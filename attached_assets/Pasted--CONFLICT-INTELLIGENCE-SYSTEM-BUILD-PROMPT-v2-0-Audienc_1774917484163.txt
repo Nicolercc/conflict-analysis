@@ -1,0 +1,856 @@
+# CONFLICT INTELLIGENCE SYSTEM — BUILD PROMPT v2.0
+# Audience: Journalists & Researchers
+# Aesthetic: Editorial Intelligence Platform
+# Copy this entire document into Replit AI Assistant
+
+---
+
+## ROLE & MISSION
+
+You are a senior full-stack engineer. Build a complete, production-quality web application called **Conflict Intelligence System** — an editorial research platform that transforms a news article URL into a structured, multi-perspective geopolitical intelligence brief for journalists, researchers, and policy professionals.
+
+The tone is: **trustworthy, academic, editorial**. Think Foreign Affairs magazine meets a research university's digital library. This is a safe informational environment — not a military terminal. Every design decision must reinforce calm authority, readability, and intellectual rigor.
+
+Stack: React 18 (Vite) + Node.js/Express backend proxy. Deploy target: Replit. No databases. No auth. Stateless.
+
+---
+
+## ENVIRONMENT & SECRETS
+
+Set in Replit Secrets before running:
+
+```
+ANTHROPIC_API_KEY=your_key_here
+PERPLEXITY_API_KEY=your_key_here
+```
+
+Express backend reads `process.env.ANTHROPIC_API_KEY` and `process.env.PERPLEXITY_API_KEY`.
+React frontend never touches API keys — all calls go through the Express proxy.
+
+---
+
+## FILE STRUCTURE
+
+```
+conflict-intelligence/
+├── server/
+│   ├── index.js
+│   └── scraper.js
+├── src/
+│   ├── main.jsx
+│   ├── App.jsx
+│   ├── components/
+│   │   ├── WorldMap.jsx
+│   │   ├── AnalysisLoader.jsx
+│   │   ├── EventCard.jsx
+│   │   ├── CredScore.jsx
+│   │   ├── EscBar.jsx
+│   │   ├── PerspectivesPanel.jsx
+│   │   ├── SourceDiversity.jsx
+│   │   └── VerificationPanel.jsx
+│   ├── hooks/
+│   │   ├── useTypewriter.js
+│   │   └── useAnimCounter.js
+│   ├── lib/
+│   │   ├── constants.js
+│   │   └── geo.js
+│   └── styles/
+│       └── global.css
+├── index.html
+├── vite.config.js
+├── package.json
+└── .env.example
+```
+
+---
+
+## PACKAGE.JSON
+
+```json
+{
+  "name": "conflict-intelligence",
+  "version": "2.0.0",
+  "scripts": {
+    "dev": "concurrently \"node server/index.js\" \"vite\"",
+    "build": "vite build",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "concurrently": "^8.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.0",
+    "node-fetch": "^3.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^5.0.0"
+  }
+}
+```
+
+---
+
+## VITE CONFIG
+
+```js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    proxy: {
+      '/api': { target: 'http://localhost:3001', changeOrigin: true },
+    },
+  },
+});
+```
+
+---
+
+## DESIGN SYSTEM
+
+### Aesthetic Direction
+
+**Editorial Intelligence Platform.** The visual language references serious long-form journalism: Foreign Affairs, The Guardian's investigations desk, academic research portals. Warm off-white backgrounds. Deep navy text. Generous whitespace. Serif display type that signals authority and careful thought. This is where a journalist comes to understand something complex — not to be alarmed, but to be informed.
+
+Every element should feel like it belongs in a well-designed research report, not a live broadcast.
+
+### Color Tokens
+
+```css
+:root {
+  /* Backgrounds */
+  --bg-primary: #F7F4EF;        /* Warm cream — page background */
+  --bg-surface: #FFFFFF;        /* Cards, panels */
+  --bg-subtle: #F0EDE8;         /* Alternate surface, input fields */
+  --bg-overlay: #EDE9E3;        /* Hover states, dividers */
+
+  /* Borders */
+  --border-light: #E2DDD6;      /* Default borders */
+  --border-medium: #C8C2BA;     /* Stronger dividers */
+  --border-focus: #2B4C7E;      /* Input focus ring */
+
+  /* Text */
+  --text-primary: #1A1614;      /* Headlines, key content */
+  --text-secondary: #3D3835;    /* Body text */
+  --text-muted: #7A7470;        /* Labels, metadata */
+  --text-faint: #B0ABA6;        /* Captions, secondary metadata */
+
+  /* Accent — Deep Navy (trust, authority) */
+  --accent-navy: #2B4C7E;
+  --accent-navy-light: #EBF0F8;
+  --accent-navy-border: #B8C9E0;
+
+  /* Semantic colors — muted, not alarming */
+  --risk-high: #8B3A3A;         /* Muted terracotta — serious, not screaming */
+  --risk-high-bg: #F5EAEA;
+  --risk-medium: #8B6914;       /* Warm amber */
+  --risk-medium-bg: #FBF5E6;
+  --risk-low: #2D6A4F;          /* Forest green */
+  --risk-low-bg: #EBF5F0;
+
+  /* Event type colors — muted, editorial */
+  --type-strike: #8B3A3A;
+  --type-escalation: #8B5E1A;
+  --type-negotiation: #2D6A4F;
+  --type-humanitarian: #2B4C7E;
+  --type-political: #5A3A7E;
+
+  /* Source region colors */
+  --region-western: #2B4C7E;
+  --region-mideast: #8B5E1A;
+  --region-asia: #5A3A7E;
+  --region-africa: #2D6A4F;
+  --region-latam: #3A6B8B;
+  --region-state: #7A7470;
+}
+```
+
+### Typography
+
+| Role | Font | Weight | Size | Usage |
+|---|---|---|---|---|
+| Display | Playfair Display | 400–700 | 28–52px | Page title, brief headline, section heads |
+| Body / Serif | Source Serif 4 | 300–400 | 14–17px | Summary text, descriptions, body copy |
+| Label / Data | IBM Plex Mono | 300–500 | 9–12px | Metadata, badges, coordinates, scores |
+
+Google Fonts import:
+```
+https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap
+```
+
+### Animation Principles
+
+Animations should feel like a thoughtful document loading — not a live broadcast. Use:
+- **Fade + subtle upward drift** for card entrances (opacity 0→1, translateY 10px→0, 400ms ease)
+- **Smooth counter interpolation** for scores (no bouncing, linear ease)
+- **Gentle bar fills** for risk meter (1.2s ease-out)
+- **Slow typewriter** at 18ms/char — reading pace, not urgency
+- NO radar sweeps, NO pulse rings, NO glowing scanlines
+- Map markers: simple fade-in with a single subtle ripple — not aggressive pulse animation
+
+### Spatial Composition
+
+- Max content width: 1100px centered with auto margins
+- Generous section spacing: 56px between major sections
+- Cards: 20px padding, 1px border, 6px border-radius — restrained rounding
+- Section labels: small caps, letter-spaced, IBM Plex Mono, above each section
+- Horizontal rules (`<hr>`) as section dividers — 1px, var(--border-light)
+- Left-aligned text throughout — never centered body copy
+
+---
+
+## GLOBAL CSS
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Source Serif 4', Georgia, serif;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar — refined */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-subtle); }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+/* Keyframes */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ripple {
+  0%   { r: 5; stroke-opacity: 0.6; }
+  100% { r: 18; stroke-opacity: 0; }
+}
+@keyframes dashDraw {
+  from { stroke-dashoffset: 20; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes countUp {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+@keyframes barFill {
+  from { width: 0; }
+}
+
+/* Utility classes */
+.label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+a {
+  color: var(--accent-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+a:hover { color: var(--text-primary); }
+```
+
+---
+
+## LIB/CONSTANTS.JS
+
+```js
+export const TYPE_CFG = {
+  strike:       { color: 'var(--type-strike)',       label: 'Strike' },
+  escalation:   { color: 'var(--type-escalation)',   label: 'Escalation' },
+  negotiation:  { color: 'var(--type-negotiation)',  label: 'Negotiation' },
+  humanitarian: { color: 'var(--type-humanitarian)', label: 'Humanitarian' },
+  political:    { color: 'var(--type-political)',     label: 'Political' },
+};
+
+export const RISK_CFG = {
+  Low:    { color: 'var(--risk-low)',    bg: 'var(--risk-low-bg)',    fill: '22%',  label: 'Low Risk' },
+  Medium: { color: 'var(--risk-medium)', bg: 'var(--risk-medium-bg)', fill: '55%',  label: 'Medium Risk' },
+  High:   { color: 'var(--risk-high)',   bg: 'var(--risk-high-bg)',   fill: '88%',  label: 'High Risk' },
+};
+
+export const ALIGNMENT_CFG = {
+  Western:               { color: 'var(--region-western)', label: 'Western' },
+  Regional:              { color: 'var(--type-escalation)', label: 'Regional' },
+  'State Media':         { color: 'var(--region-state)',   label: 'State Media' },
+  'Civil Society':       { color: 'var(--type-negotiation)', label: 'Civil Society' },
+  'Affected Population': { color: 'var(--risk-medium)',    label: 'Affected Population' },
+};
+
+export const SOURCE_REGION_CFG = {
+  Western:        { color: 'var(--region-western)' },
+  'Middle East':  { color: 'var(--region-mideast)' },
+  Asia:           { color: 'var(--region-asia)' },
+  Africa:         { color: 'var(--region-africa)' },
+  'Latin America':{ color: 'var(--region-latam)' },
+  'State Media':  { color: 'var(--region-state)' },
+};
+
+export const DEMO_ARTICLE = `KYIV, Ukraine — Russian forces launched a massive coordinated missile and drone barrage on Kyiv in the early hours of Tuesday, striking multiple civilian districts and critical energy infrastructure. Ukrainian air defense intercepted dozens of projectiles, but ballistic missiles struck apartment buildings in the Shevchenkivskyi district, causing fires that burned for hours. Officials confirmed 7 civilians killed and 34 wounded. The assault — among the largest since Russia's full-scale invasion — followed the collapse of U.S.-brokered ceasefire talks last week. President Zelensky called it "deliberate terror" and demanded Western allies accelerate air defense deliveries. NATO foreign ministers were meeting in Brussels as the strikes occurred.`;
+
+export const CONTINENTS = [
+  { id: 'na', d: 'M 75,85 L 80,70 L 100,65 L 135,60 L 185,55 L 220,60 L 235,75 L 240,100 L 230,120 L 215,140 L 200,155 L 185,165 L 165,170 L 145,175 L 130,185 L 115,195 L 100,205 L 85,195 L 75,180 L 65,165 L 55,145 L 50,120 L 55,100 Z' },
+  { id: 'sa', d: 'M 185,210 L 210,200 L 235,210 L 250,230 L 255,260 L 250,290 L 240,320 L 225,345 L 210,360 L 195,355 L 180,335 L 170,305 L 165,275 L 168,250 L 175,230 Z' },
+  { id: 'eu', d: 'M 390,55 L 420,50 L 450,52 L 470,58 L 475,70 L 465,82 L 450,88 L 435,90 L 420,85 L 405,80 L 395,70 Z' },
+  { id: 'af', d: 'M 390,110 L 430,100 L 465,105 L 490,120 L 500,145 L 500,175 L 495,205 L 480,230 L 460,255 L 440,268 L 420,265 L 400,250 L 385,225 L 375,195 L 372,165 L 375,140 L 382,120 Z' },
+  { id: 'as', d: 'M 480,55 L 530,45 L 600,40 L 670,42 L 730,50 L 780,58 L 800,70 L 790,88 L 760,100 L 720,108 L 680,112 L 640,115 L 600,118 L 560,115 L 525,108 L 495,95 L 478,78 Z' },
+  { id: 'au', d: 'M 680,270 L 720,260 L 760,265 L 790,280 L 800,300 L 795,320 L 775,335 L 745,340 L 710,335 L 685,320 L 670,300 L 672,282 Z' },
+];
+```
+
+---
+
+## LIB/GEO.JS
+
+```js
+export function latLngToXY(lat, lng) {
+  return {
+    x: Math.max(10, Math.min(950, ((lng + 180) / 360) * 960)),
+    y: Math.max(10, Math.min(490, ((90 - lat) / 180) * 500)),
+  };
+}
+```
+
+---
+
+## HOOKS
+
+### hooks/useTypewriter.js
+```js
+import { useState, useEffect } from 'react';
+
+export function useTypewriter(text, speed = 18) {
+  const [out, setOut] = useState('');
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!text) return;
+    setOut('');
+    setDone(false);
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setOut(text.slice(0, i));
+      if (i >= text.length) { clearInterval(interval); setDone(true); }
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return { out, done };
+}
+```
+
+### hooks/useAnimCounter.js
+```js
+import { useState, useEffect } from 'react';
+
+export function useAnimCounter(to, dur = 1200) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!to) return;
+    let start = null;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      setVal(Math.round(p * to));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [to, dur]);
+  return val;
+}
+```
+
+---
+
+## SERVER — index.js
+
+Build a Node/Express server on port 3001.
+
+### POST /api/analyze
+
+Accepts `{ url: string }` OR `{ article: string }`.
+
+1. If `url` provided → call `scraper.js` to extract article text.
+2. Run two API calls in parallel with `Promise.all`:
+   - `callClaude(articleText)` → structured intelligence JSON
+   - `callPerplexity(headline, location)` → verification sources + citations
+3. Merge both into a single response and return it.
+
+### callClaude(articleText)
+
+POST to `https://api.anthropic.com/v1/messages`
+
+Headers: `x-api-key`, `anthropic-version: 2023-06-01`, `content-type: application/json`
+
+Body:
+```json
+{
+  "model": "claude-sonnet-4-20250514",
+  "max_tokens": 2000,
+  "system": "<SYSTEM_PROMPT — see below>",
+  "messages": [{ "role": "user", "content": "Analyze this article:\n\n{articleText}" }]
+}
+```
+
+Parse `data.content[0].text`, strip markdown fences, JSON.parse.
+
+### callPerplexity(headline, location)
+
+POST to `https://api.perplexity.ai/chat/completions`
+
+Headers: `Authorization: Bearer {PERPLEXITY_API_KEY}`, `content-type: application/json`
+
+Body:
+```json
+{
+  "model": "sonar",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a conflict verification researcher. Search for coverage of this event from NON-WESTERN sources including Al Jazeera, Middle East Eye, teleSUR, The Hindu, Africa Report, CGTN, Xinhua, ANI, Dawn, and regional outlets. Return ONLY valid JSON. No markdown. No preamble. Schema: { \"sources\": [ { \"title\": string, \"url\": string, \"outlet\": string, \"region\": \"Western\" | \"Middle East\" | \"Asia\" | \"Africa\" | \"Latin America\" | \"State Media\", \"summary\": string } ], \"consensus\": string, \"divergence\": string }"
+    },
+    {
+      "role": "user",
+      "content": "Find international coverage of: {headline} in {location}. Prioritize non-Western and regional sources."
+    }
+  ]
+}
+```
+
+Parse `data.choices[0].message.content`, strip fences, JSON.parse.
+
+---
+
+## SERVER — scraper.js
+
+```js
+import fetch from 'node-fetch';
+import * as cheerio from 'cheerio';
+
+export async function scrapeArticle(url) {
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ConflictIntelBot/1.0)', 'Accept': 'text/html' },
+    timeout: 10000,
+  });
+  const html = await res.text();
+  const $ = cheerio.load(html);
+  $('script, style, nav, header, footer, aside, .ad, .advertisement').remove();
+  const text = $('article').first().text() || $('main').text() || $('body').text();
+  return text.replace(/\s+/g, ' ').trim().slice(0, 8000);
+}
+```
+
+If scrape fails, throw: "Could not extract article from this URL. Try pasting the text directly."
+
+---
+
+## CLAUDE SYSTEM PROMPT
+
+```
+You are a geopolitical research analyst writing for journalists and academic researchers. Analyze the provided conflict news article and return ONLY valid JSON with no markdown, no code fences, no preamble.
+
+CRITICAL FRAMING INSTRUCTION: Do NOT default to Western government or NATO framing. Analyze from multiple geopolitical perspectives — including regional actors, affected civilian populations, Global South viewpoints, and non-Western institutional positions. Treat no single geopolitical alignment as neutral or default. Write in clear, measured, academic language.
+
+Return this exact JSON schema:
+
+{
+  "headline": string (8-10 words, factual, no editorializing),
+  "location": {
+    "city": string,
+    "country": string,
+    "region": string,
+    "lat": number,
+    "lng": number
+  },
+  "summary": string (2-3 sentences, plain language, neutral framing),
+  "actors": string[] (2-5 key parties including state, non-state, and affected civilian groups),
+  "credibility": {
+    "score": number (0-100),
+    "label": "Low" | "Medium" | "High",
+    "reason": string (1 sentence, specific)
+  },
+  "perspectives": [
+    {
+      "actor": string,
+      "alignment": "Western" | "Regional" | "State Media" | "Civil Society" | "Affected Population",
+      "framing": string (1-2 sentences — how this actor frames the event),
+      "interests": string (1 sentence — what underlying interest shapes this framing)
+    }
+  ],
+  "relatedEvents": [
+    {
+      "date": string ("Mon YYYY"),
+      "title": string,
+      "description": string (1 sentence — why this event is relevant now),
+      "type": "strike" | "escalation" | "negotiation" | "humanitarian" | "political",
+      "lat": number,
+      "lng": number,
+      "searchQuery": string (Google News query, 5-8 words)
+    }
+  ],
+  "escalationRisk": "Low" | "Medium" | "High",
+  "escalationReason": string (1-2 sentences),
+  "historicalContext": string (2-3 sentences — long-term forces that led here, non-Western framing),
+  "affectedPopulation": string (1-2 sentences — civilian impact, not military framing),
+  "keyQuestion": string (1 sentence — the most important unanswered question)
+}
+
+relatedEvents must be EXACTLY 3 items in chronological order. perspectives must contain 3-5 items with diverse alignments. lat/lng must be valid decimal degrees.
+```
+
+---
+
+## COMPONENTS
+
+### components/AnalysisLoader.jsx
+
+**Replace the radar with a calm, editorial loading state.**
+
+Layout — centered, max-width 480px, white card, generous padding:
+- Top: a simple animated horizontal progress bar — thin (3px height), navy color (`var(--accent-navy)`), CSS width animation sweeping left to right on a 2s loop
+- Title: `Analyzing Article` — Playfair Display 24px, text-primary
+- Subtitle: `Extracting context, verifying sources, building brief` — Source Serif 4, italic, text-muted, 14px
+- 5-step checklist below — each step fades in sequentially at 750ms intervals:
+  - `◦ Parsing article text`
+  - `◦ Extracting location & actors`
+  - `◦ Correlating historical events`
+  - `◦ Scoring source credibility`
+  - `◦ Building multi-perspective brief`
+  - Completed steps show `✓` in navy, IBM Plex Mono 11px
+- Background: white card, border `var(--border-light)`, soft drop-shadow `0 2px 16px rgba(0,0,0,0.06)`
+
+NO radar. NO spinning sweep. NO dark background. NO green glow.
+
+### components/WorldMap.jsx
+
+**A cartographic map — calm, reference quality.**
+
+PROPS: `{ main: { city, country, lat, lng }, related: Array, active: boolean }`
+
+960x500 SVG:
+- Background: `#EEE8DF` (warm parchment — like a reference atlas)
+- Continent fills: `#D4CCBE` (muted sand), stroke `#BFB8AE`, stroke-width 0.5
+- Grid lines: lat/lng every 30°, stroke `#C8C2B8`, opacity 0.5, stroke-width 0.3
+
+ANIMATION SEQUENCE:
+- 400ms: main incident marker fades in
+- 1000ms: connection lines appear
+- 1400ms / 1850ms / 2300ms: related markers appear
+- 2500ms: legend appears
+
+MAIN MARKER:
+- Single ripple ring: `<circle>` with `<animate>` on r (6→20) and stroke-opacity (0.5→0), dur 2.5s, repeat 2 (NOT infinite — settles calmly)
+- After ripple: static filled circle r=6, fill `var(--risk-high)` (muted terracotta), stroke white stroke-width 1.5
+- White label below: `{city}, {country}` — Playfair Display 11px, navy, on white pill with border
+- Lat/lng in IBM Plex Mono 8px, text-muted below city label
+
+RELATED MARKERS:
+- Simple circle r=5, fill = TYPE_CFG color (use muted palette vars)
+- Single ripple on appear, then static
+- Hover tooltip: white card, border, shadow, shows event.title + date in Source Serif 4
+
+CONNECTION LINES:
+- stroke `var(--border-medium)`, opacity 0.6, strokeWidth 1, strokeDasharray "5 4"
+- Fade in with opacity transition, no animating dashoffset
+
+LEGEND (top-right inset):
+- White pill with border, padding 8px 12px
+- Shows only event types present
+- Small colored dot + type label, IBM Plex Mono 8px
+
+### components/CredScore.jsx
+
+PROPS: `{ score: number, label: string, reason: string }`
+
+Layout — white card:
+- Section title: `Source Credibility`
+- Large score: Playfair Display 64px, color from risk vars (navy for High, amber for Medium, terracotta for Low)
+- `/100` in IBM Plex Mono 16px, text-muted
+- Thin progress bar (4px height), fills to score%, color-matched, border-radius 2px
+- Label chip: `HIGH` / `MEDIUM` / `LOW` — IBM Plex Mono 9px, colored text on tinted background using risk bg vars, padding 3px 8px, border-radius 3px
+- Reason: Source Serif 4, italic, 13px, text-secondary, margin-top 10px
+
+### components/EscBar.jsx
+
+PROPS: `{ risk: "Low" | "Medium" | "High", reason: string, active: boolean }`
+
+Layout — white card:
+- Section title: `Escalation Risk`
+- Bar: 6px height, background `var(--bg-overlay)`, border-radius 3px
+- Fill: CSS `animation: barFill 1.2s ease-out forwards` when active, width = RISK_CFG fill, color from risk vars
+- Risk label: Playfair Display 28px, colored text from risk vars
+- Reason: Source Serif 4, italic 13px, text-secondary below label
+
+### components/EventCard.jsx
+
+PROPS: `{ ev: EventObject, idx: number, active: boolean }`
+
+Stagger: `idx * 200ms` delay on `active=true`. Entrance: `animation: fadeUp 400ms ease forwards`.
+
+Layout:
+- Left column: vertical rule (1px, colored per type), small colored dot at top, date in IBM Plex Mono 9px below
+- Right column:
+  - Type badge: colored text on tinted background, IBM Plex Mono 8px, border-radius 3px, padding 2px 7px
+  - Title: Playfair Display 15px, font-weight 600, text-primary, margin-top 4px
+  - Description: Source Serif 4, 13px, text-secondary
+  - Verify link: `<a href="https://news.google.com/search?q={encodeURIComponent(ev.searchQuery)}" target="_blank">Verify on Google News ↗</a>` — IBM Plex Mono 9px, navy, no underline by default, underline on hover
+
+### components/PerspectivesPanel.jsx
+
+PROPS: `{ perspectives: Array, active: boolean }`
+
+Section title: `Geopolitical Perspectives`
+Subtitle below: `How different actors frame this event` — Source Serif 4, italic, text-muted, 13px
+
+For each perspective (staggered 120ms entrance):
+- White card, border-left 3px solid {alignment color}
+- Alignment badge (IBM Plex Mono 9px, colored chip) + actor name (Playfair Display 16px, bold) on same row
+- Framing: Source Serif 4, 14px, text-secondary
+- Interests subtext: IBM Plex Mono 9px, text-muted, label `Underlying interest:` + text
+- Border-bottom `var(--border-light)` between items (no border on last)
+
+### components/VerificationPanel.jsx
+
+PROPS: `{ sources: Array, consensus: string, divergence: string, active: boolean }`
+
+Section title: `International Source Verification`
+Subtitle: `Cross-referenced against global news coverage via Perplexity` — italic, text-muted
+
+Source grid: 2-column (1-col on narrow), each source card:
+- Outlet name: IBM Plex Mono 10px, font-weight 500
+- Region badge: IBM Plex Mono 8px, colored text on tinted background
+- Summary: Source Serif 4, 13px, text-secondary
+- `Read source ↗` link to source URL, IBM Plex Mono 9px
+
+Below grid: two side-by-side panels (or stacked on mobile):
+- **Consensus**: border-left 3px solid `var(--risk-low)`, label `Where sources agree`, body text
+- **Divergence**: border-left 3px solid `var(--risk-medium)`, label `Where sources diverge`, body text
+- Both: Source Serif 4, 14px, italic, text-secondary, white card background
+
+### components/SourceDiversity.jsx
+
+PROPS: `{ sources: Array }`
+
+Section title: `Source Geographic Distribution`
+
+Horizontal segmented bar (height 8px, border-radius 4px, full width):
+- Each segment width proportional to count of sources by region
+- Colors from SOURCE_REGION_CFG
+- Animate on mount: segments grow from 0 width
+
+Legend below: inline list of region name + count, IBM Plex Mono 9px, colored dots
+
+---
+
+## APP.JSX — FULL STATE & LAYOUT
+
+### State
+```js
+const [inputMode, setInputMode] = useState('url');
+const [url, setUrl] = useState('');
+const [article, setArticle] = useState('');
+const [result, setResult] = useState(null);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState(null);
+const [active, setActive] = useState(false);
+```
+
+### Header (persistent, always visible)
+
+Slim header bar, white background, border-bottom `var(--border-light)`, height 56px:
+- Left: wordmark `Conflict Intelligence` in Playfair Display 18px, text-primary
+- Center: `For journalists & researchers` — IBM Plex Mono 9px, text-muted, letter-spaced
+- Right: small chip `Beta` — IBM Plex Mono 8px, navy border, navy text
+- No live tickers. No blinking badges. No broadcast styling.
+
+### Input View
+
+Centered layout, max-width 680px, padding-top 80px:
+
+- **Eyebrow**: `Conflict Intelligence System` — IBM Plex Mono 9px, text-muted, letter-spaced, all-caps
+- **Title**: `Understand any conflict article in context` — Playfair Display 40px, font-weight 700, line-height 1.2
+- **Description**: `Paste a URL or article text. Receive a structured brief with multi-perspective analysis, source verification, and historical context.` — Source Serif 4, 16px, text-secondary, margin-top 12px
+
+- **Mode toggle**: two tabs — `Article URL` | `Paste Text` — Source Serif 4, underline on active, subtle
+- **URL input**: full-width, 48px height, border `var(--border-light)`, focus border `var(--border-focus)`, border-radius 6px, padding 0 16px, placeholder `https://aljazeera.com/...`, font Source Serif 4 15px
+- **Textarea** (text mode): min-height 180px, same styling, char count in IBM Plex Mono 9px text-muted bottom-right
+
+- **Action row**: 
+  - Primary button: `Analyze Article` — navy background `var(--accent-navy)`, white text, Source Serif 4 15px, padding 12px 28px, border-radius 5px. Hover: slightly darker navy. Disabled: opacity 0.45.
+  - Secondary button: `Load Demo Article` — transparent background, navy text, navy border, same sizing
+
+- **Below buttons**: `Analyzes in ~10 seconds · Powered by Claude & Perplexity` — IBM Plex Mono 9px, text-faint
+
+### Loading View
+
+Replace full page content with `<AnalysisLoader />` centered on page.
+Keep header visible.
+
+### Results View
+
+After result: `setTimeout(() => setActive(true), 100)`.
+
+Max-width 1100px, centered, padding 40px 24px.
+
+**BREADCRUMB ROW**
+- `← New Analysis` link (IBM Plex Mono 10px, navy) · `{result.location.city}, {result.location.country}` (IBM Plex Mono 10px, text-muted)
+
+**BRIEF HEADER** (white card, padding 32px, margin-bottom 40px)
+- Region tag: IBM Plex Mono 9px chip (navy), e.g. `Eastern Europe`
+- Headline: Playfair Display 36px, font-weight 700, line-height 1.25, max-width 780px
+- Actor row: actor name chips, IBM Plex Mono 9px, border `var(--border-medium)`, padding 3px 8px
+
+**SECTION 1: MAP** (full width, white card)
+- Section title: `Incident Location & Related Events`
+- `<WorldMap main={result.location} related={result.relatedEvents} active={active} />`
+- Below map, italic note: `{result.historicalContext}` — Source Serif 4, 14px, italic, text-secondary, padding 16px, border-top `var(--border-light)`
+
+**SECTION 2: TWO-COLUMN ROW** (60/40 desktop, stacked mobile)
+- Left (60%): 
+  - Section title: `Summary`
+  - Typewriter summary text — Source Serif 4, 16px, line-height 1.7
+  - Blinking cursor `|` while typing (CSS blink 1s)
+  - Divider
+  - `Affected Population` label + `{result.affectedPopulation}` in italic
+  - Divider
+  - `Key Question` label + `{result.keyQuestion}` in Source Serif 4, 15px, italic, navy border-left
+- Right (40%):
+  - `<CredScore />` — white card
+  - `<EscBar />` — white card, margin-top 16px
+
+**SECTION 3: PERSPECTIVES** (full width)
+- `<PerspectivesPanel perspectives={result.perspectives} active={active} />`
+
+**SECTION 4: VERIFICATION** (full width)
+- `<VerificationPanel sources={result.perplexitySources} consensus={result.consensus} divergence={result.divergence} active={active} />`
+- `<SourceDiversity sources={result.perplexitySources} />`
+
+**SECTION 5: TIMELINE** (full width)
+- Section title: `Related Events & Historical Context`
+- Intro note: `Three events that shaped the conditions for this incident` — Source Serif 4, italic, text-muted
+- Three `<EventCard />` components
+
+**FOOTER** (within results)
+- `Analysis generated via Claude (Anthropic) + Perplexity Sonar · {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}` — IBM Plex Mono 9px, text-faint, centered, margin-top 56px
+
+### Error State
+
+White card, centered, max-width 480px:
+- Eyebrow: IBM Plex Mono 9px, `var(--risk-high)` color: `Analysis could not complete`
+- Title: Playfair Display 22px: human-readable error message
+- Body: Source Serif 4, 14px, text-secondary: suggestion (e.g. "Try pasting the article text directly")
+- Retry button: navy, same style as primary CTA
+
+### handleAnalyze function
+
+```js
+async function handleAnalyze() {
+  setLoading(true);
+  setError(null);
+  setResult(null);
+  setActive(false);
+  try {
+    const body = inputMode === 'url' ? { url } : { article };
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    setResult(data);
+  } catch (e) {
+    setError(e.message || 'Analysis failed. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+}
+```
+
+---
+
+## VISUAL ATMOSPHERE — EDITORIAL, NOT MILITARY
+
+The following design choices are MANDATORY. They replace all dark/military styling from any previous spec.
+
+1. **Background is warm cream** `#F7F4EF` — never black or near-black
+2. **All cards are white** with light border — never dark panels
+3. **Text is dark on light** — never light on dark
+4. **No glow effects, no neon, no scanlines** — these cues belong to broadcast, not research
+5. **No blinking LIVE badges** — this is an analytical tool, not a newsroom ticker
+6. **Map is parchment-toned** — cartographic reference feel, not a targeting system
+7. **Markers settle after animation** — ripple twice then become static. Nothing loops forever.
+8. **Risk is communicated through color + clear labeling**, not visual alarm (no red flashing, no sirens, no "CRITICAL" in all-caps with glow)
+9. **Section spacing is generous** — the reader should feel they have room to think
+10. **Typography does the heavy lifting** — Playfair Display commands authority without theatrical effects
+
+---
+
+## ERROR HANDLING
+
+- Claude returns invalid JSON → show error card, retry once automatically
+- Perplexity fails → still render full Claude results, VerificationPanel shows "Verification temporarily unavailable" in text-muted — never block the full analysis
+- URL scraper fails → show friendly error card with suggestion to paste text
+- Lat/lng out of bounds → clamp with geo.js, log warning
+
+---
+
+## STARTUP
+
+1. `npm install`
+2. Set `ANTHROPIC_API_KEY` + `PERPLEXITY_API_KEY` in Replit Secrets
+3. `npm run dev`
+4. Express on :3001, Vite on :5173
+
+---
+
+## DEMO TEST
+
+Test URL: `https://www.aljazeera.com/news/2024/4/1/israel-strikes-iranian-consulate-in-damascus`
+
+Expected: warm cream interface, cartographic map, calm loading checklist, at least 3 perspectives including Regional and Affected Population, source diversity bar showing mixed regions, all text readable at comfortable size.
+
+---
+
+END OF BUILD PROMPT — CONFLICT INTELLIGENCE SYSTEM v2.0
+Audience: Journalists & Researchers · Aesthetic: Editorial Intelligence Platform
+```
