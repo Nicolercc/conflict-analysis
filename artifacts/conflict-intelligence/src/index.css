@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400;500&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 133 82% 2%;
+  --foreground: 120 46% 85%;
+  --card: 135 67% 4%;
+  --card-foreground: 120 46% 85%;
+  --popover: 135 67% 4%;
+  --popover-foreground: 120 46% 85%;
+  --primary: 143 100% 43%;
+  --primary-foreground: 133 82% 2%;
+  --secondary: 135 75% 3%;
+  --secondary-foreground: 120 47% 77%;
+  --muted: 136 52% 8%;
+  --muted-foreground: 137 43% 31%;
+  --accent: 125 56% 23%;
+  --accent-foreground: 120 46% 85%;
+  --destructive: 5 100% 57%;
+  --destructive-foreground: 120 46% 85%;
+  --border: 136 52% 8%;
+  --input: 136 52% 8%;
+  --ring: 143 100% 43%;
+  
+  --app-font-sans: 'DM Mono', monospace;
+  --app-font-serif: Georgia, serif;
+  --app-font-mono: 'DM Mono', monospace;
+  --app-font-heading: 'Cormorant Garamond', serif;
+
+  --radius: 0;
+
+  --button-outline: rgba(0,221,85, .10);
+  --badge-outline: rgba(0,221,85, .05);
+
+  --opaque-button-border-intensity: 0;
+
+  --elevate-1: rgba(0,221,85, .03);
+  --elevate-2: rgba(0,221,85, .08);
+}
+
+.dark {
+  --background: 133 82% 2%;
+  --foreground: 120 46% 85%;
+  --card: 135 67% 4%;
+  --card-foreground: 120 46% 85%;
+  --popover: 135 67% 4%;
+  --popover-foreground: 120 46% 85%;
+  --primary: 143 100% 43%;
+  --primary-foreground: 133 82% 2%;
+  --secondary: 135 75% 3%;
+  --secondary-foreground: 120 47% 77%;
+  --muted: 136 52% 8%;
+  --muted-foreground: 137 43% 31%;
+  --accent: 125 56% 23%;
+  --accent-foreground: 120 46% 85%;
+  --destructive: 5 100% 57%;
+  --destructive-foreground: 120 46% 85%;
+  --border: 136 52% 8%;
+  --input: 136 52% 8%;
+  --ring: 143 100% 43%;
+
+  --button-outline: rgba(0,221,85, .10);
+  --badge-outline: rgba(0,221,85, .05);
+
+  --opaque-button-border-intensity: 0;
+
+  --elevate-1: rgba(0,221,85, .04);
+  --elevate-2: rgba(0,221,85, .09);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-mono antialiased bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--app-font-heading);
+  }
+}

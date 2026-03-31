@@ -14,3 +14,57 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Uses AI to extract structured intelligence from a conflict news article
+ * @summary Analyze a conflict article
+ */
+export const analyzeArticleBodyArticleMin = 50;
+
+export const AnalyzeArticleBody = zod.object({
+  article: zod
+    .string()
+    .min(analyzeArticleBodyArticleMin)
+    .describe("The full text of the conflict news article to analyze"),
+});
+
+export const analyzeArticleResponseCredibilityScoreMin = 0;
+export const analyzeArticleResponseCredibilityScoreMax = 100;
+
+export const AnalyzeArticleResponse = zod.object({
+  headline: zod.string(),
+  location: zod.object({
+    city: zod.string(),
+    country: zod.string(),
+    lat: zod.number(),
+    lng: zod.number(),
+  }),
+  summary: zod.string(),
+  actors: zod.array(zod.string()),
+  credibility: zod.object({
+    score: zod
+      .number()
+      .min(analyzeArticleResponseCredibilityScoreMin)
+      .max(analyzeArticleResponseCredibilityScoreMax),
+    label: zod.enum(["Low", "Medium", "High"]),
+    reason: zod.string(),
+  }),
+  relatedEvents: zod.array(
+    zod.object({
+      date: zod.string(),
+      title: zod.string(),
+      description: zod.string(),
+      type: zod.enum([
+        "strike",
+        "escalation",
+        "negotiation",
+        "humanitarian",
+        "political",
+      ]),
+      lat: zod.number(),
+      lng: zod.number(),
+    }),
+  ),
+  escalationRisk: zod.enum(["Low", "Medium", "High"]),
+  escalationReason: zod.string(),
+});

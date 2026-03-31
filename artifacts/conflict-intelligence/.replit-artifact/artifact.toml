@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Conflict Intelligence System"
+version = "1.0.0"
+id = "artifacts/conflict-intelligence"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24434
+
+[services.development]
+run = "pnpm --filter @workspace/conflict-intelligence run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/conflict-intelligence", "run", "build" ]
+publicDir = "artifacts/conflict-intelligence/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24434"
+BASE_PATH = "/"

@@ -1,0 +1,652 @@
+
+CONFLICT INTELLIGENCE SYSTEM
+Context Engine
+Product Requirements & Engineering Specification
+
+
+Field
+Value
+Document Version
+1.0 — MVP Release
+Product
+Conflict Context Engine
+Target Platform
+Web Application (React + Node.js)
+Deployment Target
+Replit / Vercel / Railway
+Author
+Product & Engineering
+Status
+READY FOR BUILD
+Sprint Duration
+3 Days (Hackathon MVP)
+Primary User
+Journalists, researchers, students, news consumers
+
+
+1. Executive Summary
+Conflict Context Engine is a web application that transforms raw news articles about geopolitical conflicts, military strikes, and security incidents into structured, visually-rich intelligence briefs — instantly and automatically.
+A journalist, researcher, student, or news consumer pastes a single article. Within seconds they receive: a live world map with animated strike markers, a timeline of 2–3 related historical events plotted on the same map, an AI-generated plain-language summary, a source credibility score with explanation, and an escalation risk assessment.
+The product addresses a real gap: conflict news is fragmented, decontextualized, and overwhelming. Context Engine makes it spatial, structured, and accessible — turning one input into a complete intelligence picture.
+
+Hackathon Theme Fit: This product lives at the intersection of AI, journalism, and civic tech. It is demo-friendly (visual, immediate feedback), technically impressive (real-time AI + geospatial rendering), and emotionally resonant (the wars in Ukraine, Gaza, Sudan are in the news cycle daily).
+
+
+2. Problem Statement
+2.1 The Problem
+Conflict reporting is broken for the average reader. A single missile strike article contains no map, no historical context, no credibility signal, and no sense of whether the situation is escalating. Readers are left to piece together meaning across dozens of tabs.
+
+For journalists and researchers, the problem is the opposite: too much fragmented data, not enough synthesis. Verifying a report against related events, cross-referencing actors, and locating incidents geospatially requires significant manual effort.
+2.2 Who We Are Building For
+User Type
+Pain Point
+What They Get
+Journalists & Researchers
+Manual cross-referencing of events is slow and error-prone
+Instant AI brief + event correlation + credibility check
+Students & Educators
+Conflict news lacks teachable structure and context
+Visual, structured brief that explains patterns
+News Consumers
+Articles are decontextualized — hard to understand impact
+Plain-language summary + spatial map + risk level
+NGO / Policy Staff
+Need rapid triage of incoming incident reports
+Structured brief with actors, location, and escalation signal
+
+
+3. Product Vision & Goals
+3.1 Vision Statement
+"One article in. Full conflict intelligence out — in under 10 seconds."
+
+3.2 MVP Success Criteria
+	•	User can paste any English-language conflict article and receive a complete brief
+	•	World map renders with correct animated strike marker at extracted location
+	•	2–3 historically related events appear on map as secondary markers with dashed connection lines
+	•	Summary types out character-by-character (typewriter effect) on results render
+	•	Credibility score animates from 0 to final value
+	•	Escalation bar fills with appropriate color (green/yellow/red) based on risk level
+	•	Demo article pre-loaded for hackathon judges
+	•	Full flow completes in under 12 seconds on standard connection
+
+3.3 Non-Goals (MVP Scope)
+	•	Real-time news monitoring or RSS ingestion
+	•	User accounts, saved briefs, or history
+	•	Multi-language support
+	•	Mobile-native app
+	•	Database persistence
+	•	Advanced source verification (rule-based only for MVP)
+
+
+4. Feature Specification
+4.1 Article Input
+FEATURE ID: F-01
+	•	Large textarea accepting free-text paste of any news article
+	•	Character count displayed in real-time
+	•	"Load Demo Article" button pre-fills a Kyiv missile strike article for demonstration
+	•	Analyze button activates only when textarea has content (min 50 chars)
+	•	Input field styled with focus glow effect on interaction
+
+4.2 Analysis Pipeline (AI)
+FEATURE ID: F-02
+	•	On submit, article is sent to Anthropic Claude API (claude-sonnet-4-20250514)
+	•	System prompt instructs model to return structured JSON only — no markdown, no preamble
+	•	JSON schema includes: headline, location (city/country/lat/lng), summary, actors array, credibility object (score/label/reason), relatedEvents array (3 items with lat/lng/type/date/title/description), escalationRisk, escalationReason
+	•	Response parsed and validated client-side; error state shown on parse failure
+	•	Full pipeline target: under 8 seconds
+
+4.3 Radar Sweep Loader
+FEATURE ID: F-03
+	•	Replaces input view during analysis
+	•	SVG radar animation: rotating sweep arm with faint green trail
+	•	Progress steps cycle through: Parsing article → Extracting location → Correlating events → Scoring source → Generating brief
+	•	Step indicator bar fills segment by segment as phases advance (750ms intervals)
+
+4.4 World Map with Animated Markers
+FEATURE ID: F-04 — HIGHEST PRIORITY
+	•	SVG world map rendered at 960x500 viewBox, Equirectangular projection
+	•	Continent shapes drawn as SVG path elements with dark green fill on near-black background
+	•	Latitude/longitude grid lines at 30-degree intervals
+	•	Main incident marker: double expanding pulse rings in red, solid core dot with white center, SVG filter glow
+	•	Markers animate sequentially: main marker appears at 400ms, connection lines at 1000ms, related markers stagger at 1400/1850/2300ms
+	•	Related event markers: color-coded by type (strike=red, escalation=orange, negotiation=green, humanitarian=blue, political=purple)
+	•	Dashed animated lines connect related event markers to main incident location
+	•	Location label overlay (city, country, lat/lng) fades in at bottom-left of map
+	•	Type legend appears in top-right corner as related markers are revealed
+
+4.5 Typewriter Summary
+FEATURE ID: F-05
+	•	AI-generated 2–3 sentence summary renders character by character at 15ms/char speed
+	•	Blinking cursor ▌ appears at end of in-progress text
+	•	Cursor disappears when typing completes
+
+4.6 Credibility Score
+FEATURE ID: F-06
+	•	Large animated number counts up from 0 to final score over 1.4 seconds
+	•	Color: green (#4ade80) for 75+, yellow (#fbbf24) for 50–74, red (#ff6b6b) below 50
+	•	Thin progress bar fills to score width with matching color and glow
+	•	Text label (Low / Medium / High) displayed beside score
+	•	One-sentence AI explanation of credibility assessment shown in italic
+
+4.7 Escalation Risk Meter
+FEATURE ID: F-07
+	•	Three levels: Low (25% fill, green), Medium (58% fill, yellow), High (90% fill, red)
+	•	Bar fills with CSS transition (1.5s cubic-bezier ease) on component mount
+	•	Large risk label (LOW / MEDIUM / HIGH) rendered in matching color with text shadow glow
+	•	One-sentence AI escalation reasoning displayed below bar
+
+4.8 Related Event Timeline
+FEATURE ID: F-08
+	•	Three event cards rendered as a vertical timeline with colored dot-and-line connector
+	•	Each card shows: date, event type badge (color-coded), title (serif font), one-sentence description
+	•	Cards stagger in with opacity + translateY animation at 200ms intervals
+	•	Event types: strike, escalation, negotiation, humanitarian, political — each with distinct color
+
+4.9 Live Ticker
+FEATURE ID: F-09
+	•	Rotating status messages cycle across top bar every 3.5 seconds with fade transition
+	•	LIVE badge in red with pulse animation
+	•	Messages: CONFLICT CONTEXT ENGINE · LIVE INTELLIGENCE SYSTEM, GEOSPATIAL MAPPING · EVENT CORRELATION · CREDIBILITY SCORING, PASTE ANY CONFLICT ARTICLE TO BEGIN ANALYSIS, INCIDENT TRACKING · PATTERN RECOGNITION · BRIEF GENERATION
+
+
+5. Design System
+5.1 Aesthetic Direction
+War-room intelligence terminal. Dark, cinematic, data-dense. The visual language references military operations centers and live broadcast war coverage — not a consumer news app. Every element should feel like it belongs in a real-time ops room.
+5.2 Color Tokens
+Token
+Hex Value
+Usage
+Background Primary
+#010a03
+Page background, deepest layer
+Background Secondary
+#020e05
+Cards, panels, textarea
+Background Tertiary
+#030f05
+Subtle surface elevation
+Border Default
+#0a2010
+All card borders, dividers
+Border Active
+#1a5c20
+Focused inputs, active states
+Accent Green
+#00dd55
+Primary CTA, cursor, active indicators
+Accent Red
+#ff3322
+Strike markers, LIVE badge, high risk
+Accent Orange
+#ff8800
+Escalation type markers
+Accent Blue
+#3399ff
+Humanitarian type markers
+Accent Purple
+#cc44ff
+Political type markers
+Text Primary
+#c8eac8
+Headlines, key content
+Text Secondary
+#a8e0a8
+Body text, summaries
+Text Muted
+#2d7040
+Labels, metadata, captions
+Text Faint
+#163d18
+Version numbers, secondary metadata
+
+5.3 Typography
+Role
+Font
+Weight
+Size
+Usage
+Display / Headline
+Cormorant Garamond
+300–600
+20–54px
+Page title, brief headline, event titles
+Data / Mono
+DM Mono
+300–500
+8–12px
+Labels, metadata, coordinates, badges, ticker
+Body
+Georgia (system serif)
+400
+14–16px
+Article textarea, summary text
+
+5.4 Animation Spec
+Animation
+Type
+Duration
+Easing
+Trigger
+Card entrance
+opacity 0→1, translateY 14→0
+500ms
+ease
+Component mount
+Map main marker
+SVG animate r + stroke-opacity
+2.8s loop
+linear
+showMain state true
+Map related marker
+SVG animate r + stroke-opacity
+3.5s loop
+linear
+revealedRel includes index
+Dashed connection lines
+stroke-dashoffset animation
+1.4s loop
+linear
+showLines state true
+Credibility counter
+requestAnimationFrame
+1.4s
+linear
+Component mount
+Escalation bar fill
+CSS width transition
+1.5s
+cubic-bezier(0.16,1,0.3,1)
+active prop true
+Typewriter summary
+setInterval character append
+15ms/char
+n/a
+result set
+Radar sweep
+CSS transform rotate
+1.6s loop
+linear
+loading state true
+Ticker fade
+CSS opacity transition
+300ms
+ease
+3500ms interval
+
+
+6. Technical Architecture
+6.1 Stack
+Layer
+Technology
+Rationale
+Frontend Framework
+React 18 (Vite)
+Fast HMR, minimal config, Replit-friendly
+Styling
+Inline styles + CSS-in-JS via <style> tag
+No build step for CSS, full control
+Map Rendering
+Custom SVG (Equirectangular)
+Zero dependencies, full animation control, no API key
+AI API
+Anthropic Claude API (claude-sonnet-4-20250514)
+Structured JSON output, fast response
+HTTP Client
+Native fetch()
+No dependencies
+Fonts
+Google Fonts CDN (Cormorant Garamond, DM Mono)
+Free, no install required
+Deployment
+Replit (dev) → Vercel / Railway (prod)
+Zero-config deployment
+Package Manager
+npm
+Standard
+
+6.2 File Structure
+conflict-context-engine/
+├── src/
+│   ├── main.jsx              # React entry point
+│   ├── App.jsx               # Root component, routing
+│   ├── components/
+│   │   ├── WorldMap.jsx      # SVG world map + animated markers
+│   │   ├── RadarLoader.jsx   # Rotating radar sweep loading state
+│   │   ├── Ticker.jsx        # Live status ticker bar
+│   │   ├── EventCard.jsx     # Single timeline event card
+│   │   ├── CredScore.jsx     # Animated credibility score
+│   │   └── EscBar.jsx        # Escalation risk meter
+│   ├── hooks/
+│   │   ├── useTypewriter.js  # Character-by-character text reveal
+│   │   └── useAnimCounter.js # Animated number counter
+│   ├── lib/
+│   │   ├── api.js            # Anthropic API call + JSON parse
+│   │   ├── geo.js            # latLngToXY projection utility
+│   │   └── constants.js      # TYPE_CFG, RISK_CFG, CONTINENTS, SYSTEM_PROMPT
+│   └── styles/
+│       └── global.css        # @keyframes, scrollbar, font imports
+├── index.html
+├── vite.config.js
+├── package.json
+└── .env.example              # VITE_ANTHROPIC_API_KEY=
+
+6.3 Environment Variables
+Variable
+Required
+Description
+VITE_ANTHROPIC_API_KEY
+Yes
+Anthropic API key. Set in Replit Secrets as VITE_ANTHROPIC_API_KEY
+
+6.4 API Contract — Anthropic
+REQUEST
+POST https://api.anthropic.com/v1/messages
+{
+  model: "claude-sonnet-4-20250514",
+  max_tokens: 1000,
+  system: SYSTEM_PROMPT,
+  messages: [{ role: "user", content: `Analyze:\n\n${article}` }]
+}
+
+RESPONSE JSON SCHEMA (STRICT)
+{
+  headline: string,                    // 8-10 words
+  location: {
+    city: string,
+    country: string,
+    lat: number,                       // decimal degrees
+    lng: number
+  },
+  summary: string,                     // 2-3 sentences
+  actors: string[],                    // 2-4 key parties
+  credibility: {
+    score: number,                     // 0-100
+    label: "Low" | "Medium" | "High",
+    reason: string                     // 1 sentence
+  },
+  relatedEvents: Array<{
+    date: string,                      // "Mon YYYY"
+    title: string,
+    description: string,               // 1 sentence
+    type: "strike"|"escalation"|"negotiation"|"humanitarian"|"political",
+    lat: number,
+    lng: number
+  }>,                                  // exactly 3 items
+  escalationRisk: "Low" | "Medium" | "High",
+  escalationReason: string
+}
+
+6.5 Geo Projection Utility
+LIB/GEO.JS
+// Equirectangular projection: 960x500 SVG viewBox
+export function latLngToXY(lat, lng) {
+  return {
+    x: ((lng + 180) / 360) * 960,
+    y: ((90 - lat) / 180) * 500,
+  };
+}
+
+
+7. Component Specification
+7.1 WorldMap
+PROPS
+main: { city, country, lat, lng }
+related: Array<{ lat, lng, type, date, title, description }>
+active: boolean  // triggers animation sequence
+
+ANIMATION SEQUENCE (MS OFFSETS FROM ACTIVE=TRUE)
+	•	0ms: Component mounts, all markers hidden
+	•	400ms: Main marker fades in with pulse rings
+	•	1000ms: Dashed connection lines appear (showLines = true)
+	•	1400ms: Related marker 0 revealed
+	•	1850ms: Related marker 1 revealed
+	•	2300ms: Related marker 2 revealed
+	•	2300ms+: Legend appears in top-right
+
+7.2 RadarLoader
+No props. Self-contained. Manages its own step state with setInterval at 750ms. Renders SVG radar with CSS spin animation on sweep arm. Step indicator bar fills left to right.
+
+7.3 useTypewriter Hook
+function useTypewriter(text: string, speed: number = 15)
+returns { out: string, done: boolean }
+
+Resets and restarts whenever text changes. Uses setInterval to append one character per tick. Clears interval and sets done=true on completion.
+
+7.4 useAnimCounter Hook
+function useAnimCounter(to: number, dur: number = 1400)
+returns number
+
+Uses requestAnimationFrame with timestamp tracking. Linear interpolation from 0 to target over duration. Returns rounded integer on each frame.
+
+7.5 Ticker
+No props. Array of 4 message strings cycles on 3500ms interval. Fade transition via opacity CSS. LIVE badge uses CSS blink animation at 2.4s infinite.
+
+7.6 EventCard
+{ ev: EventObject, idx: number, active: boolean }
+
+Delay = idx * 200ms. On active=true, setTimeout triggers opacity + translateY transition. Color derived from TYPE_CFG constant keyed by ev.type.
+
+
+8. Constants & Configuration
+8.1 TYPE_CFG
+Key
+Color
+Glow
+Label
+strike
+#ff3322
+#ff332255
+STRIKE
+escalation
+#ff8800
+#ff880044
+ESCALATION
+negotiation
+#00dd66
+#00dd6644
+NEGOTIATION
+humanitarian
+#3399ff
+#3399ff44
+AID
+political
+#cc44ff
+#cc44ff44
+POLITICAL
+
+8.2 RISK_CFG
+Key
+Color
+Bar Fill
+Label
+Low
+#4ade80
+25%
+LOW RISK
+Medium
+#fbbf24
+58%
+MEDIUM RISK
+High
+#ff3322
+90%
+HIGH RISK
+
+8.3 System Prompt
+The system prompt must be sent verbatim to the API on every request. It must specify: return only valid JSON, no markdown fences, no preamble, no explanation, and provide the exact JSON schema with all field types and constraints listed.
+
+
+9. Replit Build Instructions
+9.1 Project Setup
+	•	Create a new Replit project. Select 'React' template (Vite).
+	•	In the Replit Shell, run: npm install
+	•	No additional packages needed — all dependencies are CDN or native.
+	•	In Replit Secrets (padlock icon in left sidebar), add: VITE_ANTHROPIC_API_KEY = your-key-here
+
+9.2 Build Order
+Build in this exact order to avoid prop/import errors:
+	•	lib/constants.js — all type configs, system prompt, continent paths, sample article
+	•	lib/geo.js — latLngToXY projection utility
+	•	hooks/useTypewriter.js
+	•	hooks/useAnimCounter.js
+	•	styles/global.css — all @keyframes, font imports, scrollbar styles
+	•	components/Ticker.jsx
+	•	components/RadarLoader.jsx
+	•	components/WorldMap.jsx — most complex, build last among components
+	•	components/EventCard.jsx
+	•	components/CredScore.jsx
+	•	components/EscBar.jsx
+	•	lib/api.js — Anthropic fetch wrapper
+	•	App.jsx — assemble all components, manage state
+	•	main.jsx — React root render
+
+9.3 Vite Config
+// vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: { host: '0.0.0.0', port: 5173 },
+});
+
+9.4 API Wrapper
+// lib/api.js
+export async function analyzeArticle(article) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: `Analyze:\n\n${article}` }],
+    }),
+  });
+  const data = await res.json();
+  const raw = data.content?.map(b => b.text || '').join('') || '';
+  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+}
+
+9.5 State Architecture (App.jsx)
+State Variable
+Type
+Initial
+Purpose
+article
+string
+""
+Textarea content
+result
+object | null
+null
+Parsed API response
+loading
+boolean
+false
+Shows RadarLoader
+error
+string | null
+null
+Error message display
+active
+boolean
+false
+Triggers map + card animations
+
+
+10. Hackathon Demo Script
+Use this script when presenting to judges. Total demo time: 90 seconds.
+
+OPENING (15 SECONDS)
+"Conflict news is broken. When a missile strikes Kyiv at 3am, you get one article. No map. No context. No way to know if this is an isolated event or an escalating pattern. We built Context Engine to fix that."
+
+DEMO (60 SECONDS)
+	•	Show the empty input state. Point out the radar icon and live ticker.
+	•	Click 'Load Demo Article'. The textarea fills with a Kyiv missile strike report.
+	•	Click 'Analyze Article'. The radar loader appears — point out the sweep animation.
+	•	When results load, walk through left to right: Headline + actor tags → World Map (watch the pulse rings, then the related markers connecting) → Typewriter summary → Credibility counter → Escalation bar filling red → Timeline staggering in.
+	•	Point to the map: "Three strikes. Three events. All on one map, connected. The dashed lines show you the pattern before you've read a single word."
+
+CLOSE (15 SECONDS)
+"This took one article. No database. No pre-loaded data. One paste, one AI call, one complete intelligence picture. Imagine this embedded in every major news site — or given to every conflict journalist as a standard tool."
+
+
+11. Risks & Mitigations
+Risk
+Likelihood
+Impact
+Mitigation
+AI returns malformed JSON
+Medium
+High
+Wrap parse in try/catch, show error state, retry once
+AI hallucinates lat/lng coordinates
+Medium
+Medium
+Validate lat in [-90,90] and lng in [-180,180] before rendering
+API rate limit during demo
+Low
+High
+Cache the Kyiv demo result as a static JSON fallback
+Map renders marker off-screen
+Low
+Medium
+Clamp x/y values to SVG viewBox bounds
+Typewriter effect too slow for judges
+Low
+Low
+Expose speed constant in constants.js; set to 8ms if needed
+CORS error on API call
+Low
+High
+Anthropic API allows browser-direct calls with API key in header
+
+
+12. 3-Day Sprint Plan
+Day
+Focus
+Deliverables
+Done When
+Day 1
+Core pipeline + Map
+WorldMap SVG + animations, RadarLoader, API integration, basic results layout
+Demo article renders full map with pulse rings and related markers
+Day 2
+Polish + All panels
+Typewriter summary, CredScore counter, EscBar fill, EventCard timeline, Ticker
+Full results view matches design spec with all animations
+Day 3
+Demo prep + edge cases
+Error states, fallback JSON cache, URL input (stretch), final QA, demo recording
+90-second demo can be repeated 10x without breaking
+
+12.1 Stretch Goals (if time permits)
+	•	URL input: paste a news URL, fetch article text server-side, pipe to analysis
+	•	Share brief: generate a shareable URL with result encoded in query params
+	•	Multi-article mode: analyze 2–3 articles simultaneously and merge events on one map
+	•	Export to PDF: generate a formatted intelligence brief as downloadable PDF
+
+
+13. Appendix
+13.A Sample Article (Demo Content)
+KYIV, Ukraine — Russian forces launched a massive coordinated missile and drone barrage on Kyiv in the early hours of Tuesday, striking multiple civilian districts and critical energy infrastructure. Ukrainian air defense intercepted dozens of projectiles, but ballistic missiles struck apartment buildings in the Shevchenkivskyi district, causing fires that burned for hours. Officials confirmed 7 civilians killed and 34 wounded. The assault — among the largest since Russia's full-scale invasion — followed the collapse of U.S.-brokered ceasefire talks last week. President Zelensky called it "deliberate terror" and demanded Western allies accelerate air defense deliveries. NATO foreign ministers were meeting in Brussels as the strikes occurred.
+
+13.B Continent SVG Paths
+All continent shapes use Equirectangular projection, SVG viewBox 0 0 960 500. Paths are simplified polygons — not geo-accurate, but visually recognizable. See constants.js for full path data.
+
+13.C Key Formulas
+EQUIRECTANGULAR PROJECTION
+x = ((lng + 180) / 360) * 960
+y = ((90 - lat) / 180) * 500
+
+ANIMCOUNTER INTERPOLATION
+progress = Math.min((timestamp - startTime) / duration, 1)
+value = Math.round(progress * target)
+
+TYPEWRITER CHARACTER RATE
+15ms per character ≈ 67 chars/second ≈ typical reading speed visual match
+
+
+END OF DOCUMENT
+Conflict Context Engine — MVP Engineering Specification v1.0

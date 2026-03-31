@@ -6,4 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./analyzeArticleBody";
+export * from "./credibility";
+export * from "./credibilityLabel";
+export * from "./errorResponse";
 export * from "./healthStatus";
+export * from "./intelligenceBrief";
+export * from "./intelligenceBriefEscalationRisk";
+export * from "./location";
+export * from "./relatedEvent";
+export * from "./relatedEventType";

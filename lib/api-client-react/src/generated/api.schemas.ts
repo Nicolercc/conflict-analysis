@@ -8,3 +8,82 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface AnalyzeArticleBody {
+  /**
+   * The full text of the conflict news article to analyze
+   * @minLength 50
+   */
+  article: string;
+}
+
+export interface Location {
+  city: string;
+  country: string;
+  lat: number;
+  lng: number;
+}
+
+export type CredibilityLabel =
+  (typeof CredibilityLabel)[keyof typeof CredibilityLabel];
+
+export const CredibilityLabel = {
+  Low: "Low",
+  Medium: "Medium",
+  High: "High",
+} as const;
+
+export interface Credibility {
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  score: number;
+  label: CredibilityLabel;
+  reason: string;
+}
+
+export type RelatedEventType =
+  (typeof RelatedEventType)[keyof typeof RelatedEventType];
+
+export const RelatedEventType = {
+  strike: "strike",
+  escalation: "escalation",
+  negotiation: "negotiation",
+  humanitarian: "humanitarian",
+  political: "political",
+} as const;
+
+export interface RelatedEvent {
+  date: string;
+  title: string;
+  description: string;
+  type: RelatedEventType;
+  lat: number;
+  lng: number;
+}
+
+export type IntelligenceBriefEscalationRisk =
+  (typeof IntelligenceBriefEscalationRisk)[keyof typeof IntelligenceBriefEscalationRisk];
+
+export const IntelligenceBriefEscalationRisk = {
+  Low: "Low",
+  Medium: "Medium",
+  High: "High",
+} as const;
+
+export interface IntelligenceBrief {
+  headline: string;
+  location: Location;
+  summary: string;
+  actors: string[];
+  credibility: Credibility;
+  relatedEvents: RelatedEvent[];
+  escalationRisk: IntelligenceBriefEscalationRisk;
+  escalationReason: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+  message?: string;
+}

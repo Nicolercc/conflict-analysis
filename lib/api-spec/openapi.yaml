@@ -1,6 +1,5 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
   description: API specification
@@ -10,6 +9,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: intelligence
+    description: Conflict intelligence analysis
 paths:
   /healthz:
     get:
@@ -24,6 +25,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /intelligence/analyze:
+    post:
+      operationId: analyzeArticle
+      tags: [intelligence]
+      summary: Analyze a conflict article
+      description: Uses AI to extract structured intelligence from a conflict news article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeArticleBody"
+      responses:
+        "200":
+          description: Structured intelligence brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntelligenceBrief"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +65,109 @@ components:
           type: string
       required:
         - status
-
+    AnalyzeArticleBody:
+      type: object
+      properties:
+        article:
+          type: string
+          description: The full text of the conflict news article to analyze
+          minLength: 50
+      required:
+        - article
+    Location:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+      required:
+        - city
+        - country
+        - lat
+        - lng
+    Credibility:
+      type: object
+      properties:
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        label:
+          type: string
+          enum: [Low, Medium, High]
+        reason:
+          type: string
+      required:
+        - score
+        - label
+        - reason
+    RelatedEvent:
+      type: object
+      properties:
+        date:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [strike, escalation, negotiation, humanitarian, political]
+        lat:
+          type: number
+        lng:
+          type: number
+      required:
+        - date
+        - title
+        - description
+        - type
+        - lat
+        - lng
+    IntelligenceBrief:
+      type: object
+      properties:
+        headline:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        summary:
+          type: string
+        actors:
+          type: array
+          items:
+            type: string
+        credibility:
+          $ref: "#/components/schemas/Credibility"
+        relatedEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelatedEvent"
+        escalationRisk:
+          type: string
+          enum: [Low, Medium, High]
+        escalationReason:
+          type: string
+      required:
+        - headline
+        - location
+        - summary
+        - actors
+        - credibility
+        - relatedEvents
+        - escalationRisk
+        - escalationReason
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
