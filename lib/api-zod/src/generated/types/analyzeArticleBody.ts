@@ -6,10 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
+/**
+ * Provide either article text or a URL (not both)
+ */
 export interface AnalyzeArticleBody {
-  /**
-   * The full text of the conflict news article to analyze
-   * @minLength 50
-   */
-  article: string;
+  /** Full text of the conflict news article */
+  article?: string;
+  /** URL of a publicly accessible conflict news article to scrape */
+  url?: string;
 }

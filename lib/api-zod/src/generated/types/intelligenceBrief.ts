@@ -10,8 +10,9 @@ import type { Credibility } from "./credibility";
 import type { IntelligenceBriefEscalationRisk } from "./intelligenceBriefEscalationRisk";
 import type { LiveEvent } from "./liveEvent";
 import type { Location } from "./location";
-import type { RegionalPerspective } from "./regionalPerspective";
+import type { Perspective } from "./perspective";
 import type { RelatedEvent } from "./relatedEvent";
+import type { Verification } from "./verification";
 
 export interface IntelligenceBrief {
   headline: string;
@@ -19,12 +20,15 @@ export interface IntelligenceBrief {
   summary: string;
   actors: string[];
   credibility: Credibility;
+  perspectives: Perspective[];
   relatedEvents: RelatedEvent[];
   escalationRisk: IntelligenceBriefEscalationRisk;
   escalationReason: string;
+  historicalContext: string;
+  affectedPopulation: string;
+  keyQuestion: string;
   casualtyData: CasualtyData;
-  perspectives: RegionalPerspective[];
   liveEvents: LiveEvent[];
-  conflictBackground: string;
+  verification: Verification;
   sources: string[];
 }

@@ -14,4 +14,6 @@ export interface RelatedEvent {
   type: RelatedEventType;
   lat: number;
   lng: number;
+  /** Google News search query to verify this event */
+  searchQuery: string;
 }

@@ -17,7 +17,6 @@ paths:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -29,8 +28,7 @@ paths:
     post:
       operationId: analyzeArticle
       tags: [intelligence]
-      summary: Analyze a conflict article
-      description: Uses AI + live web data to extract structured intelligence from a conflict news article
+      summary: Analyze a conflict article (URL or text)
       requestBody:
         required: true
         content:
@@ -61,7 +59,6 @@ paths:
       operationId: exploreConflict
       tags: [intelligence]
       summary: Explore a conflict by topic
-      description: Generate a comprehensive intelligence profile for any conflict, war, or geopolitical topic using live web data
       requestBody:
         required: true
         content:
@@ -94,26 +91,25 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
     AnalyzeArticleBody:
       type: object
       properties:
         article:
           type: string
-          description: The full text of the conflict news article to analyze
-          minLength: 50
-      required:
-        - article
+          description: Full text of the conflict news article
+        url:
+          type: string
+          description: URL of a publicly accessible conflict news article to scrape
+      description: Provide either article text or a URL (not both)
     ExploreConflictBody:
       type: object
       properties:
         topic:
           type: string
-          description: The conflict, war, or geopolitical topic to explore (e.g. "Gaza conflict", "Sudan civil war", "Ukraine war")
+          description: Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
           minLength: 3
-      required:
-        - topic
+      required: [topic]
     Location:
       type: object
       properties:
@@ -121,15 +117,14 @@ components:
           type: string
         country:
           type: string
+        region:
+          type: string
+          description: Broader geopolitical region (e.g. "Eastern Europe", "Middle East")
         lat:
           type: number
         lng:
           type: number
-      required:
-        - city
-        - country
-        - lat
-        - lng
+      required: [city, country, region, lat, lng]
     Credibility:
       type: object
       properties:
@@ -142,10 +137,23 @@ components:
           enum: [Low, Medium, High]
         reason:
           type: string
-      required:
-        - score
-        - label
-        - reason
+      required: [score, label, reason]
+    Perspective:
+      type: object
+      properties:
+        actor:
+          type: string
+          description: Name of the actor or group holding this perspective
+        alignment:
+          type: string
+          enum: [Western, Regional, State Media, Civil Society, Affected Population]
+        framing:
+          type: string
+          description: How this actor frames the event (1-2 sentences)
+        interests:
+          type: string
+          description: Underlying interest shaping this framing (1 sentence)
+      required: [actor, alignment, framing, interests]
     RelatedEvent:
       type: object
       properties:
@@ -162,13 +170,10 @@ components:
           type: number
         lng:
           type: number
-      required:
-        - date
-        - title
-        - description
-        - type
-        - lat
-        - lng
+        searchQuery:
+          type: string
+          description: Google News search query to verify this event
+      required: [date, title, description, type, lat, lng, searchQuery]
     CasualtyData:
       type: object
       properties:
@@ -178,20 +183,7 @@ components:
           type: string
         allSides:
           type: string
-      required:
-        - description
-        - civilianImpact
-        - allSides
-    RegionalPerspective:
-      type: object
-      properties:
-        region:
-          type: string
-        viewpoint:
-          type: string
-      required:
-        - region
-        - viewpoint
+      required: [description, civilianImpact, allSides]
     LiveEvent:
       type: object
       properties:
@@ -203,11 +195,36 @@ components:
           type: string
         date:
           type: string
-      required:
-        - title
-        - source
-        - url
-        - date
+      required: [title, source, url, date]
+    VerificationSource:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        outlet:
+          type: string
+        region:
+          type: string
+          enum: [Western, Middle East, Asia, Africa, Latin America, State Media]
+        summary:
+          type: string
+      required: [title, url, outlet, region, summary]
+    Verification:
+      type: object
+      properties:
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/VerificationSource"
+        consensus:
+          type: string
+          description: Where sources agree
+        divergence:
+          type: string
+          description: Where sources diverge
+      required: [sources, consensus, divergence]
     IntelligenceBrief:
       type: object
       properties:
@@ -223,6 +240,10 @@ components:
             type: string
         credibility:
           $ref: "#/components/schemas/Credibility"
+        perspectives:
+          type: array
+          items:
+            $ref: "#/components/schemas/Perspective"
         relatedEvents:
           type: array
           items:
@@ -232,18 +253,20 @@ components:
           enum: [Low, Medium, High]
         escalationReason:
           type: string
+        historicalContext:
+          type: string
+        affectedPopulation:
+          type: string
+        keyQuestion:
+          type: string
         casualtyData:
           $ref: "#/components/schemas/CasualtyData"
-        perspectives:
-          type: array
-          items:
-            $ref: "#/components/schemas/RegionalPerspective"
         liveEvents:
           type: array
           items:
             $ref: "#/components/schemas/LiveEvent"
-        conflictBackground:
-          type: string
+        verification:
+          $ref: "#/components/schemas/Verification"
         sources:
           type: array
           items:
@@ -254,13 +277,16 @@ components:
         - summary
         - actors
         - credibility
+        - perspectives
         - relatedEvents
         - escalationRisk
         - escalationReason
+        - historicalContext
+        - affectedPopulation
+        - keyQuestion
         - casualtyData
-        - perspectives
         - liveEvents
-        - conflictBackground
+        - verification
         - sources
     ErrorResponse:
       type: object
@@ -269,5 +295,4 @@ components:
           type: string
         message:
           type: string
-      required:
-        - error
+      required: [error]

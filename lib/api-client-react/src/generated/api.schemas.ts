@@ -9,17 +9,19 @@ export interface HealthStatus {
   status: string;
 }
 
+/**
+ * Provide either article text or a URL (not both)
+ */
 export interface AnalyzeArticleBody {
-  /**
-   * The full text of the conflict news article to analyze
-   * @minLength 50
-   */
-  article: string;
+  /** Full text of the conflict news article */
+  article?: string;
+  /** URL of a publicly accessible conflict news article to scrape */
+  url?: string;
 }
 
 export interface ExploreConflictBody {
   /**
-   * The conflict, war, or geopolitical topic to explore (e.g. "Gaza conflict", "Sudan civil war", "Ukraine war")
+   * Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
    * @minLength 3
    */
   topic: string;
@@ -28,6 +30,8 @@ export interface ExploreConflictBody {
 export interface Location {
   city: string;
   country: string;
+  /** Broader geopolitical region (e.g. "Eastern Europe", "Middle East") */
+  region: string;
   lat: number;
   lng: number;
 }
@@ -51,6 +55,27 @@ export interface Credibility {
   reason: string;
 }
 
+export type PerspectiveAlignment =
+  (typeof PerspectiveAlignment)[keyof typeof PerspectiveAlignment];
+
+export const PerspectiveAlignment = {
+  Western: "Western",
+  Regional: "Regional",
+  State_Media: "State Media",
+  Civil_Society: "Civil Society",
+  Affected_Population: "Affected Population",
+} as const;
+
+export interface Perspective {
+  /** Name of the actor or group holding this perspective */
+  actor: string;
+  alignment: PerspectiveAlignment;
+  /** How this actor frames the event (1-2 sentences) */
+  framing: string;
+  /** Underlying interest shaping this framing (1 sentence) */
+  interests: string;
+}
+
 export type RelatedEventType =
   (typeof RelatedEventType)[keyof typeof RelatedEventType];
 
@@ -69,6 +94,8 @@ export interface RelatedEvent {
   type: RelatedEventType;
   lat: number;
   lng: number;
+  /** Google News search query to verify this event */
+  searchQuery: string;
 }
 
 export interface CasualtyData {
@@ -77,16 +104,39 @@ export interface CasualtyData {
   allSides: string;
 }
 
-export interface RegionalPerspective {
-  region: string;
-  viewpoint: string;
-}
-
 export interface LiveEvent {
   title: string;
   source: string;
   url: string;
   date: string;
+}
+
+export type VerificationSourceRegion =
+  (typeof VerificationSourceRegion)[keyof typeof VerificationSourceRegion];
+
+export const VerificationSourceRegion = {
+  Western: "Western",
+  Middle_East: "Middle East",
+  Asia: "Asia",
+  Africa: "Africa",
+  Latin_America: "Latin America",
+  State_Media: "State Media",
+} as const;
+
+export interface VerificationSource {
+  title: string;
+  url: string;
+  outlet: string;
+  region: VerificationSourceRegion;
+  summary: string;
+}
+
+export interface Verification {
+  sources: VerificationSource[];
+  /** Where sources agree */
+  consensus: string;
+  /** Where sources diverge */
+  divergence: string;
 }
 
 export type IntelligenceBriefEscalationRisk =
@@ -104,13 +154,16 @@ export interface IntelligenceBrief {
   summary: string;
   actors: string[];
   credibility: Credibility;
+  perspectives: Perspective[];
   relatedEvents: RelatedEvent[];
   escalationRisk: IntelligenceBriefEscalationRisk;
   escalationReason: string;
+  historicalContext: string;
+  affectedPopulation: string;
+  keyQuestion: string;
   casualtyData: CasualtyData;
-  perspectives: RegionalPerspective[];
   liveEvents: LiveEvent[];
-  conflictBackground: string;
+  verification: Verification;
   sources: string[];
 }
 

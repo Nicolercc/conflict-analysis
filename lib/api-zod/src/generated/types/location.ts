@@ -9,6 +9,8 @@
 export interface Location {
   city: string;
   country: string;
+  /** Broader geopolitical region (e.g. "Eastern Europe", "Middle East") */
+  region: string;
   lat: number;
   lng: number;
 }

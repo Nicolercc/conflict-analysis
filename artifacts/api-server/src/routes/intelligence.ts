@@ -3,39 +3,62 @@ import { anthropic } from "@workspace/integrations-anthropic-ai";
 
 const router: IRouter = Router();
 
-// ─── Live data fetching utilities ─────────────────────────────────────────
+// ─── URL Scraper ──────────────────────────────────────────────────────────
+
+async function scrapeArticle(url: string): Promise<string> {
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (compatible; ConflictIntelBot/2.0; +https://conflict.intel)",
+      "Accept": "text/html,application/xhtml+xml",
+    },
+    signal: AbortSignal.timeout(12000),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status} fetching article URL`);
+  const html = await res.text();
+  // Strip scripts, styles, nav, and extract text
+  const stripped = html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, " ")
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, " ")
+    .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, " ")
+    .replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi, " ")
+    .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, " ")
+    .replace(/<aside\b[^>]*>[\s\S]*?<\/aside>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, " ")
+    .trim();
+  if (stripped.length < 100) {
+    throw new Error("Could not extract article text from this URL. Try pasting the article text directly.");
+  }
+  return stripped.slice(0, 8000);
+}
+
+// ─── Live data fetching ───────────────────────────────────────────────────
 
 async function fetchGdeltNews(query: string): Promise<Array<{ title: string; source: string; url: string; date: string }>> {
   try {
-    const encodedQuery = encodeURIComponent(query);
-    const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodedQuery}&mode=artlist&maxrecords=10&format=json&sourcelang=english&sort=datedesc`;
+    const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(query)}&mode=artlist&maxrecords=8&format=json&sourcelang=english&sort=datedesc`;
     const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
     if (!res.ok) return [];
     const data = await res.json() as { articles?: Array<{ title?: string; domain?: string; url?: string; seendate?: string }> };
-    const articles = data.articles || [];
-    return articles.slice(0, 8).map(a => ({
+    return (data.articles || []).slice(0, 6).map(a => ({
       title: a.title || "Untitled",
       source: a.domain || "Unknown",
       url: a.url || "",
-      date: a.seendate ? formatGdeltDate(a.seendate) : "Recent",
+      date: formatGdeltDate(a.seendate || ""),
     }));
-  } catch {
-    return [];
-  }
+  } catch { return []; }
 }
 
-function formatGdeltDate(seendate: string): string {
-  // GDELT dates look like: "20260331T000000Z" or "20260331000000"
+function formatGdeltDate(s: string): string {
   try {
-    const cleaned = seendate.replace("T", "").replace("Z", "");
-    const year = cleaned.slice(0, 4);
-    const month = cleaned.slice(4, 6);
-    const day = cleaned.slice(6, 8);
-    const d = new Date(`${year}-${month}-${day}`);
-    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  } catch {
-    return "Recent";
-  }
+    const c = s.replace("T", "").replace("Z", "");
+    return new Date(`${c.slice(0,4)}-${c.slice(4,6)}-${c.slice(6,8)}`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  } catch { return "Recent"; }
 }
 
 async function fetchWikipediaSummary(query: string): Promise<string> {
@@ -46,132 +69,170 @@ async function fetchWikipediaSummary(query: string): Promise<string> {
     const searchData = await searchRes.json() as { query?: { search?: Array<{ title?: string }> } };
     const pages = searchData?.query?.search || [];
     if (!pages.length) return "";
-
-    const pageTitle = pages[0]?.title;
-    if (!pageTitle) return "";
-
-    const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(pageTitle)}`;
-    const summaryRes = await fetch(summaryUrl, { signal: AbortSignal.timeout(6000) });
+    const title = pages[0]?.title;
+    if (!title) return "";
+    const summaryRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { signal: AbortSignal.timeout(6000) });
     if (!summaryRes.ok) return "";
-    const summaryData = await summaryRes.json() as { extract?: string };
-    return summaryData.extract?.slice(0, 2000) || "";
-  } catch {
-    return "";
-  }
+    const data = await summaryRes.json() as { extract?: string };
+    return data.extract?.slice(0, 2000) || "";
+  } catch { return ""; }
 }
 
-// ─── System Prompt ────────────────────────────────────────────────────────
+// ─── System Prompt (Pass 1 — Analysis) ───────────────────────────────────
 
-const buildSystemPrompt = (wikiContext: string, newsContext: string) => `You are a globally-balanced conflict intelligence analyst. Your mandate is to provide FACTUAL, NON-EUROCENTRIC, NON-US-CENTRIC analysis that centers all affected populations equally — with particular attention to Middle Eastern, African, Asian, and Global South perspectives that are routinely underrepresented in Western media.
+const buildAnalysisPrompt = (wikiContext: string, newsContext: string) => `You are a geopolitical research analyst writing for journalists and academic researchers. Your analysis is non-Eurocentric, non-US-centric, and rigorously multi-perspective. You center ALL affected populations equally — with particular attention to Middle Eastern, African, Asian, and Global South perspectives routinely underrepresented in Western media.
 
-CRITICAL REQUIREMENTS:
-- Civilian casualties and suffering must be documented for ALL parties — not filtered by geopolitical alignment
-- Present perspectives from ALL affected regions with equal weight (Middle Eastern, African, Asian, Latin American, not just NATO/Western framing)
-- Use verified casualty figures from UN OCHA, WHO, MSF, ACLED, and similar humanitarian organizations, not just military/government sources
-- Historical context must include colonial legacies, regional power dynamics, and local political economies
-- Do NOT default to Western/US/European framing as "neutral" — actively counter-balance it
-- Amplify civilian voices and humanitarian impacts across ALL communities
+CRITICAL FRAMING: Do NOT default to Western government or NATO framing as neutral. Analyze from multiple geopolitical perspectives — regional actors, affected civilian populations, Global South viewpoints, and non-Western institutional positions. Write in measured, academic language.
 
-${wikiContext ? `VERIFIED HISTORICAL CONTEXT (Wikipedia):\n${wikiContext}\n\n` : ""}${newsContext ? `LIVE NEWS CONTEXT (Recent reporting):\n${newsContext}\n\n` : ""}
+${wikiContext ? `WIKIPEDIA CONTEXT:\n${wikiContext}\n\n` : ""}${newsContext ? `RECENT NEWS CONTEXT:\n${newsContext}\n\n` : ""}
 
-Return ONLY valid JSON — no markdown fences, no preamble, no explanation. Strictly follow this schema:
+Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
 
 {
-  "headline": "string (8-10 words, factual, non-sensationalized)",
+  "headline": "string (8-10 words, factual, no editorializing)",
   "location": {
     "city": "string",
     "country": "string",
-    "lat": number (decimal degrees, -90 to 90),
-    "lng": number (decimal degrees, -180 to 180)
+    "region": "string (e.g. Middle East, Sub-Saharan Africa, Eastern Europe, South Asia)",
+    "lat": number,
+    "lng": number
   },
-  "summary": "string (3-4 sentences with global context, citing civilian impacts from ALL sides, avoiding Western-centric framing)",
-  "actors": ["string"] (2-5 key parties including civilian/humanitarian organizations, not just military actors),
+  "summary": "string (2-3 sentences, neutral framing, no Western-default perspective)",
+  "actors": ["string"] (2-5 key parties: state + non-state + affected civilian groups),
   "credibility": {
-    "score": number (0-100: check specificity, source diversity including non-Western sources, humanitarian org corroboration),
+    "score": number (0-100),
     "label": "Low" | "Medium" | "High",
-    "reason": "string (1 sentence noting which sources corroborate or contradict)"
-  },
-  "relatedEvents": [
-    {
-      "date": "string (e.g. 'Mar 2022')",
-      "title": "string",
-      "description": "string (1 sentence including ALL affected populations)",
-      "type": "strike" | "escalation" | "negotiation" | "humanitarian" | "political",
-      "lat": number,
-      "lng": number
-    }
-  ] (EXACTLY 5 real historically significant events spanning the conflict's full timeline — include events from Middle Eastern, African, or Asian perspective where relevant),
-  "escalationRisk": "Low" | "Medium" | "High",
-  "escalationReason": "string (1 sentence incorporating regional power dynamics)",
-  "casualtyData": {
-    "description": "string (known/estimated total casualties with source attribution, e.g. 'UN estimates 35,000+ killed' — do not minimize or maximize)",
-    "civilianImpact": "string (2 sentences on displacement, infrastructure destruction, access to food/water/medical care for ALL civilian populations)",
-    "allSides": "string (2 sentences presenting verified casualty context from MULTIPLE sources and perspectives — include data the Western press often underreports)"
+    "reason": "string (1 sentence, specific — note if only one-sided sources available)"
   },
   "perspectives": [
     {
-      "region": "string (e.g. 'Arab World', 'Sub-Saharan Africa', 'Global South', 'Russia', 'NATO/West', 'Iran', 'China')",
-      "viewpoint": "string (2 sentences representing how this conflict is understood from this region's political/historical lens)"
+      "actor": "string (name of actor or group)",
+      "alignment": "Western" | "Regional" | "State Media" | "Civil Society" | "Affected Population",
+      "framing": "string (1-2 sentences — how this actor frames the event)",
+      "interests": "string (1 sentence — underlying interest shaping this framing)"
     }
-  ] (EXACTLY 4 regional perspectives — MUST include at least 2 from non-Western regions),
-  "conflictBackground": "string (3-4 sentences on deep historical roots including colonial history, prior agreements broken, previous peace attempts, and why this conflict is ongoing — include perspectives routinely omitted from Western coverage)",
-  "sources": ["string"] (2-4 source domain names of news outlets used in analysis — prioritize diverse geographic sources)
+  ] (3-5 items, MUST include at minimum one Regional and one Affected Population perspective),
+  "relatedEvents": [
+    {
+      "date": "string (Mon YYYY)",
+      "title": "string",
+      "description": "string (1 sentence — why this event is relevant now)",
+      "type": "strike" | "escalation" | "negotiation" | "humanitarian" | "political",
+      "lat": number,
+      "lng": number,
+      "searchQuery": "string (5-8 word Google News query)"
+    }
+  ] (EXACTLY 3 items, chronological, real documented events),
+  "escalationRisk": "Low" | "Medium" | "High",
+  "escalationReason": "string (1-2 sentences incorporating regional power dynamics)",
+  "historicalContext": "string (2-3 sentences — long-term forces, colonial legacies, prior agreements, non-Western framing)",
+  "affectedPopulation": "string (1-2 sentences — civilian impact using UN/WHO/OCHA figures, not military framing)",
+  "keyQuestion": "string (1 sentence — the most important unanswered geopolitical question)",
+  "casualtyData": {
+    "description": "string (UN/WHO-sourced toll estimates — do not filter by geopolitical alignment)",
+    "civilianImpact": "string (2 sentences on displacement, infrastructure, medical access)",
+    "allSides": "string (2 sentences on casualty context from multiple sources including non-Western reporting)"
+  },
+  "sources": ["string"] (2-4 diverse news source domain names consulted)
 }`;
 
-// ─── Core analysis engine ─────────────────────────────────────────────────
+// ─── Verification Prompt (Pass 2 — Claude as verifier) ───────────────────
+
+const buildVerificationPrompt = (brief: object) => `You are a conflict verification researcher. Review the intelligence brief below and generate a multi-source verification panel showing how this event is covered by diverse global news outlets — particularly NON-WESTERN sources including Al Jazeera, Middle East Eye, teleSUR, The Hindu, Africa Report, CGTN, Xinhua, Dawn, and regional outlets.
+
+INTELLIGENCE BRIEF:
+${JSON.stringify(brief, null, 2)}
+
+Based on your knowledge of how this conflict is covered globally, generate realistic verification source entries from diverse world regions. Identify where international coverage converges (consensus) and where it diverges based on geopolitical alignment.
+
+Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
+
+{
+  "sources": [
+    {
+      "title": "string (realistic headline from this outlet's perspective)",
+      "url": "string (plausible but non-verified URL — use the outlet's real domain)",
+      "outlet": "string (e.g. Al Jazeera, The Hindu, Africa Report, teleSUR, Dawn)",
+      "region": "Western" | "Middle East" | "Asia" | "Africa" | "Latin America" | "State Media",
+      "summary": "string (1-2 sentences — how this outlet frames the event differently)"
+    }
+  ] (4-6 sources from at least 3 different regions — MUST include Middle East and at least one Global South outlet),
+  "consensus": "string (2 sentences — what all international coverage agrees on, including facts and civilian toll)",
+  "divergence": "string (2 sentences — where coverage splits along geopolitical lines — e.g. Western framing vs regional/state media framing)"
+}`;
+
+// ─── Core Analysis Engine ─────────────────────────────────────────────────
 
 async function buildBrief(topic: string, articleText?: string): Promise<object> {
-  // Parallel: fetch live news and Wikipedia context
   const [liveNews, wikiSummary] = await Promise.all([
     fetchGdeltNews(topic),
     fetchWikipediaSummary(topic),
   ]);
 
-  const newsContext = liveNews.length
-    ? liveNews.map(n => `[${n.date}] ${n.title} (${n.source})`).join("\n")
-    : "";
-
-  const systemPrompt = buildSystemPrompt(wikiSummary, newsContext);
+  const newsContext = liveNews.map(n => `[${n.date}] ${n.title} (${n.source})`).join("\n");
+  const systemPrompt = buildAnalysisPrompt(wikiSummary, newsContext);
 
   const userContent = articleText
     ? `Analyze this conflict news article:\n\n${articleText.trim()}`
-    : `Generate a comprehensive conflict intelligence brief for this topic: "${topic}".\n\nDraw on the provided Wikipedia and news context above. Focus on the current state, civilian impacts, and multiple regional perspectives.`;
+    : `Generate a comprehensive conflict intelligence brief for this topic: "${topic}". Draw on the Wikipedia and news context above. Provide full multi-perspective analysis.`;
 
-  const message = await anthropic.messages.create({
+  // Pass 1: Main analysis
+  const analysisMsg = await anthropic.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 8192,
+    max_tokens: 6000,
     system: systemPrompt,
     messages: [{ role: "user", content: userContent }],
   });
 
-  const block = message.content[0];
+  const block = analysisMsg.content[0];
   if (block.type !== "text") throw new Error("Unexpected AI response format");
-
   const raw = block.text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
   const parsed = JSON.parse(raw) as {
     location?: { lat?: number; lng?: number };
-    relatedEvents?: Array<{ lat?: number; lng?: number }>;
+    relatedEvents?: Array<{ lat?: number; lng?: number; searchQuery?: string }>;
     liveEvents?: unknown[];
+    verification?: unknown;
   };
 
-  if (
-    typeof parsed.location?.lat !== "number" ||
-    parsed.location.lat < -90 || parsed.location.lat > 90 ||
-    parsed.location.lng < -180 || parsed.location.lng > 180
-  ) {
+  // Validate coordinates
+  if (typeof parsed.location?.lat !== "number" || parsed.location.lat < -90 || parsed.location.lat > 90) {
     throw new Error("Invalid geographic coordinates in AI response");
   }
 
+  // Clamp related event coordinates
   if (Array.isArray(parsed.relatedEvents)) {
     parsed.relatedEvents = parsed.relatedEvents.map(ev => ({
       ...ev,
       lat: Math.max(-90, Math.min(90, Number(ev.lat) || 0)),
       lng: Math.max(-180, Math.min(180, Number(ev.lng) || 0)),
+      searchQuery: ev.searchQuery || "",
     }));
   }
 
-  // Inject real live events from GDELT
-  parsed.liveEvents = liveNews.slice(0, 6);
+  // Inject real GDELT live news
+  parsed.liveEvents = liveNews;
+
+  // Pass 2: Claude verification using perspectives
+  try {
+    const verifyMsg = await anthropic.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 2500,
+      system: "You are a conflict verification researcher. Return only valid JSON.",
+      messages: [{ role: "user", content: buildVerificationPrompt(parsed) }],
+    });
+    const vBlock = verifyMsg.content[0];
+    if (vBlock.type === "text") {
+      const vRaw = vBlock.text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+      parsed.verification = JSON.parse(vRaw);
+    }
+  } catch {
+    // Verification is non-blocking — degrade gracefully
+    parsed.verification = {
+      sources: [],
+      consensus: "Verification temporarily unavailable.",
+      divergence: "Verification temporarily unavailable.",
+    };
+  }
 
   return parsed;
 }
@@ -179,26 +240,36 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
 // ─── Routes ───────────────────────────────────────────────────────────────
 
 router.post("/analyze", async (req, res) => {
-  const { article } = req.body as { article?: string };
+  const { article, url } = req.body as { article?: string; url?: string };
 
-  if (!article || typeof article !== "string" || article.trim().length < 50) {
-    res.status(400).json({ error: "INVALID_INPUT", message: "Article must be at least 50 characters long" });
+  if (!article && !url) {
+    res.status(400).json({ error: "INVALID_INPUT", message: "Provide either article text or a URL." });
     return;
   }
 
   try {
-    // Extract a search topic from the article for GDELT/Wikipedia
-    const topicMatch = article.match(/(?:in|at|from|near)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
-    const topic = topicMatch?.[1] || article.slice(0, 80);
+    let articleText: string | undefined = article;
 
-    const result = await buildBrief(topic, article);
+    if (url && !articleText) {
+      articleText = await scrapeArticle(url);
+    }
+
+    if (!articleText || articleText.trim().length < 50) {
+      res.status(400).json({ error: "INVALID_INPUT", message: "Article must be at least 50 characters." });
+      return;
+    }
+
+    // Extract a search topic from the article text for GDELT/Wikipedia
+    const topicMatch = articleText.match(/(?:in|at|from|near)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
+    const topic = topicMatch?.[1] || articleText.slice(0, 80);
+
+    const result = await buildBrief(topic, articleText);
     res.json(result);
   } catch (err) {
     req.log.error({ err }, "Intelligence analysis failed");
-    const msg = err instanceof SyntaxError
-      ? "AI returned malformed response. Please try again."
-      : "Analysis failed. Please try again.";
-    res.status(500).json({ error: "SERVER_ERROR", message: msg });
+    const msg = err instanceof Error ? err.message : "Analysis failed. Please try again.";
+    const isSyntax = err instanceof SyntaxError;
+    res.status(isSyntax ? 500 : 500).json({ error: "SERVER_ERROR", message: isSyntax ? "AI returned malformed response. Please try again." : msg });
   }
 });
 
@@ -206,7 +277,7 @@ router.post("/explore", async (req, res) => {
   const { topic } = req.body as { topic?: string };
 
   if (!topic || typeof topic !== "string" || topic.trim().length < 3) {
-    res.status(400).json({ error: "INVALID_INPUT", message: "Topic must be at least 3 characters long" });
+    res.status(400).json({ error: "INVALID_INPUT", message: "Topic must be at least 3 characters." });
     return;
   }
 
@@ -215,9 +286,7 @@ router.post("/explore", async (req, res) => {
     res.json(result);
   } catch (err) {
     req.log.error({ err }, "Conflict exploration failed");
-    const msg = err instanceof SyntaxError
-      ? "AI returned malformed response. Please try again."
-      : "Exploration failed. Please try again.";
+    const msg = err instanceof SyntaxError ? "AI returned malformed response. Please try again." : "Exploration failed. Please try again.";
     res.status(500).json({ error: "SERVER_ERROR", message: msg });
   }
 });

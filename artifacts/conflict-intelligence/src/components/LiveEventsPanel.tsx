@@ -6,42 +6,55 @@ export function LiveEventsPanel({ events, active }: { events: LiveEvent[]; activ
 
   return (
     <div
-      className="bg-[#030f05] border border-[#0a2010] p-5 space-y-4 transition-all duration-700"
-      style={{ opacity: active ? 1 : 0, transform: active ? "translateY(0)" : "translateY(20px)" }}
+      className="card"
+      style={{
+        opacity: active ? 1 : 0,
+        transform: active ? "translateY(0)" : "translateY(8px)",
+        transition: "opacity 0.5s ease, transform 0.5s ease",
+      }}
     >
-      <div className="flex items-center justify-between border-b border-[#0a2010] pb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#00dd55] animate-pulse" />
-          <div className="text-[#2d7040] text-[10px] font-mono tracking-widest">LIVE FEED — REAL WORLD REPORTS</div>
-        </div>
-        <div className="text-[9px] font-mono text-[#2d7040] border border-[#0a2010] px-1.5 py-0.5">GDELT</div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", paddingBottom: "12px", borderBottom: "1px solid var(--border-light)" }}>
+        <span className="section-label" style={{ margin: 0, padding: 0, border: "none" }}>Recent Coverage</span>
+        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "8px", color: "var(--text-faint)", letterSpacing: "0.1em" }}>
+          via GDELT
+        </span>
       </div>
 
-      <div className="space-y-2">
+      <div>
         {events.map((ev, i) => (
           <div
             key={i}
-            className="group flex items-start gap-3 py-2 border-b border-[#0a2010] last:border-0 transition-all duration-500"
             style={{
+              paddingTop: "12px",
+              paddingBottom: "12px",
+              borderBottom: i < events.length - 1 ? "1px solid var(--border-light)" : "none",
               opacity: active ? 1 : 0,
-              transitionDelay: `${i * 80}ms`,
+              transition: "opacity 0.4s ease",
+              transitionDelay: (i * 60) + "ms",
             }}
           >
-            <div className="flex-shrink-0 w-1 h-1 rounded-full bg-[#00dd55] mt-2 group-hover:bg-[#00ff66] transition-colors" />
-            <div className="flex-1 min-w-0">
-              <a
-                href={ev.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-xs text-[#c8eac8] hover:text-[#00dd55] line-clamp-2 leading-relaxed transition-colors flex items-start gap-1"
-              >
-                <span className="flex-1">{ev.title}</span>
-                <ExternalLink className="w-3 h-3 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </a>
-              <div className="flex gap-2 mt-1">
-                <span className="text-[9px] font-mono text-[#2d7040]">{ev.source}</span>
-                <span className="text-[9px] font-mono text-[#1a5c20]">{ev.date}</span>
-              </div>
+            <a
+              href={ev.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "'Source Serif 4', Georgia, serif",
+                fontSize: "14px",
+                color: "var(--text-primary)",
+                textDecoration: "underline",
+                textUnderlineOffset: "3px",
+                lineHeight: "1.5",
+                display: "flex",
+                gap: "6px",
+                alignItems: "flex-start",
+              }}
+            >
+              <span style={{ flex: 1 }}>{ev.title}</span>
+              <ExternalLink style={{ width: "12px", height: "12px", flexShrink: 0, marginTop: "4px", color: "var(--text-muted)" }} />
+            </a>
+            <div style={{ marginTop: "4px", display: "flex", gap: "10px" }}>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--accent-navy)" }}>{ev.source}</span>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--text-faint)" }}>{ev.date}</span>
             </div>
           </div>
         ))}

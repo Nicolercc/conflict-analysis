@@ -1,56 +1,74 @@
-import type { RegionalPerspective } from "@workspace/api-client-react";
+import type { Perspective } from "@workspace/api-client-react";
 
-const REGION_COLORS: Record<string, string> = {
-  "Arab World": "#f59e0b",
-  "Middle East": "#f59e0b",
-  "Sub-Saharan Africa": "#84cc16",
-  "Africa": "#84cc16",
-  "Global South": "#22d3ee",
-  "Latin America": "#a78bfa",
-  "China": "#f87171",
-  "Russia": "#f87171",
-  "Iran": "#fb923c",
-  "NATO/West": "#60a5fa",
-  "United States": "#60a5fa",
-  "Europe": "#60a5fa",
-  "default": "#6ee7b7",
+const ALIGNMENT_COLORS: Record<string, string> = {
+  "Western":             "var(--region-western)",
+  "Regional":            "var(--region-mideast)",
+  "State Media":         "var(--region-state)",
+  "Civil Society":       "var(--risk-low)",
+  "Affected Population": "var(--risk-medium)",
 };
 
-function getColor(region: string): string {
-  for (const [key, val] of Object.entries(REGION_COLORS)) {
-    if (region.toLowerCase().includes(key.toLowerCase())) return val;
-  }
-  return REGION_COLORS.default;
-}
+const ALIGNMENT_BG: Record<string, string> = {
+  "Western":             "#EBF0F8",
+  "Regional":            "#FBF5E6",
+  "State Media":         "#F5F3F1",
+  "Civil Society":       "#EBF5F0",
+  "Affected Population": "#FBF5E6",
+};
 
-export function PerspectivesPanel({ perspectives, active }: { perspectives: RegionalPerspective[]; active: boolean }) {
+export function PerspectivesPanel({ perspectives, active }: { perspectives: Perspective[]; active: boolean }) {
   return (
-    <div
-      className="bg-[#030f05] border border-[#0a2010] p-5 space-y-4 transition-all duration-700"
-      style={{ opacity: active ? 1 : 0, transform: active ? "translateY(0)" : "translateY(20px)" }}
-    >
-      <div className="flex items-center gap-2 border-b border-[#0a2010] pb-3">
-        <div className="w-2 h-2 rounded-full bg-[#f59e0b] animate-pulse" />
-        <div className="text-[#2d7040] text-[10px] font-mono tracking-widest">REGIONAL PERSPECTIVES</div>
-      </div>
+    <div>
+      <span className="section-label">Geopolitical Perspectives</span>
+      <p style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontStyle: "italic", fontSize: "13px", color: "var(--text-muted)", marginBottom: "20px", marginTop: "-10px" }}>
+        How different actors frame this event
+      </p>
 
-      <div className="space-y-4">
+      <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
         {perspectives.map((p, i) => {
-          const color = getColor(p.region);
+          const color = ALIGNMENT_COLORS[p.alignment] ?? "var(--accent-navy)";
+          const bg = ALIGNMENT_BG[p.alignment] ?? "var(--accent-navy-light)";
           return (
             <div
               key={i}
-              className="border-l-2 pl-3 space-y-1 transition-all duration-500"
               style={{
-                borderColor: color,
+                borderLeft: "3px solid " + color,
+                paddingLeft: "16px",
+                paddingTop: "16px",
+                paddingBottom: "16px",
+                borderBottom: i < perspectives.length - 1 ? "1px solid var(--border-light)" : "none",
                 opacity: active ? 1 : 0,
-                transitionDelay: `${i * 120}ms`,
+                transform: active ? "translateY(0)" : "translateY(8px)",
+                transition: "opacity 0.4s ease, transform 0.4s ease",
+                transitionDelay: (i * 120) + "ms",
               }}
             >
-              <div className="text-[9px] font-mono tracking-widest uppercase" style={{ color }}>
-                {p.region}
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px", flexWrap: "wrap" as const }}>
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "9px",
+                    fontWeight: 500,
+                    color,
+                    background: bg,
+                    padding: "2px 7px",
+                    borderRadius: "3px",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase" as const,
+                  }}
+                >
+                  {p.alignment}
+                </span>
+                <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "16px", fontWeight: 700, color: "var(--text-primary)" }}>
+                  {p.actor}
+                </span>
               </div>
-              <p className="font-mono text-xs text-[#a8c8a8] leading-relaxed">{p.viewpoint}</p>
+              <p style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontSize: "14px", color: "var(--text-secondary)", lineHeight: "1.6", marginBottom: "8px" }}>
+                {p.framing}
+              </p>
+              <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--text-muted)" }}>
+                <strong>Underlying interest:</strong> {p.interests}
+              </p>
             </div>
           );
         })}

@@ -8,7 +8,6 @@
 import * as zod from "zod";
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -16,17 +15,20 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * Uses AI + live web data to extract structured intelligence from a conflict news article
- * @summary Analyze a conflict article
+ * @summary Analyze a conflict article (URL or text)
  */
-export const analyzeArticleBodyArticleMin = 50;
-
-export const AnalyzeArticleBody = zod.object({
-  article: zod
-    .string()
-    .min(analyzeArticleBodyArticleMin)
-    .describe("The full text of the conflict news article to analyze"),
-});
+export const AnalyzeArticleBody = zod
+  .object({
+    article: zod
+      .string()
+      .optional()
+      .describe("Full text of the conflict news article"),
+    url: zod
+      .string()
+      .optional()
+      .describe("URL of a publicly accessible conflict news article to scrape"),
+  })
+  .describe("Provide either article text or a URL (not both)");
 
 export const analyzeArticleResponseCredibilityScoreMin = 0;
 export const analyzeArticleResponseCredibilityScoreMax = 100;
@@ -36,6 +38,11 @@ export const AnalyzeArticleResponse = zod.object({
   location: zod.object({
     city: zod.string(),
     country: zod.string(),
+    region: zod
+      .string()
+      .describe(
+        'Broader geopolitical region (e.g. \"Eastern Europe\", \"Middle East\")',
+      ),
     lat: zod.number(),
     lng: zod.number(),
   }),
@@ -49,6 +56,26 @@ export const AnalyzeArticleResponse = zod.object({
     label: zod.enum(["Low", "Medium", "High"]),
     reason: zod.string(),
   }),
+  perspectives: zod.array(
+    zod.object({
+      actor: zod
+        .string()
+        .describe("Name of the actor or group holding this perspective"),
+      alignment: zod.enum([
+        "Western",
+        "Regional",
+        "State Media",
+        "Civil Society",
+        "Affected Population",
+      ]),
+      framing: zod
+        .string()
+        .describe("How this actor frames the event (1-2 sentences)"),
+      interests: zod
+        .string()
+        .describe("Underlying interest shaping this framing (1 sentence)"),
+    }),
+  ),
   relatedEvents: zod.array(
     zod.object({
       date: zod.string(),
@@ -63,21 +90,21 @@ export const AnalyzeArticleResponse = zod.object({
       ]),
       lat: zod.number(),
       lng: zod.number(),
+      searchQuery: zod
+        .string()
+        .describe("Google News search query to verify this event"),
     }),
   ),
   escalationRisk: zod.enum(["Low", "Medium", "High"]),
   escalationReason: zod.string(),
+  historicalContext: zod.string(),
+  affectedPopulation: zod.string(),
+  keyQuestion: zod.string(),
   casualtyData: zod.object({
     description: zod.string(),
     civilianImpact: zod.string(),
     allSides: zod.string(),
   }),
-  perspectives: zod.array(
-    zod.object({
-      region: zod.string(),
-      viewpoint: zod.string(),
-    }),
-  ),
   liveEvents: zod.array(
     zod.object({
       title: zod.string(),
@@ -86,12 +113,30 @@ export const AnalyzeArticleResponse = zod.object({
       date: zod.string(),
     }),
   ),
-  conflictBackground: zod.string(),
+  verification: zod.object({
+    sources: zod.array(
+      zod.object({
+        title: zod.string(),
+        url: zod.string(),
+        outlet: zod.string(),
+        region: zod.enum([
+          "Western",
+          "Middle East",
+          "Asia",
+          "Africa",
+          "Latin America",
+          "State Media",
+        ]),
+        summary: zod.string(),
+      }),
+    ),
+    consensus: zod.string().describe("Where sources agree"),
+    divergence: zod.string().describe("Where sources diverge"),
+  }),
   sources: zod.array(zod.string()),
 });
 
 /**
- * Generate a comprehensive intelligence profile for any conflict, war, or geopolitical topic using live web data
  * @summary Explore a conflict by topic
  */
 export const exploreConflictBodyTopicMin = 3;
@@ -101,7 +146,7 @@ export const ExploreConflictBody = zod.object({
     .string()
     .min(exploreConflictBodyTopicMin)
     .describe(
-      'The conflict, war, or geopolitical topic to explore (e.g. \"Gaza conflict\", \"Sudan civil war\", \"Ukraine war\")',
+      'Conflict topic to explore (e.g. \"Gaza conflict\", \"Sudan civil war\")',
     ),
 });
 
@@ -113,6 +158,11 @@ export const ExploreConflictResponse = zod.object({
   location: zod.object({
     city: zod.string(),
     country: zod.string(),
+    region: zod
+      .string()
+      .describe(
+        'Broader geopolitical region (e.g. \"Eastern Europe\", \"Middle East\")',
+      ),
     lat: zod.number(),
     lng: zod.number(),
   }),
@@ -126,6 +176,26 @@ export const ExploreConflictResponse = zod.object({
     label: zod.enum(["Low", "Medium", "High"]),
     reason: zod.string(),
   }),
+  perspectives: zod.array(
+    zod.object({
+      actor: zod
+        .string()
+        .describe("Name of the actor or group holding this perspective"),
+      alignment: zod.enum([
+        "Western",
+        "Regional",
+        "State Media",
+        "Civil Society",
+        "Affected Population",
+      ]),
+      framing: zod
+        .string()
+        .describe("How this actor frames the event (1-2 sentences)"),
+      interests: zod
+        .string()
+        .describe("Underlying interest shaping this framing (1 sentence)"),
+    }),
+  ),
   relatedEvents: zod.array(
     zod.object({
       date: zod.string(),
@@ -140,21 +210,21 @@ export const ExploreConflictResponse = zod.object({
       ]),
       lat: zod.number(),
       lng: zod.number(),
+      searchQuery: zod
+        .string()
+        .describe("Google News search query to verify this event"),
     }),
   ),
   escalationRisk: zod.enum(["Low", "Medium", "High"]),
   escalationReason: zod.string(),
+  historicalContext: zod.string(),
+  affectedPopulation: zod.string(),
+  keyQuestion: zod.string(),
   casualtyData: zod.object({
     description: zod.string(),
     civilianImpact: zod.string(),
     allSides: zod.string(),
   }),
-  perspectives: zod.array(
-    zod.object({
-      region: zod.string(),
-      viewpoint: zod.string(),
-    }),
-  ),
   liveEvents: zod.array(
     zod.object({
       title: zod.string(),
@@ -163,6 +233,25 @@ export const ExploreConflictResponse = zod.object({
       date: zod.string(),
     }),
   ),
-  conflictBackground: zod.string(),
+  verification: zod.object({
+    sources: zod.array(
+      zod.object({
+        title: zod.string(),
+        url: zod.string(),
+        outlet: zod.string(),
+        region: zod.enum([
+          "Western",
+          "Middle East",
+          "Asia",
+          "Africa",
+          "Latin America",
+          "State Media",
+        ]),
+        summary: zod.string(),
+      }),
+    ),
+    consensus: zod.string().describe("Where sources agree"),
+    divergence: zod.string().describe("Where sources diverge"),
+  }),
   sources: zod.array(zod.string()),
 });

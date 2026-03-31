@@ -8,7 +8,7 @@
 
 export interface ExploreConflictBody {
   /**
-   * The conflict, war, or geopolitical topic to explore (e.g. "Gaza conflict", "Sudan civil war", "Ukraine war")
+   * Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
    * @minLength 3
    */
   topic: string;

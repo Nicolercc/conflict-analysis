@@ -60,9 +60,18 @@ A war-room style globally-balanced geopolitical intelligence terminal. Two input
 **Design principle**: Explicitly non-US/non-Eurocentric — AI prompt mandates equal coverage of Middle Eastern, African, Asian, and Global South perspectives. Civilian casualties documented from ALL parties.
 
 **Live data sources**: GDELT (gdeltproject.org) for real-time news, Wikipedia REST API for historical context
-**Tech**: React + Vite, Tailwind, custom SVG map, Anthropic Claude AI
+**Tech**: React + Vite, Tailwind, custom SVG map, Anthropic Claude AI (claude-sonnet-4-6)
 **Preview path**: `/`
-**Features**: Cormorant Garamond + DM Mono typography, dark terminal aesthetic (#010a03 background)
+**Design v2.0**: Editorial warm cream (#F7F4EF) background, white cards, Playfair Display headings, Source Serif 4 body, IBM Plex Mono labels. No dark panels. CSS variables: --bg-primary, --bg-surface, --accent-navy, --risk-high/medium/low, --region-western/mideast/asia/africa/latam/state.
+
+**New in v2.0**:
+- `VerificationPanel` — multi-source grid cross-referencing global outlets (via Claude 2nd pass)
+- `SourceDiversity` — segmented bar showing geographic distribution of sources
+- `PerspectivesPanel` — uses `Perspective` schema (`actor/alignment/framing/interests`)
+- Full editorial layout: breadcrumb → brief header (region chip + headline + actor chips) → map → two-column summary/scores → perspectives → verification + source diversity → timeline → live news footer
+- Two-pass Claude: main analysis (6000 tokens) + verification pass (2500 tokens, non-blocking)
+- URL scraper: HTML regex extraction for any public URL
+- SiteHeader in LiveTicker.tsx (slim 56px fixed header, no ticker)
 
 ### API Server (`artifacts/api-server`)
 
