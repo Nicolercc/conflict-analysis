@@ -19,6 +19,7 @@ import type {
 import type {
   AnalyzeArticleBody,
   ErrorResponse,
+  ExploreConflictBody,
   HealthStatus,
   IntelligenceBrief,
 } from "./api.schemas";
@@ -109,7 +110,7 @@ export function useHealthCheck<
 }
 
 /**
- * Uses AI to extract structured intelligence from a conflict news article
+ * Uses AI + live web data to extract structured intelligence from a conflict news article
  * @summary Analyze a conflict article
  */
 export const getAnalyzeArticleUrl = () => {
@@ -193,4 +194,91 @@ export const useAnalyzeArticle = <
   TContext
 > => {
   return useMutation(getAnalyzeArticleMutationOptions(options));
+};
+
+/**
+ * Generate a comprehensive intelligence profile for any conflict, war, or geopolitical topic using live web data
+ * @summary Explore a conflict by topic
+ */
+export const getExploreConflictUrl = () => {
+  return `/api/intelligence/explore`;
+};
+
+export const exploreConflict = async (
+  exploreConflictBody: ExploreConflictBody,
+  options?: RequestInit,
+): Promise<IntelligenceBrief> => {
+  return customFetch<IntelligenceBrief>(getExploreConflictUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(exploreConflictBody),
+  });
+};
+
+export const getExploreConflictMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof exploreConflict>>,
+    TError,
+    { data: BodyType<ExploreConflictBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof exploreConflict>>,
+  TError,
+  { data: BodyType<ExploreConflictBody> },
+  TContext
+> => {
+  const mutationKey = ["exploreConflict"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof exploreConflict>>,
+    { data: BodyType<ExploreConflictBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return exploreConflict(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ExploreConflictMutationResult = NonNullable<
+  Awaited<ReturnType<typeof exploreConflict>>
+>;
+export type ExploreConflictMutationBody = BodyType<ExploreConflictBody>;
+export type ExploreConflictMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Explore a conflict by topic
+ */
+export const useExploreConflict = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof exploreConflict>>,
+    TError,
+    { data: BodyType<ExploreConflictBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof exploreConflict>>,
+  TError,
+  { data: BodyType<ExploreConflictBody> },
+  TContext
+> => {
+  return useMutation(getExploreConflictMutationOptions(options));
 };

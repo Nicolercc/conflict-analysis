@@ -5,9 +5,12 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CasualtyData } from "./casualtyData";
 import type { Credibility } from "./credibility";
 import type { IntelligenceBriefEscalationRisk } from "./intelligenceBriefEscalationRisk";
+import type { LiveEvent } from "./liveEvent";
 import type { Location } from "./location";
+import type { RegionalPerspective } from "./regionalPerspective";
 import type { RelatedEvent } from "./relatedEvent";
 
 export interface IntelligenceBrief {
@@ -19,4 +22,9 @@ export interface IntelligenceBrief {
   relatedEvents: RelatedEvent[];
   escalationRisk: IntelligenceBriefEscalationRisk;
   escalationReason: string;
+  casualtyData: CasualtyData;
+  perspectives: RegionalPerspective[];
+  liveEvents: LiveEvent[];
+  conflictBackground: string;
+  sources: string[];
 }

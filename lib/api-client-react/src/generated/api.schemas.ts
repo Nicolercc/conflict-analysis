@@ -17,6 +17,14 @@ export interface AnalyzeArticleBody {
   article: string;
 }
 
+export interface ExploreConflictBody {
+  /**
+   * The conflict, war, or geopolitical topic to explore (e.g. "Gaza conflict", "Sudan civil war", "Ukraine war")
+   * @minLength 3
+   */
+  topic: string;
+}
+
 export interface Location {
   city: string;
   country: string;
@@ -63,6 +71,24 @@ export interface RelatedEvent {
   lng: number;
 }
 
+export interface CasualtyData {
+  description: string;
+  civilianImpact: string;
+  allSides: string;
+}
+
+export interface RegionalPerspective {
+  region: string;
+  viewpoint: string;
+}
+
+export interface LiveEvent {
+  title: string;
+  source: string;
+  url: string;
+  date: string;
+}
+
 export type IntelligenceBriefEscalationRisk =
   (typeof IntelligenceBriefEscalationRisk)[keyof typeof IntelligenceBriefEscalationRisk];
 
@@ -81,6 +107,11 @@ export interface IntelligenceBrief {
   relatedEvents: RelatedEvent[];
   escalationRisk: IntelligenceBriefEscalationRisk;
   escalationReason: string;
+  casualtyData: CasualtyData;
+  perspectives: RegionalPerspective[];
+  liveEvents: LiveEvent[];
+  conflictBackground: string;
+  sources: string[];
 }
 
 export interface ErrorResponse {

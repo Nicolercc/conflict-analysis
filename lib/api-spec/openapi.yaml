@@ -30,7 +30,7 @@ paths:
       operationId: analyzeArticle
       tags: [intelligence]
       summary: Analyze a conflict article
-      description: Uses AI to extract structured intelligence from a conflict news article
+      description: Uses AI + live web data to extract structured intelligence from a conflict news article
       requestBody:
         required: true
         content:
@@ -40,6 +40,37 @@ paths:
       responses:
         "200":
           description: Structured intelligence brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntelligenceBrief"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /intelligence/explore:
+    post:
+      operationId: exploreConflict
+      tags: [intelligence]
+      summary: Explore a conflict by topic
+      description: Generate a comprehensive intelligence profile for any conflict, war, or geopolitical topic using live web data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExploreConflictBody"
+      responses:
+        "200":
+          description: Conflict exploration brief
           content:
             application/json:
               schema:
@@ -74,6 +105,15 @@ components:
           minLength: 50
       required:
         - article
+    ExploreConflictBody:
+      type: object
+      properties:
+        topic:
+          type: string
+          description: The conflict, war, or geopolitical topic to explore (e.g. "Gaza conflict", "Sudan civil war", "Ukraine war")
+          minLength: 3
+      required:
+        - topic
     Location:
       type: object
       properties:
@@ -129,6 +169,45 @@ components:
         - type
         - lat
         - lng
+    CasualtyData:
+      type: object
+      properties:
+        description:
+          type: string
+        civilianImpact:
+          type: string
+        allSides:
+          type: string
+      required:
+        - description
+        - civilianImpact
+        - allSides
+    RegionalPerspective:
+      type: object
+      properties:
+        region:
+          type: string
+        viewpoint:
+          type: string
+      required:
+        - region
+        - viewpoint
+    LiveEvent:
+      type: object
+      properties:
+        title:
+          type: string
+        source:
+          type: string
+        url:
+          type: string
+        date:
+          type: string
+      required:
+        - title
+        - source
+        - url
+        - date
     IntelligenceBrief:
       type: object
       properties:
@@ -153,6 +232,22 @@ components:
           enum: [Low, Medium, High]
         escalationReason:
           type: string
+        casualtyData:
+          $ref: "#/components/schemas/CasualtyData"
+        perspectives:
+          type: array
+          items:
+            $ref: "#/components/schemas/RegionalPerspective"
+        liveEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/LiveEvent"
+        conflictBackground:
+          type: string
+        sources:
+          type: array
+          items:
+            type: string
       required:
         - headline
         - location
@@ -162,6 +257,11 @@ components:
         - relatedEvents
         - escalationRisk
         - escalationReason
+        - casualtyData
+        - perspectives
+        - liveEvents
+        - conflictBackground
+        - sources
     ErrorResponse:
       type: object
       properties:

@@ -16,7 +16,7 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * Uses AI to extract structured intelligence from a conflict news article
+ * Uses AI + live web data to extract structured intelligence from a conflict news article
  * @summary Analyze a conflict article
  */
 export const analyzeArticleBodyArticleMin = 50;
@@ -67,4 +67,102 @@ export const AnalyzeArticleResponse = zod.object({
   ),
   escalationRisk: zod.enum(["Low", "Medium", "High"]),
   escalationReason: zod.string(),
+  casualtyData: zod.object({
+    description: zod.string(),
+    civilianImpact: zod.string(),
+    allSides: zod.string(),
+  }),
+  perspectives: zod.array(
+    zod.object({
+      region: zod.string(),
+      viewpoint: zod.string(),
+    }),
+  ),
+  liveEvents: zod.array(
+    zod.object({
+      title: zod.string(),
+      source: zod.string(),
+      url: zod.string(),
+      date: zod.string(),
+    }),
+  ),
+  conflictBackground: zod.string(),
+  sources: zod.array(zod.string()),
+});
+
+/**
+ * Generate a comprehensive intelligence profile for any conflict, war, or geopolitical topic using live web data
+ * @summary Explore a conflict by topic
+ */
+export const exploreConflictBodyTopicMin = 3;
+
+export const ExploreConflictBody = zod.object({
+  topic: zod
+    .string()
+    .min(exploreConflictBodyTopicMin)
+    .describe(
+      'The conflict, war, or geopolitical topic to explore (e.g. \"Gaza conflict\", \"Sudan civil war\", \"Ukraine war\")',
+    ),
+});
+
+export const exploreConflictResponseCredibilityScoreMin = 0;
+export const exploreConflictResponseCredibilityScoreMax = 100;
+
+export const ExploreConflictResponse = zod.object({
+  headline: zod.string(),
+  location: zod.object({
+    city: zod.string(),
+    country: zod.string(),
+    lat: zod.number(),
+    lng: zod.number(),
+  }),
+  summary: zod.string(),
+  actors: zod.array(zod.string()),
+  credibility: zod.object({
+    score: zod
+      .number()
+      .min(exploreConflictResponseCredibilityScoreMin)
+      .max(exploreConflictResponseCredibilityScoreMax),
+    label: zod.enum(["Low", "Medium", "High"]),
+    reason: zod.string(),
+  }),
+  relatedEvents: zod.array(
+    zod.object({
+      date: zod.string(),
+      title: zod.string(),
+      description: zod.string(),
+      type: zod.enum([
+        "strike",
+        "escalation",
+        "negotiation",
+        "humanitarian",
+        "political",
+      ]),
+      lat: zod.number(),
+      lng: zod.number(),
+    }),
+  ),
+  escalationRisk: zod.enum(["Low", "Medium", "High"]),
+  escalationReason: zod.string(),
+  casualtyData: zod.object({
+    description: zod.string(),
+    civilianImpact: zod.string(),
+    allSides: zod.string(),
+  }),
+  perspectives: zod.array(
+    zod.object({
+      region: zod.string(),
+      viewpoint: zod.string(),
+    }),
+  ),
+  liveEvents: zod.array(
+    zod.object({
+      title: zod.string(),
+      source: zod.string(),
+      url: zod.string(),
+      date: zod.string(),
+    }),
+  ),
+  conflictBackground: zod.string(),
+  sources: zod.array(zod.string()),
 });

@@ -42,13 +42,24 @@ artifacts-monorepo/
 
 ### Conflict Intelligence System (`artifacts/conflict-intelligence`)
 
-A war-room style geopolitical intelligence terminal. Users paste conflict news articles and receive:
-- Animated SVG world map with strike markers and historical event correlations
-- AI-generated intelligence brief (typewriter effect)
-- Credibility scoring (animated counter, 0-100)
-- Escalation risk meter (Low/Medium/High with animated fill bars)
-- Historical event timeline with staggered card animations
+A war-room style globally-balanced geopolitical intelligence terminal. Two input modes:
+1. **Paste Article** — paste any conflict news article for instant AI analysis
+2. **Explore Conflict** — type any conflict/war/crisis topic for a comprehensive deep-dive
 
+**Output panels**:
+- Animated SVG world map with main incident marker + 5 historical event markers
+- AI-generated intelligence brief (typewriter effect)
+- Credibility scoring (animated counter, 0-100, with diverse source check)
+- Escalation risk meter (Low/Medium/High with animated fill bars)
+- **Casualty data panel** — UN/WHO-sourced casualty estimates from all sides
+- **Regional perspectives** — 4 panels showing how different world regions view the conflict (2+ non-Western required)
+- **Live events feed** — real-time news pulled from GDELT (free, no API key needed)
+- **Historical context** — Wikipedia-sourced background with colonial/political roots
+- **Conflict timeline** — 5 real historical events spanning full conflict arc
+
+**Design principle**: Explicitly non-US/non-Eurocentric — AI prompt mandates equal coverage of Middle Eastern, African, Asian, and Global South perspectives. Civilian casualties documented from ALL parties.
+
+**Live data sources**: GDELT (gdeltproject.org) for real-time news, Wikipedia REST API for historical context
 **Tech**: React + Vite, Tailwind, custom SVG map, Anthropic Claude AI
 **Preview path**: `/`
 **Features**: Cormorant Garamond + DM Mono typography, dark terminal aesthetic (#010a03 background)
@@ -59,9 +70,15 @@ Express 5 API server. Routes at `/api`.
 
 **Endpoints**:
 - `GET /api/healthz` — health check
-- `POST /api/intelligence/analyze` — AI article analysis (returns IntelligenceBrief JSON)
+- `POST /api/intelligence/analyze` — paste article analysis (fetches GDELT + Wikipedia context, then Claude analysis)
+- `POST /api/intelligence/explore` — topic-based conflict exploration (same pipeline, no article required)
 
-The analyze endpoint calls Anthropic Claude (`claude-sonnet-4-6`) with a conflict-intelligence system prompt and returns structured JSON with location, credibility score, escalation risk, and 3 historically-correlated related events.
+Before calling Claude, both endpoints:
+1. Search GDELT for recent real news matching the conflict location/topic
+2. Fetch Wikipedia summary for historical background
+3. Pass all real context into Claude's system prompt for grounded analysis
+
+Returns enriched `IntelligenceBrief` with: location, credibility, escalationRisk, casualtyData, perspectives (4 regions), liveEvents (real GDELT), conflictBackground (Wikipedia), relatedEvents (5 historical), sources.
 
 ## TypeScript & Composite Projects
 

@@ -7,12 +7,16 @@
  */
 
 export * from "./analyzeArticleBody";
+export * from "./casualtyData";
 export * from "./credibility";
 export * from "./credibilityLabel";
 export * from "./errorResponse";
+export * from "./exploreConflictBody";
 export * from "./healthStatus";
 export * from "./intelligenceBrief";
 export * from "./intelligenceBriefEscalationRisk";
+export * from "./liveEvent";
 export * from "./location";
+export * from "./regionalPerspective";
 export * from "./relatedEvent";
 export * from "./relatedEventType";
