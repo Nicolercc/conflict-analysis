@@ -1,7 +1,136 @@
 import { Router, type IRouter } from "express";
+import crypto from "crypto";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 
 const router: IRouter = Router();
+
+function getAnthropicCache(req: Parameters<IRouter["use"]>[0] & { app: { locals: Record<string, unknown> } }) {
+  const cache = req.app.locals["anthropicCache"];
+  return cache instanceof Map ? (cache as Map<string, unknown>) : undefined;
+}
+
+// ─── JSON Extraction Helper ───────────────────────────────────────────────
+// Robustly extract valid JSON from Claude response that may contain:
+// - Markdown code fences (```json ... ```)
+// - Extra text before/after JSON
+// - Incomplete JSON
+function findFirstJsonBracketIndex(s: string): number {
+  const i = s.indexOf("{");
+  const j = s.indexOf("[");
+  if (i === -1) return j;
+  if (j === -1) return i;
+  return Math.min(i, j);
+}
+
+function extractJSON(text: string): object {
+  // Remove markdown code fences (opening); strip trailing fence if present
+  let cleaned = text
+    .replace(/```(?:json)?\s*/gi, "")
+    .replace(/```\s*$/g, "")
+    .trim();
+
+  let startIdx = findFirstJsonBracketIndex(cleaned);
+
+  if (startIdx === -1) {
+    throw new Error("No JSON object or array found in response");
+  }
+  
+  // Use the first character as the opening bracket
+  const openChar = cleaned[startIdx];
+  const closeChar = openChar === "{" ? "}" : "]";
+  
+  let depth = 0;
+  let endIdx = -1;
+  let inString = false;
+  let escapeNext = false;
+  
+  for (let i = startIdx; i < cleaned.length; i++) {
+    const char = cleaned[i];
+    
+    if (escapeNext) {
+      escapeNext = false;
+      continue;
+    }
+    
+    if (char === "\\") {
+      escapeNext = true;
+      continue;
+    }
+    
+    if (char === '"' && !escapeNext) {
+      inString = !inString;
+      continue;
+    }
+    
+    if (inString) continue;
+    
+    if (char === openChar) depth++;
+    if (char === closeChar) {
+      depth--;
+      if (depth === 0) {
+        endIdx = i + 1;
+        break;
+      }
+    }
+  }
+  
+  if (endIdx === -1) {
+    throw new Error("Malformed JSON: could not find matching closing bracket");
+  }
+  
+  const jsonStr = cleaned.substring(startIdx, endIdx);
+  return JSON.parse(jsonStr);
+}
+
+/** Coerce AI string/number coords; fall back to 0,0 (Null Island) when unusable. */
+function normalizeLatLng(lat: unknown, lng: unknown): { lat: number; lng: number } {
+  const parse = (v: unknown): number => {
+    if (typeof v === "number" && Number.isFinite(v)) return v;
+    const s = String(v ?? "").trim().replace(/,/g, "");
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : NaN;
+  };
+  let la = parse(lat);
+  let ln = parse(lng);
+  if (!Number.isFinite(la) || la < -90 || la > 90) la = 0;
+  if (!Number.isFinite(ln) || ln < -180 || ln > 180) ln = 0;
+  return { lat: la, lng: ln };
+}
+
+/** When the model adds preamble/postamble, try fenced blocks or trailing JSON. */
+function tryExtractJsonFallback(text: string): object | null {
+  const fencedBlocks: string[] = [];
+  const re = /```(?:json)?\s*([\s\S]*?)```/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const inner = m[1]?.trim();
+    if (inner) fencedBlocks.push(inner);
+  }
+  for (const block of fencedBlocks.reverse()) {
+    try {
+      return extractJSON(block);
+    } catch {
+      /* try next */
+    }
+  }
+  const lineStart = text.lastIndexOf("\n{");
+  if (lineStart !== -1) {
+    try {
+      return extractJSON(text.slice(lineStart + 1));
+    } catch {
+      /* */
+    }
+  }
+  const lb = text.lastIndexOf("{");
+  if (lb !== -1) {
+    try {
+      return extractJSON(text.slice(lb));
+    } catch {
+      /* */
+    }
+  }
+  return null;
+}
 
 // ─── URL Scraper ──────────────────────────────────────────────────────────
 
@@ -178,7 +307,7 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
 
   // Pass 1: Main analysis
   const analysisMsg = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
+    model: "claude-haiku-4-5-20251001",
     max_tokens: 6000,
     system: systemPrompt,
     messages: [{ role: "user", content: userContent }],
@@ -186,27 +315,41 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
 
   const block = analysisMsg.content[0];
   if (block.type !== "text") throw new Error("Unexpected AI response format");
-  const raw = block.text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-  const parsed = JSON.parse(raw) as {
-    location?: { lat?: number; lng?: number };
-    relatedEvents?: Array<{ lat?: number; lng?: number; searchQuery?: string }>;
+  
+  let parsed: {
+    location?: { lat?: unknown; lng?: unknown; city?: string; country?: string; region?: string };
+    relatedEvents?: Array<{ lat?: unknown; lng?: unknown; searchQuery?: string }>;
     liveEvents?: unknown[];
     verification?: unknown;
   };
-
-  // Validate coordinates
-  if (typeof parsed.location?.lat !== "number" || parsed.location.lat < -90 || parsed.location.lat > 90) {
-    throw new Error("Invalid geographic coordinates in AI response");
+  try {
+    parsed = extractJSON(block.text) as typeof parsed;
+  } catch (parseErr) {
+    // Retry: sometimes the model wraps JSON in extra prose — take last ```json block or last { ... }
+    const fallback = tryExtractJsonFallback(block.text);
+    if (!fallback) throw parseErr;
+    parsed = fallback as typeof parsed;
   }
+
+  // Normalize primary location (strings like "31.5" or missing lng must not 500)
+  if (!parsed.location || typeof parsed.location !== "object") {
+    parsed.location = { city: "", country: "", region: "", lat: 0, lng: 0 };
+  }
+  const loc = normalizeLatLng(parsed.location.lat, parsed.location.lng);
+  parsed.location.lat = loc.lat;
+  parsed.location.lng = loc.lng;
 
   // Clamp related event coordinates
   if (Array.isArray(parsed.relatedEvents)) {
-    parsed.relatedEvents = parsed.relatedEvents.map(ev => ({
-      ...ev,
-      lat: Math.max(-90, Math.min(90, Number(ev.lat) || 0)),
-      lng: Math.max(-180, Math.min(180, Number(ev.lng) || 0)),
-      searchQuery: ev.searchQuery || "",
-    }));
+    parsed.relatedEvents = parsed.relatedEvents.map(ev => {
+      const coords = normalizeLatLng(ev.lat, ev.lng);
+      return {
+        ...ev,
+        lat: coords.lat,
+        lng: coords.lng,
+        searchQuery: typeof ev.searchQuery === "string" ? ev.searchQuery : "",
+      };
+    });
   }
 
   // Inject real GDELT live news
@@ -215,15 +358,23 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
   // Pass 2: Claude verification using perspectives
   try {
     const verifyMsg = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 2500,
       system: "You are a conflict verification researcher. Return only valid JSON.",
       messages: [{ role: "user", content: buildVerificationPrompt(parsed) }],
     });
     const vBlock = verifyMsg.content[0];
     if (vBlock.type === "text") {
-      const vRaw = vBlock.text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-      parsed.verification = JSON.parse(vRaw);
+      try {
+        parsed.verification = extractJSON(vBlock.text);
+      } catch {
+        parsed.verification =
+          tryExtractJsonFallback(vBlock.text) ?? {
+            sources: [],
+            consensus: "Verification temporarily unavailable.",
+            divergence: "Verification temporarily unavailable.",
+          };
+      }
     }
   } catch {
     // Verification is non-blocking — degrade gracefully
@@ -248,6 +399,7 @@ router.post("/analyze", async (req, res) => {
   }
 
   try {
+    const cache = getAnthropicCache(req as never);
     let articleText: string | undefined = article;
 
     if (url && !articleText) {
@@ -259,17 +411,25 @@ router.post("/analyze", async (req, res) => {
       return;
     }
 
+    const cacheKey = `paste:${crypto.createHash("sha256").update(articleText.trim()).digest("hex")}`;
+    const cached = cache?.get(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
+
     // Extract a search topic from the article text for GDELT/Wikipedia
     const topicMatch = articleText.match(/(?:in|at|from|near)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
     const topic = topicMatch?.[1] || articleText.slice(0, 80);
 
     const result = await buildBrief(topic, articleText);
+    cache?.set(cacheKey, result);
     res.json(result);
   } catch (err) {
     req.log.error({ err }, "Intelligence analysis failed");
     const msg = err instanceof Error ? err.message : "Analysis failed. Please try again.";
     const isSyntax = err instanceof SyntaxError;
-    res.status(isSyntax ? 500 : 500).json({ error: "SERVER_ERROR", message: isSyntax ? "AI returned malformed response. Please try again." : msg });
+    res.status(isSyntax ? 400 : 500).json({ error: "SERVER_ERROR", message: isSyntax ? "AI returned malformed response. Please try again." : msg });
   }
 });
 
@@ -282,7 +442,16 @@ router.post("/explore", async (req, res) => {
   }
 
   try {
+    const cache = getAnthropicCache(req as never);
+    const cacheKey = `url:${req.originalUrl}?topic=${encodeURIComponent(topic.trim())}`;
+    const cached = cache?.get(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
+
     const result = await buildBrief(topic.trim());
+    cache?.set(cacheKey, result);
     res.json(result);
   } catch (err) {
     req.log.error({ err }, "Conflict exploration failed");
