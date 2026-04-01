@@ -23,7 +23,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 artifacts-monorepo/
 ├── artifacts/              # Deployable applications
 │   ├── api-server/         # Express API server
-│   └── conflict-intelligence/  # Conflict Intelligence System (React + Vite)
+│   └── vantage/  # Vantage (React + Vite)
 ├── lib/                    # Shared libraries
 │   ├── api-spec/           # OpenAPI spec + Orval codegen config
 │   ├── api-client-react/   # Generated React Query hooks
@@ -40,7 +40,7 @@ artifacts-monorepo/
 
 ## Applications
 
-### Conflict Intelligence System (`artifacts/conflict-intelligence`)
+### Vantage (`artifacts/vantage`)
 
 A war-room style globally-balanced geopolitical intelligence terminal. Two input modes:
 1. **Paste Article** — paste any conflict news article for instant AI analysis

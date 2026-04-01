@@ -15,6 +15,8 @@ export const IRAN_US_ANALYSIS: ConflictAnalysis = {
   escalationTag: "Succession vacuum \u00b7 proxy actors",
   displacedCount: "500k+",
   displacedCountries: 4,
+  displacedNarrative:
+    "Large-scale displacement along front-line corridors; cross-check UNHCR and OCHA situational reports for current estimates.",
   parties: [
     { name: "United States", color: "#3B78D4" },
     { name: "Israel (IDF)", color: "#4A9B8B" },

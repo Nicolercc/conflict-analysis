@@ -10,7 +10,7 @@ tags:
   - name: health
     description: Health operations
   - name: intelligence
-    description: Conflict intelligence analysis
+    description: Vantage — conflict, in context.
 paths:
   /healthz:
     get:

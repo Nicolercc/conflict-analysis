@@ -5,7 +5,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     User Browser (Port 5173)                 │
-│  Conflict Intelligence System - React 19 + Vite              │
+│  Vantage — React 19 + Vite                                    │
 │                                                               │
 │  ┌─────────────────────────────────────────────────────────┐ │
 │  │ Home Page                                               │ │

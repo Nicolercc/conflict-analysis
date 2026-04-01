@@ -21,7 +21,22 @@ const MARKER_COLORS: Record<MapEvent['type'], string> = {
   talks: '#4A9B8B',
 };
 
-const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS: Record<MapEvent['>`;const MARKER_LABELS: Record<MapEvent['type'const MARKER_LABELS:" xmlns="http://www.w3.org/2000/svg">
+const MARKER_LABELS: Record<MapEvent['type'], string> = {
+  strike: 'Strike',
+  city: 'City',
+  talks: 'Talks',
+};
+
+function makeMarkerHtml(type: MapEvent['type'], color: string) {
+  const duration = '2.5s';
+  const shapeByType: Record<MapEvent['type'], string> = {
+    strike: `<path d="M20 9l-2.5 7h5l-2 14 7-12h-4.5l-1.5-9z" fill="${color}" />`,
+    city: `<rect x="14" y="15" width="12" height="10" rx="1" fill="${color}" />`,
+    talks: `<circle cx="20" cy="20" r="5" fill="${color}" />`,
+  };
+  const shape = shapeByType[type];
+  return `
+    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
       <style>
         .pulse-1 { animation: pulse ${duration} ease-out infinite; transform-origin: center; }
         .pulse-2 { animation: pulse ${duration} ease-out infinite 0.35s; transform-origin: center; }
@@ -54,7 +69,7 @@ export function ConflictMap({ events, sendPrompt }: ConflictMapProps) {
 
     const tileUrl = window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'\;
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
     const map = L.map(containerRef.current, {
       center: [33.9, 43.6],

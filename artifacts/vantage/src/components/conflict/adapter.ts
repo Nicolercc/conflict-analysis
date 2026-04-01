@@ -26,8 +26,15 @@ function toTimelineType(type: string): TimelineEventType {
   return 'escalation';
 }
 
+function pickDisplacedNarrative(brief: IntelligenceBrief): string {
+  const pop = brief.affectedPopulation?.trim() ?? '';
+  if (pop) return pop;
+  return brief.casualtyData?.civilianImpact?.trim() ?? '';
+}
+
 export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
   const sourceCount = brief.verification?.sources?.length ?? 0;
+  const displacedNarrative = pickDisplacedNarrative(brief);
 
   return {
     title: brief.headline,
@@ -42,6 +49,7 @@ export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
     escalationTag: brief.escalationReason,
     displacedCount: '—',
     displacedCountries: 0,
+    displacedNarrative,
     parties: brief.actors.map((name, i) => ({
       name,
       color: PARTY_COLORS[i % PARTY_COLORS.length],

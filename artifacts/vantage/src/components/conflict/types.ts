@@ -15,6 +15,8 @@ export interface ConflictAnalysis {
   escalationTag: string;
   displacedCount: string;
   displacedCountries: number;
+  /** When API has no headcount, narrative from affectedPopulation / casualtyData fills the card. */
+  displacedNarrative: string;
   parties: Party[];
   timeline: TimelineEvent[];
   perspectives: PerspectiveItem[];

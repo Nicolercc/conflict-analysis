@@ -1,6 +1,6 @@
 # 🎯 SENIOR ENGINEER AUDIT - COMPLETE SUMMARY
 
-**Project**: Knowledge Nexus - Conflict Intelligence System
+**Project**: Knowledge Nexus — Vantage
 **Date**: March 31, 2026
 **Audit Scope**: Full codebase security, architecture, and local runability
 **Status**: ✅ **ALL ISSUES RESOLVED** - Project Ready for Local Development
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Your **Conflict Intelligence System** is now fully operational for local development. The application conducts AI-powered multi-perspective geopolitical analysis using a 2-pass Claude system.
+**Vantage** is now fully operational for local development. The application conducts AI-powered multi-perspective geopolitical analysis using a 2-pass Claude system.
 
 **What was broken**: API key config, missing API client initialization, wrong dev entry point
 **What I fixed**: 5 critical issues + 3 medium-priority bugs
@@ -32,7 +32,7 @@ pnpm run dev
 ```
 
 ### Browser: http://localhost:5173
-**You now have**: Conflict Intelligence UI with 7 visualization panels
+**You now have**: Vantage UI with 7 visualization panels
 
 ---
 
@@ -44,7 +44,7 @@ pnpm run dev
 |---|-------|------|-----|--------|
 | 1 | API key blank | `.env` | Populated from ANTHROPIC_API_KEY | Backend can now init |
 | 2 | Frontend can't call API | `main.tsx` | Added `setBaseUrl()` | Frontend → Backend works |
-| 3 | Wrong app in dev script | `package.json` | Changed to conflict-intelligence | Users see real app, not preview |
+| 3 | Wrong app in dev script | `package.json` | Changed to vantage frontend | Users see real app, not preview |
 | 4 | Cache collision | `intelligence.ts` | SHA-256 hash instead of slice | Better cache accuracy |
 | 5 | Status code bug | `intelligence.ts` | SyntaxError returns 400, not 500 | Better error semantics |
 
@@ -105,7 +105,7 @@ User Input → React → HTTP POST → Express API → GDELT/Wikipedia → Claud
 
 ### Monorepo Structure
 - **lib/**: Shared utilities (API client, Anthropic integration)
-- **artifacts/**: Standalone apps (api-server, conflict-intelligence, mockup-sandbox)
+- **artifacts/**: Standalone apps (api-server, vantage, mockup-sandbox)
 - **Build**: TypeScript project references (tsc --build)
 
 ---
@@ -163,7 +163,7 @@ CORS Misconfiguration| ⚠️ Dev  | Fully open (intentional for dev)
 ### Files Modified (5 total)
 1. **.env** - Populated AI_INTEGRATIONS_ANTHROPIC_API_KEY
 2. **package.json** - Fixed dev script, added dev:api script
-3. **artifacts/conflict-intelligence/src/main.tsx** - Added setBaseUrl() initialization
+3. **artifacts/vantage/src/main.tsx** - Added setBaseUrl() initialization
 4. **artifacts/api-server/src/routes/intelligence.ts** - Fixed cache key (SHA-256), fixed status codes, added crypto import
 5. **artifacts/api-server/src/app.ts** - Reviewed (no changes needed)
 
@@ -270,7 +270,7 @@ router.post("/newEndpoint", async (req, res) => {
 
 **Add new visualization**:
 ```typescript
-// artifacts/conflict-intelligence/src/components/NewPanel.tsx
+// artifacts/vantage/src/components/NewPanel.tsx
 import type { IntelligenceBrief } from '@workspace/api-client-react';
 export function NewPanel({ data }: { data: IntelligenceBrief }) {
   // Render data field

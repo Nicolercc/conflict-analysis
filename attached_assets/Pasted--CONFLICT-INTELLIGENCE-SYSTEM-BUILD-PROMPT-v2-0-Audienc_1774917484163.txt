@@ -1,4 +1,4 @@
-# CONFLICT INTELLIGENCE SYSTEM — BUILD PROMPT v2.0
+# VANTAGE — BUILD PROMPT v2.0
 # Audience: Journalists & Researchers
 # Aesthetic: Editorial Intelligence Platform
 # Copy this entire document into Replit AI Assistant
@@ -7,7 +7,7 @@
 
 ## ROLE & MISSION
 
-You are a senior full-stack engineer. Build a complete, production-quality web application called **Conflict Intelligence System** — an editorial research platform that transforms a news article URL into a structured, multi-perspective geopolitical intelligence brief for journalists, researchers, and policy professionals.
+You are a senior full-stack engineer. Build a complete, production-quality web application called **Vantage** — an editorial research platform that transforms a news article URL into a structured, multi-perspective geopolitical intelligence brief for journalists, researchers, and policy professionals.
 
 The tone is: **trustworthy, academic, editorial**. Think Foreign Affairs magazine meets a research university's digital library. This is a safe informational environment — not a military terminal. Every design decision must reinforce calm authority, readability, and intellectual rigor.
 
@@ -32,7 +32,7 @@ React frontend never touches API keys — all calls go through the Express proxy
 ## FILE STRUCTURE
 
 ```
-conflict-intelligence/
+vantage/
 ├── server/
 │   ├── index.js
 │   └── scraper.js
@@ -68,7 +68,7 @@ conflict-intelligence/
 
 ```json
 {
-  "name": "conflict-intelligence",
+  "name": "vantage",
   "version": "2.0.0",
   "scripts": {
     "dev": "concurrently \"node server/index.js\" \"vite\"",
@@ -697,7 +697,7 @@ const [active, setActive] = useState(false);
 ### Header (persistent, always visible)
 
 Slim header bar, white background, border-bottom `var(--border-light)`, height 56px:
-- Left: wordmark `Conflict Intelligence` in Playfair Display 18px, text-primary
+- Left: wordmark `Vantage` in Playfair Display 18px, text-primary
 - Center: `For journalists & researchers` — IBM Plex Mono 9px, text-muted, letter-spaced
 - Right: small chip `Beta` — IBM Plex Mono 8px, navy border, navy text
 - No live tickers. No blinking badges. No broadcast styling.
@@ -706,7 +706,7 @@ Slim header bar, white background, border-bottom `var(--border-light)`, height 5
 
 Centered layout, max-width 680px, padding-top 80px:
 
-- **Eyebrow**: `Conflict Intelligence System` — IBM Plex Mono 9px, text-muted, letter-spaced, all-caps
+- **Eyebrow**: `Vantage` — IBM Plex Mono 9px, text-muted, letter-spaced, all-caps
 - **Title**: `Understand any conflict article in context` — Playfair Display 40px, font-weight 700, line-height 1.2
 - **Description**: `Paste a URL or article text. Receive a structured brief with multi-perspective analysis, source verification, and historical context.` — Source Serif 4, 16px, text-secondary, margin-top 12px
 
@@ -851,6 +851,6 @@ Expected: warm cream interface, cartographic map, calm loading checklist, at lea
 
 ---
 
-END OF BUILD PROMPT — CONFLICT INTELLIGENCE SYSTEM v2.0
+END OF BUILD PROMPT — VANTAGE v2.0
 Audience: Journalists & Researchers · Aesthetic: Editorial Intelligence Platform
 ```

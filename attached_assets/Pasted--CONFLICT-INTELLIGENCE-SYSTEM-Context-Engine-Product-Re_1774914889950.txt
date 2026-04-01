@@ -1,5 +1,5 @@
 
-CONFLICT INTELLIGENCE SYSTEM
+VANTAGE
 Context Engine
 Product Requirements & Engineering Specification
 
@@ -57,7 +57,7 @@ Structured brief with actors, location, and escalation signal
 
 3. Product Vision & Goals
 3.1 Vision Statement
-"One article in. Full conflict intelligence out — in under 10 seconds."
+"One article in. Full Vantage brief out — in under 10 seconds."
 
 3.2 MVP Success Criteria
 	•	User can paste any English-language conflict article and receive a complete brief

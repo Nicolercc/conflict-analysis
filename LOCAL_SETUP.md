@@ -2,7 +2,7 @@
 
 ## System Overview
 
-**Knowledge Nexus** is a Conflict Intelligence System that uses AI to analyze conflict news articles and topics. It provides multi-perspective analysis, geopolitical context, and source verification.
+**Knowledge Nexus** ships **Vantage**, which uses AI to analyze conflict news articles and topics. It provides multi-perspective analysis, geopolitical context, and source verification.
 
 ### Architecture
 - **Frontend**: React 19 + Vite (port 5173)
@@ -33,14 +33,14 @@ AI_INTEGRATIONS_ANTHROPIC_BASE_URL=https://api.anthropic.com
 pnpm run dev:api
 
 # Expected output:
-# 📊 Conflict Intelligence API
+# 📊 Vantage API
 # ✅ Server listening on port 3001
 # Ready to accept /api/analyze and /api/explore requests
 ```
 
 ### Step 3: Start the Frontend (Terminal 2)
 ```bash
-# Starting Conflict Intelligence frontend on port 5173
+# Starting Vantage frontend on port 5173
 pnpm run dev
 
 # Expected output:
@@ -175,7 +175,7 @@ Check browser console → Network tab → inspect request
 │   ├── .env                ← API key & port (dev only)
 │   └── build.mjs           ← ESBuild config
 │
-└── 📁 conflict-intelligence/  ← React 19 frontend
+└── 📁 vantage/  ← React 19 frontend (Vantage)
     ├── src/
     │   ├── main.tsx        ← Entry point (sets API base URL)
     │   ├── App.tsx         ← Router setup
@@ -211,7 +211,7 @@ curl -X POST http://localhost:3001/api/explore \
 ```
 
 ### Modify Test Article
-Edit `artifacts/conflict-intelligence/src/pages/Home.tsx` line 18:
+Edit `artifacts/vantage/src/pages/Home.tsx` line 18:
 ```typescript
 const DEMO_ARTICLE = "...your test article...";
 ```
@@ -245,7 +245,7 @@ const DEMO_ARTICLE = "...your test article...";
 ## Next Steps
 
 1. ✅ Both servers running locally?
-2. ✅ Can see Conflict Intelligence UI?
+2. ✅ Can see Vantage UI?
 3. ✅ Try pasting a real article?
 4. ✅ Explore a conflict topic?
 

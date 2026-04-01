@@ -1,0 +1,555 @@
+/* Layout only — positioning aligned with vantage_redesign_preview.html */
+
+.ci-hero__top {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 9px;
+	gap: 12px;
+}
+
+.ci-hero__region-row {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	flex-wrap: wrap;
+}
+
+.ci-hero__badge {
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 9px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	border: 1px solid var(--border-light);
+	background: var(--bg-subtle);
+	color: var(--text-secondary);
+}
+
+.ci-hero__locations {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 9px;
+	color: var(--text-muted);
+}
+
+.ci-hero__live {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	flex-shrink: 0;
+}
+
+.ci-hero__live-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--risk-high);
+	animation: ci-live-blink 2s infinite;
+}
+
+@keyframes ci-live-blink {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.2;
+	}
+}
+
+/* Score cards — same interaction model as preview HTML (.sc) */
+.ci-score-card {
+	cursor: pointer;
+	transition:
+		transform 0.15s ease,
+		border-color 0.15s ease,
+		box-shadow 0.15s ease;
+	border: 1px solid var(--border-light);
+	border-radius: 7px;
+	padding: 12px 14px;
+	background: var(--bg-surface);
+	box-sizing: border-box;
+}
+
+.ci-score-card:hover {
+	transform: translateY(-1px);
+	border-color: var(--border-medium);
+}
+
+/* Collapsed by default; expands on card hover (like .tl-det) */
+.ci-score-reason-wrap {
+	max-height: 2.75em;
+	overflow: hidden;
+	transition: max-height 0.35s ease;
+}
+
+.ci-score-card:hover .ci-score-reason-wrap {
+	max-height: 320px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ci-score-card {
+		transition: none;
+	}
+	.ci-score-reason-wrap {
+		transition: none;
+		max-height: none;
+		overflow: visible;
+	}
+}
+
+.ci-score-row {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+	padding: 12px 0 20px;
+}
+
+@media (max-width: 900px) {
+	.ci-score-row {
+		grid-template-columns: 1fr;
+	}
+}
+
+.ci-map-outer {
+	position: relative;
+	width: 100%;
+	margin-bottom: 0;
+	border-bottom: 1px solid var(--border-light);
+}
+
+.ci-columns {
+	display: flex;
+	gap: 0;
+	align-items: flex-start;
+}
+
+.ci-main {
+	flex: 1;
+	min-width: 0;
+	padding: 18px 18px 24px 0;
+	border-right: 1px solid var(--border-light);
+}
+
+.ci-sidebar {
+	width: 250px;
+	flex-shrink: 0;
+	padding: 18px 0 24px 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+}
+
+@media (max-width: 960px) {
+	.ci-columns {
+		flex-direction: column;
+	}
+	.ci-main {
+		border-right: none;
+		padding-right: 0;
+		border-bottom: 1px solid var(--border-light);
+	}
+	.ci-sidebar {
+		width: 100%;
+		padding-left: 0;
+	}
+}
+
+.ci-section-block {
+	margin-bottom: 22px;
+}
+
+/* Sources sidebar — preview .sr-r / .sr-pop */
+.sr-r {
+	position: relative;
+	cursor: default;
+}
+
+.sr-pop {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.18s;
+	position: absolute;
+	z-index: 20;
+}
+
+.sr-r:hover .sr-pop {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.ci-sr-row:hover .ci-sr-pop {
+	opacity: 1 !important;
+	pointer-events: auto !important;
+}
+
+/* Parties — preview .pr-r */
+.pr-r {
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background 0.15s ease;
+	padding: 5px 7px;
+	margin: 0 -7px;
+}
+
+.pr-r:hover {
+	background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+}
+
+@supports not (background: color-mix(in srgb, var(--text-primary) 4%, transparent)) {
+	.pr-r:hover {
+		background: var(--bg-overlay);
+	}
+}
+
+/* Timeline — preview .tl-r / .tl-det */
+.tl-r {
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background 0.14s ease;
+	padding: 7px 5px;
+	margin: 0 -5px;
+}
+
+.tl-r:hover {
+	background: color-mix(in srgb, var(--text-primary) 3.5%, transparent);
+}
+
+@supports not (background: color-mix(in srgb, var(--text-primary) 3.5%, transparent)) {
+	.tl-r:hover {
+		background: var(--bg-subtle);
+	}
+}
+
+.tl-det {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.35s ease;
+}
+
+.tl-r:hover .tl-det {
+	max-height: 220px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tl-det {
+		max-height: none;
+		overflow: visible;
+	}
+	.sr-pop {
+		transition: none;
+	}
+	.pr-r:hover,
+	.tl-r:hover {
+		background: transparent;
+	}
+}
+
+/* Perspectives — preview .pp-pill / .pp-pop */
+.pp-pill {
+	position: relative;
+}
+
+.pp-pop {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.18s;
+	position: absolute;
+	z-index: 20;
+}
+
+.pp-pill:hover .pp-pop {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* —— Interactive Leaflet conflict map (realistic basemap + tooltips) —— */
+.ci-interactive-map .leaflet-container {
+	font-family: inherit;
+	background: var(--bg-primary);
+}
+
+.ci-interactive-map .leaflet-control-zoom {
+	border: 1px solid var(--border-light) !important;
+	border-radius: 6px;
+	overflow: hidden;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.ci-interactive-map .leaflet-control-zoom a {
+	color: var(--text-secondary) !important;
+	background: var(--bg-surface) !important;
+}
+
+.ci-interactive-map .leaflet-control-attribution {
+	font-size: 9px;
+	line-height: 1.3;
+	max-width: min(100%, 320px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 2px 6px !important;
+	border-radius: 4px 0 0 0;
+	background: color-mix(in srgb, var(--bg-surface) 92%, transparent) !important;
+	color: var(--text-muted) !important;
+	border: 1px solid var(--border-light);
+	border-bottom: none;
+	border-right: none;
+}
+
+/* On-map chrome: opaque panels + readable type (scoped to interactive map only) */
+.ci-interactive-map .ci-map-chip {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	line-height: 1.35;
+	letter-spacing: 0.06em;
+	color: var(--text-primary);
+	background: var(--bg-surface);
+	padding: 6px 11px;
+	border-radius: 6px;
+	border: 1px solid var(--border-medium);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ci-interactive-map .ci-map-legend-inline__item {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	line-height: 1.35;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--text-primary);
+	background: var(--bg-surface);
+	padding: 5px 10px;
+	border-radius: 6px;
+	border: 1px solid var(--border-medium);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.ci-map-legend-inline__dot {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.ci-map-legend-inline__dot--hub {
+	background: var(--accent-navy, #1a3a52);
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.ci-map-legend-inline__diamond {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	transform: rotate(45deg);
+	flex-shrink: 0;
+}
+
+.ci-map-marker-wrap {
+	background: transparent !important;
+	border: none !important;
+}
+
+.ci-map-hub {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	pointer-events: none;
+}
+
+.ci-map-hub__pulse {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 50%;
+	top: 2px;
+	margin-left: -22px;
+	border: 2px solid color-mix(in srgb, var(--accent-navy, #1a3a52) 55%, transparent);
+	border-radius: 50%;
+	animation: ci-map-pulse 2s ease-out infinite;
+}
+
+.ci-map-hub__pin {
+	position: relative;
+	z-index: 1;
+	line-height: 0;
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.ci-interactive-map .ci-map-hub__label {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--text-primary);
+	margin-top: 4px;
+	max-width: 132px;
+	text-align: center;
+	line-height: 1.35;
+	padding: 5px 8px;
+	background: var(--bg-surface);
+	border: 1px solid var(--border-medium);
+	border-radius: 5px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.ci-map-ev {
+	position: relative;
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.ci-map-ev__ring {
+	position: absolute;
+	width: 26px;
+	height: 26px;
+	border: 2px solid var(--ev);
+	border-radius: 50%;
+	animation: ci-map-pulse 1.6s ease-out infinite;
+	opacity: 0.75;
+}
+
+.ci-map-ev__ring--slow {
+	animation-duration: 2.5s;
+}
+
+.ci-map-ev--strike .ci-map-ev__shape {
+	width: 9px;
+	height: 9px;
+	background: var(--ev);
+	transform: rotate(45deg);
+	position: relative;
+	z-index: 1;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.ci-map-ev__dot {
+	width: 11px;
+	height: 11px;
+	border-radius: 50%;
+	background: var(--ev);
+	position: relative;
+	z-index: 1;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes ci-map-pulse {
+	0% {
+		transform: scale(0.65);
+		opacity: 0.65;
+	}
+	70% {
+		opacity: 0.12;
+	}
+	100% {
+		transform: scale(1.45);
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ci-map-hub__pulse,
+	.ci-map-ev__ring {
+		animation: none;
+		opacity: 0.35;
+	}
+}
+
+/*
+ * Marker hover tooltips: Leaflet defaults to opacity ~0.9 on .leaflet-tooltip,
+ * which washes out backgrounds — force opaque shell under .ci-interactive-map only.
+ */
+.ci-interactive-map .leaflet-tooltip-pane .leaflet-tooltip.ci-leaflet-tooltip {
+	opacity: 1 !important;
+	background: var(--bg-surface) !important;
+	background-color: var(--bg-surface) !important;
+	border: 1px solid var(--border-medium) !important;
+	border-radius: 10px !important;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18) !important;
+	padding: 0 !important;
+	max-width: min(92vw, 360px);
+}
+
+.ci-interactive-map .leaflet-tooltip.ci-leaflet-tooltip::before {
+	display: none !important;
+}
+
+.ci-interactive-map .ci-leaflet-tip {
+	min-width: 220px;
+	max-width: 100%;
+	padding: 12px 14px;
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	pointer-events: auto;
+}
+
+.ci-interactive-map .ci-leaflet-tip__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 8px;
+}
+
+.ci-interactive-map .ci-leaflet-tip__badge {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 10px;
+	line-height: 1.3;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	padding: 4px 9px;
+	border-radius: 5px;
+	border: 1px solid transparent;
+	font-weight: 600;
+}
+
+.ci-interactive-map .ci-leaflet-tip__badge--hub {
+	background: color-mix(in srgb, var(--accent-navy, #1a3a52) 14%, var(--bg-surface));
+	border-color: color-mix(in srgb, var(--accent-navy, #1a3a52) 40%, var(--border-medium));
+	color: var(--accent-navy, #1a3a52);
+}
+
+.ci-interactive-map .ci-leaflet-tip__date {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 12px;
+	line-height: 1.3;
+	color: var(--text-secondary);
+	flex-shrink: 0;
+}
+
+.ci-interactive-map .ci-leaflet-tip__title {
+	font-family: "Playfair Display", Georgia, serif;
+	font-size: 1.0625rem;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--text-primary);
+	margin-bottom: 8px;
+}
+
+.ci-interactive-map .ci-leaflet-tip__desc {
+	font-family: "Source Serif 4", Georgia, serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--text-primary);
+	margin: 0 0 8px;
+	max-height: 12.5em;
+	overflow: auto;
+}
+
+.ci-interactive-map .ci-leaflet-tip__hint {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	line-height: 1.45;
+	color: var(--text-secondary);
+	display: block;
+	padding-top: 4px;
+	border-top: 1px solid var(--border-light);
+}

@@ -1,8 +1,8 @@
 kind = "web"
 previewPath = "/"
-title = "Conflict Intelligence System"
+title = "Vantage"
 version = "1.0.0"
-id = "artifacts/conflict-intelligence"
+id = "artifacts/vantage"
 router = "path"
 
 [[integratedSkills]]
@@ -15,11 +15,11 @@ paths = [ "/" ]
 localPort = 24434
 
 [services.development]
-run = "pnpm --filter @workspace/conflict-intelligence run dev"
+run = "pnpm --filter @workspace/vantage run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/conflict-intelligence", "run", "build" ]
-publicDir = "artifacts/conflict-intelligence/dist/public"
+build = [ "pnpm", "--filter", "@workspace/vantage", "run", "build" ]
+publicDir = "artifacts/vantage/dist/public"
 serve = "static"
 
 [[services.production.rewrites]]
