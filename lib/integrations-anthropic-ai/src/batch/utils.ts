@@ -1,5 +1,5 @@
 import pLimit from "p-limit";
-import pRetry from "p-retry";
+import pRetry, { AbortError } from "p-retry";
 
 /**
  * Batch Processing Utilities
@@ -16,7 +16,7 @@ import pRetry from "p-retry";
  *   artworks,
  *   async (artwork) => {
  *     const message = await anthropic.messages.create({
- *       model: "claude-sonnet-4-6",
+ *       model: "claude-haiku-4-5-20251001",
  *       max_tokens: 8192,
  *       messages: [{ role: "user", content: `Categorize: ${artwork.name}` }],
  *     });
@@ -75,7 +75,7 @@ export async function batchProcess<T, R>(
             if (isRateLimitError(error)) {
               throw error;
             }
-            throw new pRetry.AbortError(
+            throw new AbortError(
               error instanceof Error ? error : new Error(String(error))
             );
           }
@@ -115,7 +115,7 @@ export async function batchProcessWithSSE<T, R>(
           factor: 2,
           onFailedAttempt: (error) => {
             if (!isRateLimitError(error)) {
-              throw new pRetry.AbortError(
+              throw new AbortError(
                 error instanceof Error ? error : new Error(String(error))
               );
             }
