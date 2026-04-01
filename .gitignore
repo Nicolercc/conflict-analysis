@@ -1,5 +1,7 @@
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
+.env
+.env.local
+.env.*.local
 # compiled output
 dist
 tmp
@@ -10,6 +12,7 @@ out-tsc
 
 # dependencies
 node_modules
+.pnpm-store/
 
 # IDEs and editors
 /.idea
