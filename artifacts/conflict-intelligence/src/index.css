@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Syne:wght@400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -43,6 +43,29 @@
   --region-africa: #2D6A4F;
   --region-latam: #3A6B8B;
   --region-state: #7A7470;
+
+  /* Conflict Analysis Design System */
+  --accent: #C2536A;
+  --accent-light: rgba(194, 83, 106, 0.09);
+  --accent-mid: rgba(194, 83, 106, 0.20);
+  --strike: #C2536A;
+  --escalation: #E07B39;
+  --negotiation: #4A9B8B;
+  --party-us: #3B78D4;
+  --party-israel: #4A9B8B;
+  --party-iran: #C2536A;
+  --party-regional: #E07B39;
+  --party-civilian: #9B7BC8;
+  --party-proxy: #888;
+
+  /* Semantic variants */
+  --color-background-primary: var(--bg-primary);
+  --color-background-secondary: var(--bg-surface);
+  --color-border-tertiary: var(--border-light);
+  --color-border-secondary: var(--border-medium);
+  --color-text-danger: var(--risk-high);
+  --color-text-warning: var(--risk-medium);
+  --color-text-info: var(--accent-navy);
 }
 
 @theme inline {
@@ -81,8 +104,8 @@
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Source Serif 4', Georgia, serif;
-  line-height: 1.65;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  line-height: 1.75;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -121,18 +144,18 @@ body {
 }
 
 .font-display {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
 .font-mono-data {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
 }
 
 .section-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 20px;
