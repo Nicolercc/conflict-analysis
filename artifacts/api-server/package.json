@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "NODE_ENV=development tsx watch src/index.ts",
     "build": "node ./build.mjs",
     "build:prod": "node ./build.mjs",
-    "start": "node --enable-source-maps ./dist/index.mjs",
+    "start": "NODE_ENV=production node --enable-source-maps ./dist/index.mjs",
     "start:prod": "NODE_ENV=production node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

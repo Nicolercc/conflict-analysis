@@ -303,7 +303,7 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
 
   const userContent = articleText
     ? `Analyze this conflict news article:\n\n${articleText.trim()}`
-    : `Generate a comprehensive Vantage brief for this topic: "${topic}". Draw on the Wikipedia and news context above. Provide full multi-perspective analysis.`;
+    : `Generate a comprehensive conflict intelligence brief for this topic: "${topic}". Draw on the Wikipedia and news context above. Provide full multi-perspective analysis.`;
 
   // Pass 1: Main analysis
   const analysisMsg = await anthropic.messages.create({

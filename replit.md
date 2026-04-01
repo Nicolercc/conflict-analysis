@@ -119,3 +119,12 @@ This regenerates:
 - `AI_INTEGRATIONS_ANTHROPIC_API_KEY` — Auto-set by Replit AI Integrations
 - `SESSION_SECRET` — Set in Replit Secrets
 - `DATABASE_URL` — Set if database is provisioned
+- `PORT` — Required by the API process (Replit and Docker set this automatically in most setups)
+- `NODE_ENV` — Use `production` for the API in production so logs stay JSON (not `pino-pretty`)
+- `VITE_API_BASE_URL` — Set **at Vantage build time** when the static UI calls a remote API (no trailing slash). Omit when `/api` is same-origin or reverse-proxied to the API
+
+## Deployment notes
+
+- **API (Docker)**: `docker build -t api .` from the repo root, then run with `--env-file` supplying `PORT`, `NODE_ENV=production`, and Anthropic variables (see `.env.example`).
+- **API (pnpm)**: After `pnpm run build:api`, run `pnpm run start:api` with the same environment variables.
+- **Vantage (static)**: Run `pnpm --filter @workspace/vantage run build` with `BASE_PATH` and `PORT` as today; set `VITE_API_BASE_URL` if the API is on another origin.

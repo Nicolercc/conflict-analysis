@@ -2,10 +2,16 @@
 	"name": "workspace",
 	"version": "0.0.0",
 	"license": "MIT",
+	"packageManager": "pnpm@9.9.0",
+	"engines": {
+		"node": ">=22.0.0"
+	},
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "start": "pnpm run build && pnpm -r --if-present run start",
+    "build:api": "pnpm run typecheck && pnpm --filter @workspace/api-server run build",
+    "start:api": "pnpm --filter @workspace/api-server run start",
     "dev": "cd artifacts/vantage && BASE_PATH=/ PORT=5173 pnpm run dev",
     "dev:api": "cd artifacts/api-server && pnpm run dev",
     "typecheck:libs": "tsc --build",
