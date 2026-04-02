@@ -18,8 +18,45 @@ const fadeUp = {
 	animate: { opacity: 1, y: 0 },
 };
 
+function isLikelyGeopolitical(query: string): boolean {
+	if (query.trim().split(" ").length < 2) return false;
+	const keywords = [
+		"war",
+		"conflict",
+		"crisis",
+		"ceasefire",
+		"strike",
+		"attack",
+		"tension",
+		"sanctions",
+		"troops",
+		"humanitarian",
+		"coup",
+		"protest",
+		"siege",
+		"invasion",
+		"occupation",
+		"refugee",
+		"displacement",
+		"nuclear",
+		"drone",
+		"missile",
+		"militia",
+		"insurgency",
+		"treaty",
+		"negotiation",
+		"peace",
+		"blockade",
+		"airstrike",
+		"coalition",
+	];
+	const q = query.toLowerCase();
+	return keywords.some((k) => q.includes(k));
+}
+
 export function Home() {
 	const [topic, setTopic] = useState("");
+	const [offTopicHint, setOffTopicHint] = useState(false);
 	const [, setLocation] = useLocation();
 	const canSearch = topic.trim().length >= 3;
 	const reduceMotion = useReducedMotion();
@@ -32,6 +69,11 @@ export function Home() {
 		event.preventDefault();
 		const query = topic.trim();
 		if (!query) return;
+		if (!isLikelyGeopolitical(query)) {
+			setOffTopicHint(true);
+			return;
+		}
+		setOffTopicHint(false);
 		setLocation(`/analysis?topic=${encodeURIComponent(query)}`);
 	};
 
@@ -95,7 +137,10 @@ export function Home() {
 										className="home-search__input"
 										type="search"
 										value={topic}
-										onChange={(e) => setTopic(e.currentTarget.value)}
+										onChange={(e) => {
+											setTopic(e.currentTarget.value);
+											setOffTopicHint(false);
+										}}
 										placeholder="Try a region, actor, or incident…"
 										autoComplete="off"
 										autoCapitalize="sentences"
@@ -112,6 +157,20 @@ export function Home() {
 								<p className="home-search__hint">
 									Three characters minimum · No account required for search
 								</p>
+								{offTopicHint ? (
+									<p
+										style={{
+											color: "var(--accent)",
+											fontFamily: "var(--mono)",
+											fontSize: "11px",
+											marginTop: "8px",
+										}}
+									>
+										Try a specific conflict or crisis — e.g. &quot;Gaza
+										ceasefire&quot;, &quot;Sudan humanitarian access&quot;, &quot;Red
+										Sea shipping tensions&quot;
+									</p>
+								) : null}
 							</form>
 						</motion.div>
 

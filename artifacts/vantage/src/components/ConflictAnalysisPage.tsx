@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearch } from "wouter";
-import { useExploreConflict } from "@workspace/api-client-react";
+import {
+	useExploreConflict,
+	type IntelligenceBrief,
+} from "@workspace/api-client-react";
 import { SiteHeader } from "./LiveTicker";
 import { AnalysisLoader } from "./AnalysisLoader";
 import { AnimatedScore } from "./AnimatedScore";
@@ -27,6 +30,17 @@ function formatPublishedAt(iso: string) {
 	} catch {
 		return iso;
 	}
+}
+
+function isOutOfScopeBrief(data: IntelligenceBrief): boolean {
+	const score = data.credibility?.score ?? 0;
+	const risk = data.escalationRisk as string;
+	const headline = data.headline ?? "";
+	return (
+		score === 0 ||
+		risk === "N/A" ||
+		headline.includes("Outside Research Scope")
+	);
 }
 
 export function ConflictAnalysisPageRoute() {
@@ -132,6 +146,107 @@ export function ConflictAnalysisPageRoute() {
 							Back to Search
 						</a>
 					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (isOutOfScopeBrief(briefData)) {
+		return (
+			<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
+				<SiteHeader onReset={() => (window.location.href = "/")} />
+				<div
+					style={{
+						maxWidth: "560px",
+						margin: "80px auto",
+						textAlign: "center",
+						fontFamily: "var(--serif)",
+						padding: "0 24px",
+					}}
+				>
+					<p
+						style={{
+							fontFamily: "var(--mono)",
+							fontSize: "10px",
+							textTransform: "uppercase",
+							letterSpacing: ".08em",
+							color: "var(--color-text-secondary)",
+							marginBottom: "16px",
+						}}
+					>
+						Outside scope
+					</p>
+					<h2
+						style={{
+							fontSize: "28px",
+							fontWeight: 600,
+							fontStyle: "italic",
+							marginBottom: "12px",
+						}}
+					>
+						We couldn&apos;t find a conflict to brief
+					</h2>
+					<p
+						style={{
+							fontSize: "16px",
+							lineHeight: 1.7,
+							color: "var(--color-text-secondary)",
+							marginBottom: "32px",
+						}}
+					>
+						Vantage works best with ongoing geopolitical conflicts, humanitarian
+						crises, and regional tensions. Try one of these:
+					</p>
+					<div
+						style={{
+							display: "flex",
+							gap: "8px",
+							flexWrap: "wrap",
+							justifyContent: "center",
+						}}
+					>
+						{[
+							"Gaza ceasefire reporting",
+							"Red Sea shipping tensions",
+							"Sudan humanitarian access",
+							"Ukraine front-line updates",
+						].map((s) => (
+							<button
+								key={s}
+								type="button"
+								onClick={() => {
+									window.location.href = `/analysis?topic=${encodeURIComponent(s)}`;
+								}}
+								style={{
+									fontFamily: "var(--mono)",
+									fontSize: "11px",
+									padding: "8px 14px",
+									border: "1px solid var(--color-border-secondary)",
+									borderRadius: "4px",
+									background: "transparent",
+									cursor: "pointer",
+									color: "var(--color-text-primary)",
+								}}
+							>
+								{s}
+							</button>
+						))}
+					</div>
+					<button
+						type="button"
+						onClick={() => window.history.back()}
+						style={{
+							marginTop: "32px",
+							fontFamily: "var(--mono)",
+							fontSize: "11px",
+							color: "var(--accent)",
+							background: "none",
+							border: "none",
+							cursor: "pointer",
+						}}
+					>
+						← Try a different search
+					</button>
 				</div>
 			</div>
 		);
