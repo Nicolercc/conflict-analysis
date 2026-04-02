@@ -67,8 +67,12 @@ export default defineConfig({
       deny: ["**/.*"],
     },
     proxy: {
-      '/api': 'http://localhost:3001'
-    }
+      "/api": {
+        target: "https://conflict-analysis.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   preview: {
     port,
