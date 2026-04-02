@@ -19,7 +19,8 @@ const fadeUp = {
 };
 
 function isLikelyGeopolitical(query: string): boolean {
-	if (query.trim().split(" ").length < 2) return false;
+	const words = query.trim().split(/\s+/).filter(Boolean);
+	if (words.length < 2) return false;
 	const keywords = [
 		"war",
 		"conflict",
@@ -49,8 +50,21 @@ function isLikelyGeopolitical(query: string): boolean {
 		"blockade",
 		"airstrike",
 		"coalition",
+		"hostage",
+		"famine",
+		"massacre",
+		"bombing",
+		"withdrawal",
+		"offensive",
+		"frontline",
+		"airspace",
+		"embargo",
+		"proxy",
+		"detention",
+		"uprising",
 	];
 	const q = query.toLowerCase();
+	if (words.length >= 5) return true;
 	return keywords.some((k) => q.includes(k));
 }
 
@@ -106,7 +120,7 @@ export function Home() {
 							{...fadeUp}
 							transition={{ ...transition, delay: reduceMotion ? 0 : 0.12 }}
 						>
-							See the full story <em>behind</em> the headline.
+							See the full story behind the headline.
 						</motion.h1>
 
 						<motion.p
@@ -114,9 +128,9 @@ export function Home() {
 							{...fadeUp}
 							transition={{ ...transition, delay: reduceMotion ? 0 : 0.2 }}
 						>
-							Search a conflict, crisis, or region. We assemble verification signals,
-							timelines, perspectives, and geography—so you can file with context,
-							not chaos.
+							Built for geopolitical conflicts, humanitarian crises, and regional
+							tensions. Paste an article link or search a specific event — we assemble
+							verification signals, timelines, perspectives, and geography.
 						</motion.p>
 
 						<motion.div
@@ -141,7 +155,7 @@ export function Home() {
 											setTopic(e.currentTarget.value);
 											setOffTopicHint(false);
 										}}
-										placeholder="Try a region, actor, or incident…"
+										placeholder="e.g. Gaza ceasefire, Red Sea tensions, Sudan crisis..."
 										autoComplete="off"
 										autoCapitalize="sentences"
 										enterKeyHint="search"
@@ -155,23 +169,24 @@ export function Home() {
 									</button>
 								</div>
 								<p className="home-search__hint">
-									Three characters minimum · No account required for search
+									Works best with specific conflicts and crises · Article links
+									supported · No account required
 								</p>
-								{offTopicHint ? (
-									<p
-										style={{
-											color: "var(--accent)",
-											fontFamily: "var(--mono)",
-											fontSize: "11px",
-											marginTop: "8px",
-										}}
-									>
-										Try a specific conflict or crisis — e.g. &quot;Gaza
-										ceasefire&quot;, &quot;Sudan humanitarian access&quot;, &quot;Red
-										Sea shipping tensions&quot;
-									</p>
-								) : null}
 							</form>
+							{offTopicHint ? (
+								<p
+									style={{
+										fontFamily: "var(--mono)",
+										fontSize: "11px",
+										color: "var(--accent)",
+										marginTop: "8px",
+										marginBottom: "0",
+									}}
+								>
+									Try a specific conflict or paste an article link — e.g. &quot;Gaza
+									ceasefire&quot; or &quot;Red Sea shipping tensions&quot;
+								</p>
+							) : null}
 						</motion.div>
 
 						<motion.div
@@ -180,6 +195,20 @@ export function Home() {
 							{...fadeUp}
 							transition={{ ...transition, delay: reduceMotion ? 0 : 0.36 }}
 						>
+							<p
+								style={{
+									flexBasis: "100%",
+									textAlign: "center",
+									fontFamily: "var(--mono)",
+									fontSize: "10px",
+									textTransform: "uppercase",
+									letterSpacing: ".08em",
+									color: "var(--color-text-secondary)",
+									marginBottom: "10px",
+								}}
+							>
+								Try one of these →
+							</p>
 							{QUICK_TOPICS.map((q) => (
 								<button
 									key={q}
@@ -202,6 +231,18 @@ export function Home() {
 					<div className="home-band__inner">
 						<header className="home-band__head">
 							<p className="home-band__label">Why teams open this first</p>
+							<p
+								style={{
+									fontSize: "clamp(15px, 1.8vw, 17px)",
+									lineHeight: 1.6,
+									color: "var(--text-secondary)",
+									maxWidth: "36rem",
+									margin: "0 auto 12px",
+								}}
+							>
+								Search a specific conflict, humanitarian crisis, or geopolitical
+								event.
+							</p>
 							<h2 id="features-title" className="home-band__title">
 								Built for speed, anchored in evidence
 							</h2>
@@ -266,7 +307,7 @@ export function Home() {
 			</main>
 
 			<footer className="home-footer">
-				Knowledge Nexus · Vantage preview
+				Vantage · Conflict intelligence in context
 			</footer>
 		</div>
 	);
