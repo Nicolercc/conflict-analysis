@@ -197,7 +197,9 @@
 	background: color-mix(in srgb, var(--text-primary) 4%, transparent);
 }
 
-@supports not (background: color-mix(in srgb, var(--text-primary) 4%, transparent)) {
+@supports not (
+	background: color-mix(in srgb, var(--text-primary) 4%, transparent)
+) {
 	.pr-r:hover {
 		background: var(--bg-overlay);
 	}
@@ -216,7 +218,9 @@
 	background: color-mix(in srgb, var(--text-primary) 3.5%, transparent);
 }
 
-@supports not (background: color-mix(in srgb, var(--text-primary) 3.5%, transparent)) {
+@supports not (
+	background: color-mix(in srgb, var(--text-primary) 3.5%, transparent)
+) {
 	.tl-r:hover {
 		background: var(--bg-subtle);
 	}
@@ -368,7 +372,8 @@
 	left: 50%;
 	top: 2px;
 	margin-left: -22px;
-	border: 2px solid color-mix(in srgb, var(--accent-navy, #1a3a52) 55%, transparent);
+	border: 2px solid
+		color-mix(in srgb, var(--accent-navy, #1a3a52) 55%, transparent);
 	border-radius: 50%;
 	animation: ci-map-pulse 2s ease-out infinite;
 }
@@ -512,8 +517,16 @@
 }
 
 .ci-interactive-map .ci-leaflet-tip__badge--hub {
-	background: color-mix(in srgb, var(--accent-navy, #1a3a52) 14%, var(--bg-surface));
-	border-color: color-mix(in srgb, var(--accent-navy, #1a3a52) 40%, var(--border-medium));
+	background: color-mix(
+		in srgb,
+		var(--accent-navy, #1a3a52) 14%,
+		var(--bg-surface)
+	);
+	border-color: color-mix(
+		in srgb,
+		var(--accent-navy, #1a3a52) 40%,
+		var(--border-medium)
+	);
 	color: var(--accent-navy, #1a3a52);
 }
 

@@ -14,7 +14,11 @@ const TYPE_META: Record<
 	RelatedEventType,
 	{ label: string; color: string; short: string }
 > = {
-	strike: { label: "Strike", color: "#C2536A", short: "Military or kinetic event" },
+	strike: {
+		label: "Strike",
+		color: "#C2536A",
+		short: "Military or kinetic event",
+	},
 	escalation: {
 		label: "Escalation",
 		color: "#E07B39",
@@ -150,7 +154,10 @@ interface InteractiveConflictMapProps {
 	active: boolean;
 }
 
-export function InteractiveConflictMap({ data, active }: InteractiveConflictMapProps) {
+export function InteractiveConflictMap({
+	data,
+	active,
+}: InteractiveConflictMapProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const mapRef = useRef<L.Map | null>(null);
 	const layersRef = useRef<{
@@ -275,7 +282,10 @@ export function InteractiveConflictMap({ data, active }: InteractiveConflictMapP
 				title: evt.title,
 			})
 				.addTo(map)
-				.bindTooltip(eventTooltipHtml(evt), { ...TOOLTIP_OPTS, offset: [0, -20] });
+				.bindTooltip(eventTooltipHtml(evt), {
+					...TOOLTIP_OPTS,
+					offset: [0, -20],
+				});
 
 			marker.on("click", () => {
 				map.flyTo(pos, Math.max(map.getZoom(), 7), { duration: 0.85 });
@@ -293,7 +303,9 @@ export function InteractiveConflictMap({ data, active }: InteractiveConflictMapP
 		queueMicrotask(() => map.invalidateSize());
 	}, [data, active, mapReady]);
 
-	const presentKinds = [...new Set(data.relatedEvents.map((e) => markerKind(e)))];
+	const presentKinds = [
+		...new Set(data.relatedEvents.map((e) => markerKind(e))),
+	];
 
 	return (
 		<div
@@ -376,8 +388,8 @@ export function InteractiveConflictMap({ data, active }: InteractiveConflictMapP
 					clip: "rect(0 0 0 0)",
 				}}
 			>
-				Map shows the primary briefing location and related events. Hover markers for
-				details; scroll or pinch to zoom.
+				Map shows the primary briefing location and related events. Hover
+				markers for details; scroll or pinch to zoom.
 			</p>
 
 			<div
