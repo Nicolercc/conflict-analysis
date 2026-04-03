@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useLocation } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
@@ -79,6 +79,20 @@ export function Home() {
 		? { duration: 0 }
 		: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const };
 
+	useEffect(() => {
+		const html = document.documentElement;
+		const prevBehavior = html.style.scrollBehavior;
+		const prevPaddingTop = html.style.scrollPaddingTop;
+		html.style.scrollPaddingTop = "56px";
+		if (!reduceMotion) {
+			html.style.scrollBehavior = "smooth";
+		}
+		return () => {
+			html.style.scrollBehavior = prevBehavior;
+			html.style.scrollPaddingTop = prevPaddingTop;
+		};
+	}, [reduceMotion]);
+
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const query = topic.trim();
@@ -105,39 +119,39 @@ export function Home() {
 					<div className="home-hero__mesh" aria-hidden />
 					<div className="home-hero__grain" aria-hidden />
 					<div className="home-hero__inner">
-						<motion.p
-							className="home-kicker"
-							{...fadeUp}
-							transition={{ ...transition, delay: reduceMotion ? 0 : 0.05 }}
-						>
-							<span className="home-kicker__dot" aria-hidden />
-							For reporters, editors &amp; engaged citizens
-						</motion.p>
+						<div id="search">
+							<motion.p
+								className="home-kicker"
+								{...fadeUp}
+								transition={{ ...transition, delay: reduceMotion ? 0 : 0.05 }}
+							>
+								<span className="home-kicker__dot" aria-hidden />
+								For reporters, editors &amp; engaged citizens
+							</motion.p>
 
-						<motion.h1
-							id="home-hero-title"
-							className="home-title"
-							{...fadeUp}
-							transition={{ ...transition, delay: reduceMotion ? 0 : 0.12 }}
-						>
-							See the full story behind the headline.
-						</motion.h1>
+							<motion.h1
+								id="home-hero-title"
+								className="home-title"
+								{...fadeUp}
+								transition={{ ...transition, delay: reduceMotion ? 0 : 0.12 }}
+							>
+								See the full story behind the headline.
+							</motion.h1>
 
-						<motion.p
-							className="home-lead"
-							{...fadeUp}
-							transition={{ ...transition, delay: reduceMotion ? 0 : 0.2 }}
-						>
-							Built for geopolitical conflicts, humanitarian crises, and regional
-							tensions. Paste an article link or search a specific event — we assemble
-							verification signals, timelines, perspectives, and geography.
-						</motion.p>
+							<motion.p
+								className="home-lead"
+								{...fadeUp}
+								transition={{ ...transition, delay: reduceMotion ? 0 : 0.2 }}
+							>
+								Built for geopolitical conflicts, humanitarian crises, and regional
+								tensions. Paste an article link or search a specific event — we assemble
+								verification signals, timelines, perspectives, and geography.
+							</motion.p>
 
-						<motion.div
-							id="search"
-							{...fadeUp}
-							transition={{ ...transition, delay: reduceMotion ? 0 : 0.28 }}
-						>
+							<motion.div
+								{...fadeUp}
+								transition={{ ...transition, delay: reduceMotion ? 0 : 0.28 }}
+							>
 							<form className="home-search" onSubmit={handleSubmit} role="search">
 								<label htmlFor="search-input" className="sr-only">
 									Search for a conflict topic
@@ -187,7 +201,8 @@ export function Home() {
 									ceasefire&quot; or &quot;Red Sea shipping tensions&quot;
 								</p>
 							) : null}
-						</motion.div>
+							</motion.div>
+						</div>
 
 						<motion.div
 							className="home-chips"
