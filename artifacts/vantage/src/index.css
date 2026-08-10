@@ -1,0 +1,348 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Syne:wght@400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	--bg-primary: #f7f4ef;
+	--bg-surface: #ffffff;
+	--bg-subtle: #f0ede8;
+	--bg-overlay: #ede9e3;
+
+	--border-light: #e2ddd6;
+	--border-medium: #c8c2ba;
+	--border-focus: #2b4c7e;
+
+	--text-primary: #1a1614;
+	--text-secondary: #3d3835;
+	--text-muted: #7a7470;
+	--text-faint: #b0aba6;
+
+	--accent-navy: #2b4c7e;
+	--accent-navy-light: #ebf0f8;
+	--accent-navy-border: #b8c9e0;
+
+	--risk-high: #8b3a3a;
+	--risk-high-bg: #f5eaea;
+	--risk-medium: #8b6914;
+	--risk-medium-bg: #fbf5e6;
+	--risk-low: #2d6a4f;
+	--risk-low-bg: #ebf5f0;
+
+	--type-strike: #8b3a3a;
+	--type-escalation: #8b5e1a;
+	--type-negotiation: #2d6a4f;
+	--type-humanitarian: #2b4c7e;
+	--type-political: #5a3a7e;
+
+	--region-western: #2b4c7e;
+	--region-mideast: #8b5e1a;
+	--region-asia: #5a3a7e;
+	--region-africa: #2d6a4f;
+	--region-latam: #3a6b8b;
+	--region-state: #7a7470;
+
+	/* Conflict Analysis Design System */
+	--accent: #c2536a;
+	--accent-light: rgba(194, 83, 106, 0.09);
+	--accent-mid: rgba(194, 83, 106, 0.2);
+	--strike: #c2536a;
+	--escalation: #e07b39;
+	--negotiation: #4a9b8b;
+	--party-us: #3b78d4;
+	--party-israel: #4a9b8b;
+	--party-iran: #c2536a;
+	--party-regional: #e07b39;
+	--party-civilian: #9b7bc8;
+	--party-proxy: #888;
+
+	/* Semantic variants */
+	--color-background-primary: var(--bg-primary);
+	--color-background-secondary: var(--bg-surface);
+	--color-border-tertiary: var(--border-light);
+	--color-border-secondary: var(--border-medium);
+	--color-text-danger: var(--risk-high);
+	--color-text-warning: var(--risk-medium);
+	--color-text-info: var(--accent-navy);
+}
+
+@theme inline {
+	--color-background: var(--bg-primary);
+	--color-foreground: var(--text-primary);
+	--color-border: var(--border-light);
+	--color-input: var(--bg-subtle);
+	--color-ring: var(--border-focus);
+	--color-card: var(--bg-surface);
+	--color-card-foreground: var(--text-primary);
+	--color-card-border: var(--border-light);
+	--color-popover: var(--bg-surface);
+	--color-popover-foreground: var(--text-primary);
+	--color-popover-border: var(--border-light);
+	--color-primary: var(--accent-navy);
+	--color-primary-foreground: #ffffff;
+	--color-primary-border: var(--accent-navy-border);
+	--color-secondary: var(--bg-subtle);
+	--color-secondary-foreground: var(--text-secondary);
+	--color-secondary-border: var(--border-light);
+	--color-muted: var(--bg-overlay);
+	--color-muted-foreground: var(--text-muted);
+	--color-accent: var(--accent-navy-light);
+	--color-accent-foreground: var(--accent-navy);
+	--color-destructive: var(--risk-high);
+	--color-destructive-foreground: #ffffff;
+	--radius: 6px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+body {
+	background: var(--bg-primary);
+	color: var(--text-primary);
+	font-family: "Cormorant Garamond", Georgia, serif;
+	line-height: 1.75;
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Global site header — unified bar; grid centers the nav column */
+.site-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	min-height: 56px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	align-items: center;
+	gap: 0.5rem 1rem;
+	padding: 0.5rem clamp(1rem, 3vw, 1.75rem);
+	background: rgba(247, 244, 239, 0.9);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border-bottom: 1px solid rgba(10, 11, 13, 0.07);
+	box-sizing: border-box;
+}
+
+.site-header__cell--left {
+	justify-self: start;
+	min-width: 0;
+}
+
+.site-header__cell--center {
+	justify-self: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(1rem, 3vw, 2rem);
+	flex-wrap: wrap;
+}
+
+.site-header__cell--right {
+	justify-self: end;
+	min-width: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.75rem;
+}
+
+.site-header__brand {
+	display: flex;
+	align-items: baseline;
+	gap: 0.4rem;
+	flex-shrink: 0;
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+	max-width: 100%;
+}
+
+.site-header__brand-name {
+	font-family: "Newsreader", Georgia, serif;
+	font-size: 1.125rem;
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	color: var(--text-primary);
+	line-height: 1;
+}
+
+.site-header__brand-tag {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 0.5625rem;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	line-height: 1;
+}
+
+.site-header__cell--center a {
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 0.8125rem;
+	font-weight: 500;
+	color: var(--text-secondary);
+	text-decoration: none;
+	transition: color 0.15s ease;
+	white-space: nowrap;
+}
+
+.site-header__cell--center a:hover {
+	color: var(--accent-navy);
+}
+
+.site-header__pill {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 0.5625rem;
+	font-weight: 500;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--accent-navy);
+	border: 1px solid var(--accent-navy-border);
+	padding: 0.35rem 0.65rem;
+	border-radius: 999px;
+	background: rgba(43, 76, 126, 0.04);
+}
+
+@media (max-width: 720px) {
+	.site-header {
+		padding: 0.45rem 0.75rem;
+		gap: 0.35rem 0.5rem;
+	}
+
+	.site-header__cell--center {
+		gap: 0.65rem;
+	}
+
+	.site-header__cell--center a {
+		font-size: 0.75rem;
+	}
+
+	.site-header__brand-name {
+		font-size: 1rem;
+	}
+
+	.site-header__brand-tag {
+		display: none;
+	}
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+::-webkit-scrollbar-track {
+	background: var(--bg-subtle);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--border-medium);
+	border-radius: 3px;
+}
+
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes ripple {
+	0% {
+		r: 5;
+		stroke-opacity: 0.6;
+	}
+	100% {
+		r: 18;
+		stroke-opacity: 0;
+	}
+}
+
+@keyframes barFill {
+	from {
+		width: 0;
+	}
+}
+
+@keyframes blink {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}
+
+@keyframes progressSweep {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(400%);
+	}
+}
+
+.font-display {
+	font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-mono-data {
+	font-family: "DM Mono", monospace;
+}
+
+.section-label {
+	font-family: "DM Mono", monospace;
+	font-size: 10px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	margin-bottom: 20px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--border-light);
+	display: block;
+}
+
+.card {
+	background: var(--bg-surface);
+	border: 1px solid var(--border-light);
+	border-radius: 6px;
+	padding: 24px;
+}
+
+.cursor-blink {
+	display: inline-block;
+	animation: blink 1s step-end infinite;
+	color: var(--accent-navy);
+	margin-left: 1px;
+}

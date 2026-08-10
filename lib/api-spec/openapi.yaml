@@ -1,0 +1,298 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: intelligence
+    description: Vantage — conflict, in context.
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /intelligence/analyze:
+    post:
+      operationId: analyzeArticle
+      tags: [intelligence]
+      summary: Analyze a conflict article (URL or text)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeArticleBody"
+      responses:
+        "200":
+          description: Structured intelligence brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntelligenceBrief"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /intelligence/explore:
+    post:
+      operationId: exploreConflict
+      tags: [intelligence]
+      summary: Explore a conflict by topic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExploreConflictBody"
+      responses:
+        "200":
+          description: Conflict exploration brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntelligenceBrief"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+    AnalyzeArticleBody:
+      type: object
+      properties:
+        article:
+          type: string
+          description: Full text of the conflict news article
+        url:
+          type: string
+          description: URL of a publicly accessible conflict news article to scrape
+      description: Provide either article text or a URL (not both)
+    ExploreConflictBody:
+      type: object
+      properties:
+        topic:
+          type: string
+          description: Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
+          minLength: 3
+      required: [topic]
+    Location:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        region:
+          type: string
+          description: Broader geopolitical region (e.g. "Eastern Europe", "Middle East")
+        lat:
+          type: number
+        lng:
+          type: number
+      required: [city, country, region, lat, lng]
+    Credibility:
+      type: object
+      properties:
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        label:
+          type: string
+          enum: [Low, Medium, High]
+        reason:
+          type: string
+      required: [score, label, reason]
+    Perspective:
+      type: object
+      properties:
+        actor:
+          type: string
+          description: Name of the actor or group holding this perspective
+        alignment:
+          type: string
+          enum: [Western, Regional, State Media, Civil Society, Affected Population]
+        framing:
+          type: string
+          description: How this actor frames the event (1-2 sentences)
+        interests:
+          type: string
+          description: Underlying interest shaping this framing (1 sentence)
+      required: [actor, alignment, framing, interests]
+    RelatedEvent:
+      type: object
+      properties:
+        date:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [strike, escalation, negotiation, humanitarian, political]
+        lat:
+          type: number
+        lng:
+          type: number
+        searchQuery:
+          type: string
+          description: Google News search query to verify this event
+      required: [date, title, description, type, lat, lng, searchQuery]
+    CasualtyData:
+      type: object
+      properties:
+        description:
+          type: string
+        civilianImpact:
+          type: string
+        allSides:
+          type: string
+      required: [description, civilianImpact, allSides]
+    LiveEvent:
+      type: object
+      properties:
+        title:
+          type: string
+        source:
+          type: string
+        url:
+          type: string
+        date:
+          type: string
+      required: [title, source, url, date]
+    VerificationSource:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        outlet:
+          type: string
+        region:
+          type: string
+          enum: [Western, Middle East, Asia, Africa, Latin America, State Media]
+        summary:
+          type: string
+      required: [title, url, outlet, region, summary]
+    Verification:
+      type: object
+      properties:
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/VerificationSource"
+        consensus:
+          type: string
+          description: Where sources agree
+        divergence:
+          type: string
+          description: Where sources diverge
+      required: [sources, consensus, divergence]
+    IntelligenceBrief:
+      type: object
+      properties:
+        headline:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        summary:
+          type: string
+        actors:
+          type: array
+          items:
+            type: string
+        credibility:
+          $ref: "#/components/schemas/Credibility"
+        perspectives:
+          type: array
+          items:
+            $ref: "#/components/schemas/Perspective"
+        relatedEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelatedEvent"
+        escalationRisk:
+          type: string
+          enum: [Low, Medium, High]
+        escalationReason:
+          type: string
+        historicalContext:
+          type: string
+        affectedPopulation:
+          type: string
+        keyQuestion:
+          type: string
+        casualtyData:
+          $ref: "#/components/schemas/CasualtyData"
+        liveEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/LiveEvent"
+        verification:
+          $ref: "#/components/schemas/Verification"
+        sources:
+          type: array
+          items:
+            type: string
+      required:
+        - headline
+        - location
+        - summary
+        - actors
+        - credibility
+        - perspectives
+        - relatedEvents
+        - escalationRisk
+        - escalationReason
+        - historicalContext
+        - affectedPopulation
+        - keyQuestion
+        - casualtyData
+        - liveEvents
+        - verification
+        - sources
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required: [error]

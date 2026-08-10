@@ -1,0 +1,17 @@
+.git
+.github
+.cursor
+**/.DS_Store
+node_modules
+**/node_modules
+**/dist
+**/.cache
+.local
+.env
+.env.*
+!.env.example
+*.md
+!README.md
+coverage
+*.log
+pnpm-debug.log*
