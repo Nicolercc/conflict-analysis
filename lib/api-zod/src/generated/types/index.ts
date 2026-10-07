@@ -8,8 +8,6 @@
 
 export * from "./analyzeArticleBody";
 export * from "./casualtyData";
-export * from "./credibility";
-export * from "./credibilityLabel";
 export * from "./errorResponse";
 export * from "./exploreConflictBody";
 export * from "./healthStatus";
@@ -21,6 +19,3 @@ export * from "./perspective";
 export * from "./perspectiveAlignment";
 export * from "./relatedEvent";
 export * from "./relatedEventType";
-export * from "./verification";
-export * from "./verificationSource";
-export * from "./verificationSourceRegion";

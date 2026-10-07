@@ -1,17 +1,8 @@
 import type { IntelligenceBrief } from '@workspace/api-client-react';
-import type { ConflictAnalysis, MapEventType, TimelineEventType } from './types';
+import type { ConflictAnalysis, MapEvent, MapEventType, TimelineEventType } from './types';
 
 const PARTY_COLORS = ['#3B78D4', '#4A9B8B', '#C2536A', '#E07B39', '#9B7BC8', '#888888'];
 const PERSPECTIVE_COLORS = ['#3B78D4', '#C2536A', '#E07B39', '#9B7BC8', '#4A9B8B'];
-
-const REGION_FLAGS: Record<string, string> = {
-  Western: '🇺🇸',
-  'Middle East': '🇶🇦',
-  Asia: '🇮🇳',
-  Africa: '🌍',
-  'Latin America': '🇧🇷',
-  'State Media': '📡',
-};
 
 function toMapEventType(type: string): MapEventType {
   if (type === 'negotiation') return 'talks';
@@ -26,30 +17,50 @@ function toTimelineType(type: string): TimelineEventType {
   return 'escalation';
 }
 
-function pickDisplacedNarrative(brief: IntelligenceBrief): string {
-  const pop = brief.affectedPopulation?.trim() ?? '';
-  if (pop) return pop;
-  return brief.casualtyData?.civilianImpact?.trim() ?? '';
+/** A place is plotted only when both coordinates are known. */
+function hasCoords<T extends { lat: number | null; lng: number | null }>(
+  p: T,
+): p is T & { lat: number; lng: number } {
+  return typeof p.lat === 'number' && typeof p.lng === 'number';
 }
 
 export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
-  const sourceCount = brief.verification?.sources?.length ?? 0;
-  const displacedNarrative = pickDisplacedNarrative(brief);
+  const liveEvents = brief.liveEvents ?? [];
+
+  const mapEvents: MapEvent[] = [];
+  if (hasCoords(brief.location)) {
+    mapEvents.push({
+      lat: brief.location.lat,
+      lng: brief.location.lng,
+      type: 'strike',
+      name: brief.location.city,
+      desc: brief.headline,
+    });
+  }
+  for (const e of brief.relatedEvents) {
+    if (!hasCoords(e)) continue;
+    mapEvents.push({
+      lat: e.lat,
+      lng: e.lng,
+      type: toMapEventType(e.type),
+      name: e.title.split(' ').slice(0, 2).join(' '),
+      desc: e.description,
+    });
+  }
 
   return {
     title: brief.headline,
-    location: `${brief.location.city}, ${brief.location.country}`,
-    region: `${brief.location.region} · ${brief.location.city}`,
-    publishedAt: new Date().toISOString(),
+    location: [brief.location.city, brief.location.country].filter(Boolean).join(', '),
+    region: [brief.location.region, brief.location.city].filter(Boolean).join(' · '),
+    publishedAt: brief.generatedAt,
     summary: brief.summary,
     keyQuestion: brief.keyQuestion,
-    credibilityScore: brief.credibility.score,
-    credibilityTag: brief.credibility.reason,
     escalationLevel: brief.escalationRisk,
     escalationTag: brief.escalationReason,
-    displacedCount: '—',
-    displacedCountries: 0,
-    displacedNarrative,
+    coverage: {
+      articles: liveEvents.length,
+      outlets: new Set(liveEvents.map((e) => e.source)).size,
+    },
     parties: brief.actors.map((name, i) => ({
       name,
       color: PARTY_COLORS[i % PARTY_COLORS.length],
@@ -70,36 +81,8 @@ export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
       quote: p.framing,
       interest: p.interests,
     })),
-    sources:
-      sourceCount > 0
-        ? brief.verification.sources.map((s) => ({
-            name: s.outlet,
-            flag: REGION_FLAGS[s.region] ?? '🌐',
-            region: s.region,
-            summary: s.summary,
-          }))
-        : [],
-    mapEvents: [
-      {
-        lat: brief.location.lat,
-        lng: brief.location.lng,
-        type: 'strike',
-        name: brief.location.city,
-        desc: brief.headline,
-      },
-      ...brief.relatedEvents.map((e) => ({
-        lat: e.lat,
-        lng: e.lng,
-        type: toMapEventType(e.type),
-        name: e.title.split(' ').slice(0, 2).join(' '),
-        desc: e.description,
-      })),
-    ],
-    consensus: {
-      agree: brief.verification?.consensus ?? '—',
-      diverge: brief.verification?.divergence ?? '—',
-    },
+    mapEvents,
     historicalContext: brief.historicalContext,
-    credit: 'Claude (Anthropic) + GDELT Live News',
+    credit: 'Claude (Anthropic) + GDELT news retrieval',
   };
 }

@@ -32,27 +32,13 @@ export interface Location {
   country: string;
   /** Broader geopolitical region (e.g. "Eastern Europe", "Middle East") */
   region: string;
-  lat: number;
-  lng: number;
-}
-
-export type CredibilityLabel =
-  (typeof CredibilityLabel)[keyof typeof CredibilityLabel];
-
-export const CredibilityLabel = {
-  Low: "Low",
-  Medium: "Medium",
-  High: "High",
-} as const;
-
-export interface Credibility {
   /**
-   * @minimum 0
-   * @maximum 100
+   * Null when the location is unknown. Lat and lng are null together.
+   * @nullable
    */
-  score: number;
-  label: CredibilityLabel;
-  reason: string;
+  lat: number | null;
+  /** @nullable */
+  lng: number | null;
 }
 
 export type PerspectiveAlignment =
@@ -92,8 +78,13 @@ export interface RelatedEvent {
   title: string;
   description: string;
   type: RelatedEventType;
-  lat: number;
-  lng: number;
+  /**
+   * Null when the event has no known location. Lat and lng are null together.
+   * @nullable
+   */
+  lat: number | null;
+  /** @nullable */
+  lng: number | null;
   /** Google News search query to verify this event */
   searchQuery: string;
 }
@@ -104,39 +95,14 @@ export interface CasualtyData {
   allSides: string;
 }
 
+/**
+ * A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.
+ */
 export interface LiveEvent {
   title: string;
   source: string;
   url: string;
   date: string;
-}
-
-export type VerificationSourceRegion =
-  (typeof VerificationSourceRegion)[keyof typeof VerificationSourceRegion];
-
-export const VerificationSourceRegion = {
-  Western: "Western",
-  Middle_East: "Middle East",
-  Asia: "Asia",
-  Africa: "Africa",
-  Latin_America: "Latin America",
-  State_Media: "State Media",
-} as const;
-
-export interface VerificationSource {
-  title: string;
-  url: string;
-  outlet: string;
-  region: VerificationSourceRegion;
-  summary: string;
-}
-
-export interface Verification {
-  sources: VerificationSource[];
-  /** Where sources agree */
-  consensus: string;
-  /** Where sources diverge */
-  divergence: string;
 }
 
 export type IntelligenceBriefEscalationRisk =
@@ -149,11 +115,14 @@ export const IntelligenceBriefEscalationRisk = {
 } as const;
 
 export interface IntelligenceBrief {
+  /** ISO 8601 time the server generated this brief. Set once; unchanged when served from cache. */
+  generatedAt: string;
+  /** False when the input is not a conflict, crisis or geopolitical tension. */
+  inScope: boolean;
   headline: string;
   location: Location;
   summary: string;
   actors: string[];
-  credibility: Credibility;
   perspectives: Perspective[];
   relatedEvents: RelatedEvent[];
   escalationRisk: IntelligenceBriefEscalationRisk;
@@ -163,8 +132,6 @@ export interface IntelligenceBrief {
   keyQuestion: string;
   casualtyData: CasualtyData;
   liveEvents: LiveEvent[];
-  verification: Verification;
-  sources: string[];
 }
 
 export interface ErrorResponse {

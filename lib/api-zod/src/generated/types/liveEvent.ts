@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
+/**
+ * A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.
+ */
 export interface LiveEvent {
   title: string;
   source: string;

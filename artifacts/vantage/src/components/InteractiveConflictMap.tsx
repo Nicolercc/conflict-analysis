@@ -51,6 +51,16 @@ function getTileUrl() {
 	return "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 }
 
+/** Null when either coordinate is unknown, so nothing is plotted at a default point. */
+function toLatLng(p: {
+	lat: number | null;
+	lng: number | null;
+}): L.LatLngTuple | null {
+	return typeof p.lat === "number" && typeof p.lng === "number"
+		? [p.lat, p.lng]
+		: null;
+}
+
 function escapeHtml(s: string) {
 	return s
 		.replace(/&/g, "&amp;")
@@ -236,8 +246,17 @@ export function InteractiveConflictMap({
 		});
 		layersRef.current = { polylines: [], markers: [] };
 
-		const hub: L.LatLngTuple = [data.location.lat, data.location.lng];
-		const bounds = L.latLngBounds([hub]);
+		const hub = toLatLng(data.location);
+		const located = data.relatedEvents.flatMap((evt) => {
+			const pos = toLatLng(evt);
+			return pos ? [{ evt, pos }] : [];
+		});
+		const points = [...(hub ? [hub] : []), ...located.map((l) => l.pos)];
+		if (points.length === 0) {
+			map.setView([20, 0], 2);
+			return;
+		}
+		const bounds = L.latLngBounds(points);
 
 		const lineStyle: L.PolylineOptions = {
 			color: "#8a9aaa",
@@ -247,14 +266,14 @@ export function InteractiveConflictMap({
 			lineCap: "round",
 		};
 
-		data.relatedEvents.forEach((evt) => {
-			const dest: L.LatLngTuple = [evt.lat, evt.lng];
-			bounds.extend(dest);
-			const line = L.polyline([hub, dest], lineStyle).addTo(map);
-			layersRef.current.polylines.push(line);
-		});
+		if (hub) {
+			located.forEach(({ pos }) => {
+				const line = L.polyline([hub, pos], lineStyle).addTo(map);
+				layersRef.current.polylines.push(line);
+			});
+		}
 
-		const hubMarker = L.marker(hub, {
+		const hubMarker = !hub ? null : L.marker(hub, {
 			icon: L.divIcon({
 				className: "ci-map-marker-wrap ci-map-marker-wrap--hub",
 				html: hubIconHtml(data.location.city),
@@ -267,10 +286,9 @@ export function InteractiveConflictMap({
 			.addTo(map)
 			.bindTooltip(hubTooltipHtml(data), { ...TOOLTIP_OPTS, offset: [0, -36] });
 
-		layersRef.current.markers.push(hubMarker);
+		if (hubMarker) layersRef.current.markers.push(hubMarker);
 
-		data.relatedEvents.forEach((evt) => {
-			const pos: L.LatLngTuple = [evt.lat, evt.lng];
+		located.forEach(({ evt, pos }) => {
 			const marker = L.marker(pos, {
 				icon: L.divIcon({
 					className: "ci-map-marker-wrap",
@@ -294,8 +312,8 @@ export function InteractiveConflictMap({
 			layersRef.current.markers.push(marker);
 		});
 
-		if (data.relatedEvents.length === 0) {
-			map.setView(hub, 6);
+		if (points.length === 1) {
+			map.setView(points[0], 6);
 		} else {
 			map.fitBounds(bounds, { padding: [36, 36], maxZoom: 8, animate: false });
 		}
@@ -303,9 +321,11 @@ export function InteractiveConflictMap({
 		queueMicrotask(() => map.invalidateSize());
 	}, [data, active, mapReady]);
 
-	const presentKinds = [
-		...new Set(data.relatedEvents.map((e) => markerKind(e))),
-	];
+	const hasHub = toLatLng(data.location) !== null;
+	const locatedEvents = data.relatedEvents.filter((e) => toLatLng(e) !== null);
+	const unplotted =
+		(hasHub ? 0 : 1) + (data.relatedEvents.length - locatedEvents.length);
+	const presentKinds = [...new Set(locatedEvents.map((e) => markerKind(e)))];
 
 	return (
 		<div
@@ -344,10 +364,18 @@ export function InteractiveConflictMap({
 						maxWidth: "min(100%, 420px)",
 					}}
 				>
-					<span className="ci-map-legend-inline__item">
-						<span className="ci-map-legend-inline__dot ci-map-legend-inline__dot--hub" />
-						Primary focus
-					</span>
+					{hasHub ? (
+						<span className="ci-map-legend-inline__item">
+							<span className="ci-map-legend-inline__dot ci-map-legend-inline__dot--hub" />
+							Primary focus
+						</span>
+					) : null}
+					{unplotted > 0 ? (
+						<span className="ci-map-legend-inline__item">
+							{unplotted} {unplotted === 1 ? "place" : "places"} not shown:
+							location unknown
+						</span>
+					) : null}
 					{presentKinds.includes("strike") ? (
 						<span className="ci-map-legend-inline__item">
 							<span

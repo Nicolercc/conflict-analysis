@@ -6,20 +6,21 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CasualtyData } from "./casualtyData";
-import type { Credibility } from "./credibility";
 import type { IntelligenceBriefEscalationRisk } from "./intelligenceBriefEscalationRisk";
 import type { LiveEvent } from "./liveEvent";
 import type { Location } from "./location";
 import type { Perspective } from "./perspective";
 import type { RelatedEvent } from "./relatedEvent";
-import type { Verification } from "./verification";
 
 export interface IntelligenceBrief {
+  /** ISO 8601 time the server generated this brief. Set once; unchanged when served from cache. */
+  generatedAt: string;
+  /** False when the input is not a conflict, crisis or geopolitical tension. */
+  inScope: boolean;
   headline: string;
   location: Location;
   summary: string;
   actors: string[];
-  credibility: Credibility;
   perspectives: Perspective[];
   relatedEvents: RelatedEvent[];
   escalationRisk: IntelligenceBriefEscalationRisk;
@@ -29,6 +30,4 @@ export interface IntelligenceBrief {
   keyQuestion: string;
   casualtyData: CasualtyData;
   liveEvents: LiveEvent[];
-  verification: Verification;
-  sources: string[];
 }

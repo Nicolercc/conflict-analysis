@@ -62,22 +62,24 @@ describe("POST /api/intelligence/explore — baseline", () => {
   });
 });
 
-// Known defects from the audit. Each is marked `it.fails` until PR 1 fixes it,
-// at which point the marker is removed and the test becomes a regression gate.
+// Regression gates for the trust defects found in the audit.
 describe("POST /api/intelligence/explore — trust contract", () => {
-  it.fails("makes one model call per brief (no simulated verification pass)", async () => {
+  it("makes one model call per brief (no simulated verification pass)", async () => {
     await explore("Sudan humanitarian access");
     expect(create).toHaveBeenCalledTimes(1);
   });
 
-  it.fails("never returns model-invented verification sources", async () => {
+  it("never returns model-invented verification sources", async () => {
     create.mockImplementation(async () =>
       modelText(
         JSON.stringify({
           ...modelBrief(),
-          sources: [{ outlet: "Al Jazeera", url: "https://aljazeera.com/made-up" }],
-          consensus: "x",
-          divergence: "y",
+          sources: ["aljazeera.com"],
+          verification: {
+            sources: [{ outlet: "Al Jazeera", url: "https://aljazeera.com/made-up" }],
+            consensus: "x",
+            divergence: "y",
+          },
         }),
       ),
     );
@@ -86,7 +88,7 @@ describe("POST /api/intelligence/explore — trust contract", () => {
     expect(res.body).not.toHaveProperty("sources");
   });
 
-  it.fails("drops a model-invented credibility score", async () => {
+  it("drops a model-invented credibility score", async () => {
     modelAnswers(
       modelBrief({ credibility: { score: 82, label: "High", reason: "r" } }),
     );
@@ -94,7 +96,7 @@ describe("POST /api/intelligence/explore — trust contract", () => {
     expect(res.body).not.toHaveProperty("credibility");
   });
 
-  it.fails("stamps the brief with a server generation time that survives caching", async () => {
+  it("stamps the brief with a server generation time that survives caching", async () => {
     const first = await explore("Sudan humanitarian access");
     expect(Number.isNaN(Date.parse(first.body.generatedAt))).toBe(false);
     await new Promise((r) => setTimeout(r, 15));
@@ -102,7 +104,7 @@ describe("POST /api/intelligence/explore — trust contract", () => {
     expect(second.body.generatedAt).toBe(first.body.generatedAt);
   });
 
-  it.fails("reports a missing location as unknown instead of 0,0", async () => {
+  it("reports a missing location as unknown instead of 0,0", async () => {
     modelAnswers(
       modelBrief({
         location: { city: "", country: "Sudan", region: "Sub-Saharan Africa" },
@@ -113,7 +115,7 @@ describe("POST /api/intelligence/explore — trust contract", () => {
     expect(res.body.location.lng).toBeNull();
   });
 
-  it.fails("does not pair one valid coordinate with a made-up zero", async () => {
+  it("does not pair one valid coordinate with a made-up zero", async () => {
     modelAnswers(
       modelBrief({
         location: {

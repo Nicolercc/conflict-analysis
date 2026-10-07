@@ -11,6 +11,11 @@ export interface Location {
   country: string;
   /** Broader geopolitical region (e.g. "Eastern Europe", "Middle East") */
   region: string;
-  lat: number;
-  lng: number;
+  /**
+   * Null when the location is unknown. Lat and lng are null together.
+   * @nullable
+   */
+  lat: number | null;
+  /** @nullable */
+  lng: number | null;
 }

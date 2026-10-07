@@ -9,12 +9,10 @@ import {
 import "./AnalysisLoader.css";
 
 const STEPS = [
-	"Parsing article text",
-	"Extracting location & actors",
-	"Correlating historical events",
-	"Scoring source credibility",
-	"Building multi-perspective brief",
-	"Running Claude verification pass",
+	"Retrieving recent coverage",
+	"Retrieving background",
+	"Generating the brief",
+	"Checking locations and dates",
 ];
 
 const INTEL_TIPS = [
@@ -23,7 +21,7 @@ const INTEL_TIPS = [
 	"When parties disagree, quote the claim and attribute—readers deserve the trace.",
 	"Primary documents (orders, transcripts) outrank anonymous social clips.",
 	"Geography matters: name the corridor, border, or city block when you can.",
-	"Slower filing with verified context often travels further than first blood.",
+	"Slower filing with checked context often travels further than being first.",
 ];
 
 const MAX_BUBBLES = 12;

@@ -121,23 +121,11 @@ components:
           type: string
           description: Broader geopolitical region (e.g. "Eastern Europe", "Middle East")
         lat:
-          type: number
+          type: [number, "null"]
+          description: Null when the location is unknown. Lat and lng are null together.
         lng:
-          type: number
+          type: [number, "null"]
       required: [city, country, region, lat, lng]
-    Credibility:
-      type: object
-      properties:
-        score:
-          type: number
-          minimum: 0
-          maximum: 100
-        label:
-          type: string
-          enum: [Low, Medium, High]
-        reason:
-          type: string
-      required: [score, label, reason]
     Perspective:
       type: object
       properties:
@@ -167,9 +155,10 @@ components:
           type: string
           enum: [strike, escalation, negotiation, humanitarian, political]
         lat:
-          type: number
+          type: [number, "null"]
+          description: Null when the event has no known location. Lat and lng are null together.
         lng:
-          type: number
+          type: [number, "null"]
         searchQuery:
           type: string
           description: Google News search query to verify this event
@@ -186,6 +175,7 @@ components:
       required: [description, civilianImpact, allSides]
     LiveEvent:
       type: object
+      description: A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.
       properties:
         title:
           type: string
@@ -196,38 +186,15 @@ components:
         date:
           type: string
       required: [title, source, url, date]
-    VerificationSource:
-      type: object
-      properties:
-        title:
-          type: string
-        url:
-          type: string
-        outlet:
-          type: string
-        region:
-          type: string
-          enum: [Western, Middle East, Asia, Africa, Latin America, State Media]
-        summary:
-          type: string
-      required: [title, url, outlet, region, summary]
-    Verification:
-      type: object
-      properties:
-        sources:
-          type: array
-          items:
-            $ref: "#/components/schemas/VerificationSource"
-        consensus:
-          type: string
-          description: Where sources agree
-        divergence:
-          type: string
-          description: Where sources diverge
-      required: [sources, consensus, divergence]
     IntelligenceBrief:
       type: object
       properties:
+        generatedAt:
+          type: string
+          description: ISO 8601 time the server generated this brief. Set once; unchanged when served from cache.
+        inScope:
+          type: boolean
+          description: False when the input is not a conflict, crisis or geopolitical tension.
         headline:
           type: string
         location:
@@ -238,8 +205,6 @@ components:
           type: array
           items:
             type: string
-        credibility:
-          $ref: "#/components/schemas/Credibility"
         perspectives:
           type: array
           items:
@@ -265,18 +230,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/LiveEvent"
-        verification:
-          $ref: "#/components/schemas/Verification"
-        sources:
-          type: array
-          items:
-            type: string
       required:
+        - generatedAt
+        - inScope
         - headline
         - location
         - summary
         - actors
-        - credibility
         - perspectives
         - relatedEvents
         - escalationRisk
@@ -286,8 +246,6 @@ components:
         - keyQuestion
         - casualtyData
         - liveEvents
-        - verification
-        - sources
     ErrorResponse:
       type: object
       properties:

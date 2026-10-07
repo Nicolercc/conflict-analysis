@@ -30,10 +30,17 @@ export const AnalyzeArticleBody = zod
   })
   .describe("Provide either article text or a URL (not both)");
 
-export const analyzeArticleResponseCredibilityScoreMin = 0;
-export const analyzeArticleResponseCredibilityScoreMax = 100;
-
 export const AnalyzeArticleResponse = zod.object({
+  generatedAt: zod
+    .string()
+    .describe(
+      "ISO 8601 time the server generated this brief. Set once; unchanged when served from cache.",
+    ),
+  inScope: zod
+    .boolean()
+    .describe(
+      "False when the input is not a conflict, crisis or geopolitical tension.",
+    ),
   headline: zod.string(),
   location: zod.object({
     city: zod.string(),
@@ -43,19 +50,16 @@ export const AnalyzeArticleResponse = zod.object({
       .describe(
         'Broader geopolitical region (e.g. \"Eastern Europe\", \"Middle East\")',
       ),
-    lat: zod.number(),
-    lng: zod.number(),
+    lat: zod
+      .number()
+      .nullable()
+      .describe(
+        "Null when the location is unknown. Lat and lng are null together.",
+      ),
+    lng: zod.number().nullable(),
   }),
   summary: zod.string(),
   actors: zod.array(zod.string()),
-  credibility: zod.object({
-    score: zod
-      .number()
-      .min(analyzeArticleResponseCredibilityScoreMin)
-      .max(analyzeArticleResponseCredibilityScoreMax),
-    label: zod.enum(["Low", "Medium", "High"]),
-    reason: zod.string(),
-  }),
   perspectives: zod.array(
     zod.object({
       actor: zod
@@ -88,8 +92,13 @@ export const AnalyzeArticleResponse = zod.object({
         "humanitarian",
         "political",
       ]),
-      lat: zod.number(),
-      lng: zod.number(),
+      lat: zod
+        .number()
+        .nullable()
+        .describe(
+          "Null when the event has no known location. Lat and lng are null together.",
+        ),
+      lng: zod.number().nullable(),
       searchQuery: zod
         .string()
         .describe("Google News search query to verify this event"),
@@ -106,34 +115,17 @@ export const AnalyzeArticleResponse = zod.object({
     allSides: zod.string(),
   }),
   liveEvents: zod.array(
-    zod.object({
-      title: zod.string(),
-      source: zod.string(),
-      url: zod.string(),
-      date: zod.string(),
-    }),
-  ),
-  verification: zod.object({
-    sources: zod.array(
-      zod.object({
+    zod
+      .object({
         title: zod.string(),
+        source: zod.string(),
         url: zod.string(),
-        outlet: zod.string(),
-        region: zod.enum([
-          "Western",
-          "Middle East",
-          "Asia",
-          "Africa",
-          "Latin America",
-          "State Media",
-        ]),
-        summary: zod.string(),
-      }),
-    ),
-    consensus: zod.string().describe("Where sources agree"),
-    divergence: zod.string().describe("Where sources diverge"),
-  }),
-  sources: zod.array(zod.string()),
+        date: zod.string(),
+      })
+      .describe(
+        "A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.",
+      ),
+  ),
 });
 
 /**
@@ -150,10 +142,17 @@ export const ExploreConflictBody = zod.object({
     ),
 });
 
-export const exploreConflictResponseCredibilityScoreMin = 0;
-export const exploreConflictResponseCredibilityScoreMax = 100;
-
 export const ExploreConflictResponse = zod.object({
+  generatedAt: zod
+    .string()
+    .describe(
+      "ISO 8601 time the server generated this brief. Set once; unchanged when served from cache.",
+    ),
+  inScope: zod
+    .boolean()
+    .describe(
+      "False when the input is not a conflict, crisis or geopolitical tension.",
+    ),
   headline: zod.string(),
   location: zod.object({
     city: zod.string(),
@@ -163,19 +162,16 @@ export const ExploreConflictResponse = zod.object({
       .describe(
         'Broader geopolitical region (e.g. \"Eastern Europe\", \"Middle East\")',
       ),
-    lat: zod.number(),
-    lng: zod.number(),
+    lat: zod
+      .number()
+      .nullable()
+      .describe(
+        "Null when the location is unknown. Lat and lng are null together.",
+      ),
+    lng: zod.number().nullable(),
   }),
   summary: zod.string(),
   actors: zod.array(zod.string()),
-  credibility: zod.object({
-    score: zod
-      .number()
-      .min(exploreConflictResponseCredibilityScoreMin)
-      .max(exploreConflictResponseCredibilityScoreMax),
-    label: zod.enum(["Low", "Medium", "High"]),
-    reason: zod.string(),
-  }),
   perspectives: zod.array(
     zod.object({
       actor: zod
@@ -208,8 +204,13 @@ export const ExploreConflictResponse = zod.object({
         "humanitarian",
         "political",
       ]),
-      lat: zod.number(),
-      lng: zod.number(),
+      lat: zod
+        .number()
+        .nullable()
+        .describe(
+          "Null when the event has no known location. Lat and lng are null together.",
+        ),
+      lng: zod.number().nullable(),
       searchQuery: zod
         .string()
         .describe("Google News search query to verify this event"),
@@ -226,32 +227,15 @@ export const ExploreConflictResponse = zod.object({
     allSides: zod.string(),
   }),
   liveEvents: zod.array(
-    zod.object({
-      title: zod.string(),
-      source: zod.string(),
-      url: zod.string(),
-      date: zod.string(),
-    }),
-  ),
-  verification: zod.object({
-    sources: zod.array(
-      zod.object({
+    zod
+      .object({
         title: zod.string(),
+        source: zod.string(),
         url: zod.string(),
-        outlet: zod.string(),
-        region: zod.enum([
-          "Western",
-          "Middle East",
-          "Asia",
-          "Africa",
-          "Latin America",
-          "State Media",
-        ]),
-        summary: zod.string(),
-      }),
-    ),
-    consensus: zod.string().describe("Where sources agree"),
-    divergence: zod.string().describe("Where sources diverge"),
-  }),
-  sources: zod.array(zod.string()),
+        date: zod.string(),
+      })
+      .describe(
+        "A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.",
+      ),
+  ),
 });

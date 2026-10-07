@@ -144,8 +144,8 @@ export function Home() {
 								transition={{ ...transition, delay: reduceMotion ? 0 : 0.2 }}
 							>
 								Built for geopolitical conflicts, humanitarian crises, and regional
-								tensions. Paste an article link or search a specific event — we assemble
-								verification signals, timelines, perspectives, and geography.
+								tensions. Search a specific event — we assemble recent coverage,
+								a background timeline, perspectives, and geography.
 							</motion.p>
 
 							<motion.div
@@ -183,8 +183,8 @@ export function Home() {
 									</button>
 								</div>
 								<p className="home-search__hint">
-									Works best with specific conflicts and crises · Article links
-									supported · No account required
+									Works best with specific conflicts and crises · No account
+									required
 								</p>
 							</form>
 							{offTopicHint ? (
@@ -197,8 +197,8 @@ export function Home() {
 										marginBottom: "0",
 									}}
 								>
-									Try a specific conflict or paste an article link — e.g. &quot;Gaza
-									ceasefire&quot; or &quot;Red Sea shipping tensions&quot;
+									Try a specific conflict — e.g. &quot;Gaza ceasefire&quot; or
+									&quot;Red Sea shipping tensions&quot;
 								</p>
 							) : null}
 							</motion.div>
@@ -268,10 +268,10 @@ export function Home() {
 								<div className="home-feature__icon" aria-hidden>
 									<ShieldCheck size={22} strokeWidth={2} />
 								</div>
-								<h3 className="home-feature__title">Source-aware briefings</h3>
+								<h3 className="home-feature__title">Linked to real reporting</h3>
 								<p className="home-feature__text">
-									See where reporting agrees, where it diverges, and how credible the
-									signal is—before you quote a line.
+									Every brief lists the recent articles it retrieved, with links to
+									the originals, and says plainly what is AI-generated.
 								</p>
 							</article>
 							<article className="home-feature">
