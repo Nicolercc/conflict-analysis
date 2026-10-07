@@ -2,7 +2,7 @@ import type { Coverage } from "./conflict/types";
 
 /** Counts of articles returned by retrieval — the only sourcing numbers the brief can stand behind. */
 export function CoverageCard({ coverage }: { coverage: Coverage }) {
-	const { articles, outlets } = coverage;
+	const { articles, outlets, countries } = coverage;
 	const none = articles === 0;
 
 	return (
@@ -52,7 +52,7 @@ export function CoverageCard({ coverage }: { coverage: Coverage }) {
 			>
 				{none
 					? "No recent articles were retrieved for this topic. The brief below rests on the model's background knowledge."
-					: `${articles} recent ${articles === 1 ? "article" : "articles"} from ${outlets} ${outlets === 1 ? "outlet" : "outlets"}, linked under Recent coverage. Retrieved, not independently verified.`}
+					: `${articles} recent ${articles === 1 ? "article" : "articles"} from ${outlets} ${outlets === 1 ? "outlet" : "outlets"}${countries > 1 ? ` in ${countries} countries` : ""}, listed under Sources. Retrieved, not independently verified.`}
 			</p>
 		</div>
 	);

@@ -25,7 +25,7 @@ function hasCoords<T extends { lat: number | null; lng: number | null }>(
 }
 
 export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
-  const liveEvents = brief.liveEvents ?? [];
+  const news = brief.sources.filter((s) => s.kind === 'news');
 
   const mapEvents: MapEvent[] = [];
   if (hasCoords(brief.location)) {
@@ -58,8 +58,9 @@ export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
     escalationLevel: brief.escalationRisk,
     escalationTag: brief.escalationReason,
     coverage: {
-      articles: liveEvents.length,
-      outlets: new Set(liveEvents.map((e) => e.source)).size,
+      articles: news.length,
+      outlets: new Set(news.map((s) => s.publisher)).size,
+      countries: new Set(news.map((s) => s.country).filter(Boolean)).size,
     },
     parties: brief.actors.map((name, i) => ({
       name,
@@ -83,6 +84,6 @@ export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
     })),
     mapEvents,
     historicalContext: brief.historicalContext,
-    credit: 'Claude (Anthropic) + GDELT news retrieval',
+    credit: 'Generated with Claude (Anthropic) from retrieved news feeds, GDELT and Wikipedia',
   };
 }

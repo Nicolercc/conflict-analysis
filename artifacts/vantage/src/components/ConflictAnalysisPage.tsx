@@ -15,7 +15,7 @@ import { EventTimeline } from "./EventTimeline";
 import { CasualtyPanel } from "./CasualtyPanel";
 import { InteractiveConflictMap } from "./InteractiveConflictMap";
 import { ConflictBackground } from "./ConflictBackground";
-import { LiveEventsPanel } from "./LiveEventsPanel";
+import { ClaimList, RetrievalSummary, SourceList } from "./Evidence";
 import { adaptBrief } from "./conflict/adapter";
 import type { CSSProperties } from "react";
 import { PartiesPanel } from "./PartiesPanel";
@@ -297,11 +297,12 @@ export function ConflictAnalysisPageRoute() {
 				</div>
 
 				<p className="ci-ai-notice">
-					<strong>AI-generated brief.</strong> Articles under Recent coverage
-					were retrieved from news sources and link to the originals. Everything
-					else — the summary, timeline, perspectives, figures and escalation
-					assessment — comes from the model&apos;s background knowledge and is
-					not individually sourced. Check original reporting before you cite it.
+					<strong>AI-generated brief.</strong> Key facts and the coverage
+					comparison cite numbered sources that were retrieved for this brief;
+					follow the numbers to the original reporting. Everything else — the
+					summary, timeline, perspectives, figures and escalation assessment —
+					is the model&apos;s background context and is not individually
+					sourced. Check original reporting before you cite it.
 				</p>
 
 				<div className="ci-score-row">
@@ -327,6 +328,40 @@ export function ConflictAnalysisPageRoute() {
 							<h2 style={S.sectionTitle}>What happened</h2>
 							<p className="ci-summary">{analysis.summary}</p>
 						</div>
+
+						<div className="ci-section-block">
+							<h2 style={S.sectionTitle}>Key facts from retrieved reporting</h2>
+							<ClaimList
+								claims={briefData.keyFacts}
+								sources={briefData.sources}
+								empty="Nothing in the retrieved sources could be tied to a specific claim, so none is shown."
+							/>
+						</div>
+
+						{(briefData.coverage.agreements.length > 0 ||
+							briefData.coverage.differences.length > 0) && (
+							<div className="ci-section-block">
+								<h2 style={S.sectionTitle}>How coverage compares</h2>
+								<div className="ci-compare">
+									<div>
+										<h3 className="ci-compare__head">Where outlets agree</h3>
+										<ClaimList
+											claims={briefData.coverage.agreements}
+											sources={briefData.sources}
+											empty="No shared point was found across the retrieved outlets."
+										/>
+									</div>
+									<div>
+										<h3 className="ci-compare__head">Where framing differs</h3>
+										<ClaimList
+											claims={briefData.coverage.differences}
+											sources={briefData.sources}
+											empty="No clear difference in framing was found."
+										/>
+									</div>
+								</div>
+							</div>
+						)}
 
 						{analysis.keyQuestion && (
 							<div
@@ -384,12 +419,11 @@ export function ConflictAnalysisPageRoute() {
 							</div>
 						)}
 
-						{briefData.liveEvents && briefData.liveEvents.length > 0 && (
-							<div className="ci-section-block">
-								<h2 style={S.sectionTitle}>Recent coverage</h2>
-								<LiveEventsPanel events={briefData.liveEvents} active={true} />
-							</div>
-						)}
+						<div className="ci-section-block">
+							<h2 style={S.sectionTitle}>Sources</h2>
+							<RetrievalSummary retrieval={briefData.retrieval} />
+							<SourceList sources={briefData.sources} />
+						</div>
 					</div>
 
 					<aside className="ci-sidebar">

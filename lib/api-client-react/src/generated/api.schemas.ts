@@ -104,13 +104,82 @@ export interface CasualtyData {
 }
 
 /**
- * A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.
+ * news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied.
  */
-export interface LiveEvent {
+export type SourceKind = (typeof SourceKind)[keyof typeof SourceKind];
+
+export const SourceKind = {
+  news: "news",
+  reference: "reference",
+  article: "article",
+} as const;
+
+/**
+ * A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.
+ */
+export interface Source {
+  /** Stable within one brief, e.g. "S1". Claims refer to sources by this id. */
+  id: string;
+  /** news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied. */
+  kind: SourceKind;
+  /** Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader. */
+  provider: string;
+  publisher: string;
   title: string;
-  source: string;
-  url: string;
-  date: string;
+  /** @nullable */
+  url: string | null;
+  /**
+   * ISO 8601 publication time when the provider gave one, otherwise null.
+   * @nullable
+   */
+  publishedAt: string | null;
+  /** ISO 8601 time the server retrieved the record. */
+  retrievedAt: string;
+  /** @nullable */
+  language: string | null;
+  /**
+   * Country of the outlet when the provider reports it.
+   * @nullable
+   */
+  country: string | null;
+  /**
+   * The publisher's own summary or the reference extract, when available.
+   * @nullable
+   */
+  excerpt: string | null;
+}
+
+/**
+ * A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.
+ */
+export interface Claim {
+  text: string;
+  /** @minItems 1 */
+  sourceIds: string[];
+}
+
+export interface CoverageComparison {
+  agreements: Claim[];
+  differences: Claim[];
+}
+
+/**
+ * empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.
+ */
+export type RetrievalStatusStatus =
+  (typeof RetrievalStatusStatus)[keyof typeof RetrievalStatusStatus];
+
+export const RetrievalStatusStatus = {
+  ok: "ok",
+  empty: "empty",
+  failed: "failed",
+} as const;
+
+export interface RetrievalStatus {
+  provider: string;
+  /** empty means the provider answered with nothing relevant; failed means it could not be reached or timed out. */
+  status: RetrievalStatusStatus;
+  count: number;
 }
 
 export type IntelligenceBriefEscalationRisk =
@@ -139,7 +208,11 @@ export interface IntelligenceBrief {
   affectedPopulation: string;
   keyQuestion: string;
   casualtyData: CasualtyData;
-  liveEvents: LiveEvent[];
+  sources: Source[];
+  /** Statements supported by the cited sources. Empty when nothing retrieved supports a claim. */
+  keyFacts: Claim[];
+  coverage: CoverageComparison;
+  retrieval: RetrievalStatus[];
 }
 
 export interface ErrorResponse {

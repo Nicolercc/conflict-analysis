@@ -6,11 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CasualtyData } from "./casualtyData";
+import type { Claim } from "./claim";
+import type { CoverageComparison } from "./coverageComparison";
 import type { IntelligenceBriefEscalationRisk } from "./intelligenceBriefEscalationRisk";
-import type { LiveEvent } from "./liveEvent";
 import type { Location } from "./location";
 import type { Perspective } from "./perspective";
 import type { RelatedEvent } from "./relatedEvent";
+import type { RetrievalStatus } from "./retrievalStatus";
+import type { Source } from "./source";
 
 export interface IntelligenceBrief {
   /** ISO 8601 time the server generated this brief. Set once; unchanged when served from cache. */
@@ -29,5 +32,9 @@ export interface IntelligenceBrief {
   affectedPopulation: string;
   keyQuestion: string;
   casualtyData: CasualtyData;
-  liveEvents: LiveEvent[];
+  sources: Source[];
+  /** Statements supported by the cited sources. Empty when nothing retrieved supports a claim. */
+  keyFacts: Claim[];
+  coverage: CoverageComparison;
+  retrieval: RetrievalStatus[];
 }

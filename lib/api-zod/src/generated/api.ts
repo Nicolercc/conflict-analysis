@@ -124,17 +124,98 @@ export const AnalyzeArticleResponse = zod.object({
     civilianImpact: zod.string(),
     allSides: zod.string(),
   }),
-  liveEvents: zod.array(
+  sources: zod.array(
     zod
       .object({
+        id: zod
+          .string()
+          .describe(
+            'Stable within one brief, e.g. \"S1\". Claims refer to sources by this id.',
+          ),
+        kind: zod
+          .enum(["news", "reference", "article"])
+          .describe(
+            "news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied.",
+          ),
+        provider: zod
+          .string()
+          .describe(
+            "Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.",
+          ),
+        publisher: zod.string(),
         title: zod.string(),
-        source: zod.string(),
-        url: zod.string(),
-        date: zod.string(),
+        url: zod.string().nullable(),
+        publishedAt: zod
+          .string()
+          .nullable()
+          .describe(
+            "ISO 8601 publication time when the provider gave one, otherwise null.",
+          ),
+        retrievedAt: zod
+          .string()
+          .describe("ISO 8601 time the server retrieved the record."),
+        language: zod.string().nullable(),
+        country: zod
+          .string()
+          .nullable()
+          .describe("Country of the outlet when the provider reports it."),
+        excerpt: zod
+          .string()
+          .nullable()
+          .describe(
+            "The publisher's own summary or the reference extract, when available.",
+          ),
       })
       .describe(
-        "A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.",
+        "A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.",
       ),
+  ),
+  keyFacts: zod
+    .array(
+      zod
+        .object({
+          text: zod.string(),
+          sourceIds: zod.array(zod.string()).min(1),
+        })
+        .describe(
+          "A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.",
+        ),
+    )
+    .describe(
+      "Statements supported by the cited sources. Empty when nothing retrieved supports a claim.",
+    ),
+  coverage: zod.object({
+    agreements: zod.array(
+      zod
+        .object({
+          text: zod.string(),
+          sourceIds: zod.array(zod.string()).min(1),
+        })
+        .describe(
+          "A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.",
+        ),
+    ),
+    differences: zod.array(
+      zod
+        .object({
+          text: zod.string(),
+          sourceIds: zod.array(zod.string()).min(1),
+        })
+        .describe(
+          "A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.",
+        ),
+    ),
+  }),
+  retrieval: zod.array(
+    zod.object({
+      provider: zod.string(),
+      status: zod
+        .enum(["ok", "empty", "failed"])
+        .describe(
+          "empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.",
+        ),
+      count: zod.number(),
+    }),
   ),
 });
 
@@ -238,16 +319,97 @@ export const ExploreConflictResponse = zod.object({
     civilianImpact: zod.string(),
     allSides: zod.string(),
   }),
-  liveEvents: zod.array(
+  sources: zod.array(
     zod
       .object({
+        id: zod
+          .string()
+          .describe(
+            'Stable within one brief, e.g. \"S1\". Claims refer to sources by this id.',
+          ),
+        kind: zod
+          .enum(["news", "reference", "article"])
+          .describe(
+            "news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied.",
+          ),
+        provider: zod
+          .string()
+          .describe(
+            "Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.",
+          ),
+        publisher: zod.string(),
         title: zod.string(),
-        source: zod.string(),
-        url: zod.string(),
-        date: zod.string(),
+        url: zod.string().nullable(),
+        publishedAt: zod
+          .string()
+          .nullable()
+          .describe(
+            "ISO 8601 publication time when the provider gave one, otherwise null.",
+          ),
+        retrievedAt: zod
+          .string()
+          .describe("ISO 8601 time the server retrieved the record."),
+        language: zod.string().nullable(),
+        country: zod
+          .string()
+          .nullable()
+          .describe("Country of the outlet when the provider reports it."),
+        excerpt: zod
+          .string()
+          .nullable()
+          .describe(
+            "The publisher's own summary or the reference extract, when available.",
+          ),
       })
       .describe(
-        "A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.",
+        "A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.",
       ),
+  ),
+  keyFacts: zod
+    .array(
+      zod
+        .object({
+          text: zod.string(),
+          sourceIds: zod.array(zod.string()).min(1),
+        })
+        .describe(
+          "A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.",
+        ),
+    )
+    .describe(
+      "Statements supported by the cited sources. Empty when nothing retrieved supports a claim.",
+    ),
+  coverage: zod.object({
+    agreements: zod.array(
+      zod
+        .object({
+          text: zod.string(),
+          sourceIds: zod.array(zod.string()).min(1),
+        })
+        .describe(
+          "A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.",
+        ),
+    ),
+    differences: zod.array(
+      zod
+        .object({
+          text: zod.string(),
+          sourceIds: zod.array(zod.string()).min(1),
+        })
+        .describe(
+          "A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.",
+        ),
+    ),
+  }),
+  retrieval: zod.array(
+    zod.object({
+      provider: zod.string(),
+      status: zod
+        .enum(["ok", "empty", "failed"])
+        .describe(
+          "empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.",
+        ),
+      count: zod.number(),
+    }),
   ),
 });
