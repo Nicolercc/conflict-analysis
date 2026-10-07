@@ -82,19 +82,27 @@ function extractJSON(text: string): object {
   return JSON.parse(jsonStr);
 }
 
-/** Coerce AI string/number coords; fall back to 0,0 (Null Island) when unusable. */
-function normalizeLatLng(lat: unknown, lng: unknown): { lat: number; lng: number } {
+/**
+ * Coerce AI string/number coords. A pair is either fully valid or unknown:
+ * an unusable lat or lng makes both null, so a missing place never becomes
+ * a real point on the map.
+ */
+function normalizeLatLng(
+  lat: unknown,
+  lng: unknown,
+): { lat: number; lng: number } | { lat: null; lng: null } {
   const parse = (v: unknown): number => {
     if (typeof v === "number" && Number.isFinite(v)) return v;
-    const s = String(v ?? "").trim().replace(/,/g, "");
-    const n = parseFloat(s);
-    return Number.isFinite(n) ? n : NaN;
+    if (typeof v !== "string") return NaN;
+    const t = v.trim().replace(/,/g, "");
+    return /^[+-]?\d+(\.\d+)?$/.test(t) ? Number(t) : NaN;
   };
-  let la = parse(lat);
-  let ln = parse(lng);
-  if (!Number.isFinite(la) || la < -90 || la > 90) la = 0;
-  if (!Number.isFinite(ln) || ln < -180 || ln > 180) ln = 0;
-  return { lat: la, lng: ln };
+  const la = parse(lat);
+  const ln = parse(lng);
+  const valid =
+    Number.isFinite(la) && la >= -90 && la <= 90 &&
+    Number.isFinite(ln) && ln >= -180 && ln <= 180;
+  return valid ? { lat: la, lng: ln } : { lat: null, lng: null };
 }
 
 /** When the model adds preamble/postamble, try fenced blocks or trailing JSON. */
@@ -215,24 +223,22 @@ CRITICAL FRAMING: Do NOT default to Western government or NATO framing as neutra
 
 ${wikiContext ? `WIKIPEDIA CONTEXT:\n${wikiContext}\n\n` : ""}${newsContext ? `RECENT NEWS CONTEXT:\n${newsContext}\n\n` : ""}
 
+SOURCING RULES: You have only the context above plus your background knowledge. Do not name news outlets you were not given, and do not invent URLs, quotes or statistics. State a figure only when you are confident of it, and name the reporting organisation and the date it refers to; otherwise say that reliable figures are not available.
+
 Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
 
 {
+  "inScope": boolean (false if the input is not a conflict, humanitarian crisis or geopolitical tension — still fill the other fields as best you can),
   "headline": "string (8-10 words, factual, no editorializing)",
   "location": {
     "city": "string",
     "country": "string",
     "region": "string (e.g. Middle East, Sub-Saharan Africa, Eastern Europe, South Asia)",
-    "lat": number,
-    "lng": number
+    "lat": number | null,
+    "lng": number | null (use null for both when the location is not known)
   },
   "summary": "string (2-3 sentences, neutral framing, no Western-default perspective)",
   "actors": ["string"] (2-5 key parties: state + non-state + affected civilian groups),
-  "credibility": {
-    "score": number (0-100),
-    "label": "Low" | "Medium" | "High",
-    "reason": "string (1 sentence, specific — note if only one-sided sources available)"
-  },
   "perspectives": [
     {
       "actor": "string (name of actor or group)",
@@ -247,50 +253,38 @@ Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
       "title": "string",
       "description": "string (1 sentence — why this event is relevant now)",
       "type": "strike" | "escalation" | "negotiation" | "humanitarian" | "political",
-      "lat": number,
-      "lng": number,
+      "lat": number | null,
+      "lng": number | null,
       "searchQuery": "string (5-8 word Google News query)"
     }
   ] (EXACTLY 3 items, chronological, real documented events),
   "escalationRisk": "Low" | "Medium" | "High",
   "escalationReason": "string (1-2 sentences incorporating regional power dynamics)",
   "historicalContext": "string (2-3 sentences — long-term forces, colonial legacies, prior agreements, non-Western framing)",
-  "affectedPopulation": "string (1-2 sentences — civilian impact using UN/WHO/OCHA figures, not military framing)",
+  "affectedPopulation": "string (1-2 sentences — civilian impact, not military framing; attribute and date any figure)",
   "keyQuestion": "string (1 sentence — the most important unanswered geopolitical question)",
   "casualtyData": {
-    "description": "string (UN/WHO-sourced toll estimates — do not filter by geopolitical alignment)",
+    "description": "string (toll estimates with the reporting organisation and date, or a statement that reliable figures are not available — do not filter by geopolitical alignment)",
     "civilianImpact": "string (2 sentences on displacement, infrastructure, medical access)",
-    "allSides": "string (2 sentences on casualty context from multiple sources including non-Western reporting)"
-  },
-  "sources": ["string"] (2-4 diverse news source domain names consulted)
-}`;
-
-// ─── Verification Prompt (Pass 2 — Claude as verifier) ───────────────────
-
-const buildVerificationPrompt = (brief: object) => `You are a conflict verification researcher. Review the intelligence brief below and generate a multi-source verification panel showing how this event is covered by diverse global news outlets — particularly NON-WESTERN sources including Al Jazeera, Middle East Eye, teleSUR, The Hindu, Africa Report, CGTN, Xinhua, Dawn, and regional outlets.
-
-INTELLIGENCE BRIEF:
-${JSON.stringify(brief, null, 2)}
-
-Based on your knowledge of how this conflict is covered globally, generate realistic verification source entries from diverse world regions. Identify where international coverage converges (consensus) and where it diverges based on geopolitical alignment.
-
-Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
-
-{
-  "sources": [
-    {
-      "title": "string (realistic headline from this outlet's perspective)",
-      "url": "string (plausible but non-verified URL — use the outlet's real domain)",
-      "outlet": "string (e.g. Al Jazeera, The Hindu, Africa Report, teleSUR, Dawn)",
-      "region": "Western" | "Middle East" | "Asia" | "Africa" | "Latin America" | "State Media",
-      "summary": "string (1-2 sentences — how this outlet frames the event differently)"
-    }
-  ] (4-6 sources from at least 3 different regions — MUST include Middle East and at least one Global South outlet),
-  "consensus": "string (2 sentences — what all international coverage agrees on, including facts and civilian toll)",
-  "divergence": "string (2 sentences — where coverage splits along geopolitical lines — e.g. Western framing vs regional/state media framing)"
+    "allSides": "string (2 sentences on casualty context across the parties, noting where figures are disputed)"
+  }
 }`;
 
 // ─── Core Analysis Engine ─────────────────────────────────────────────────
+
+/** Fields the model may author. Anything else it returns is dropped. */
+const MODEL_FIELDS = [
+  "headline",
+  "summary",
+  "actors",
+  "perspectives",
+  "escalationRisk",
+  "escalationReason",
+  "historicalContext",
+  "affectedPopulation",
+  "keyQuestion",
+  "casualtyData",
+] as const;
 
 async function buildBrief(topic: string, articleText?: string): Promise<object> {
   const [liveNews, wikiSummary] = await Promise.all([
@@ -305,7 +299,6 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
     ? `Analyze this conflict news article:\n\n${articleText.trim()}`
     : `Generate a comprehensive conflict intelligence brief for this topic: "${topic}". Draw on the Wikipedia and news context above. Provide full multi-perspective analysis.`;
 
-  // Pass 1: Main analysis
   const analysisMsg = await anthropic.messages.create({
     model: "claude-haiku-4-5-20251001",
     max_tokens: 6000,
@@ -315,12 +308,10 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
 
   const block = analysisMsg.content[0];
   if (block.type !== "text") throw new Error("Unexpected AI response format");
-  
-  let parsed: {
-    location?: { lat?: unknown; lng?: unknown; city?: string; country?: string; region?: string };
-    relatedEvents?: Array<{ lat?: unknown; lng?: unknown; searchQuery?: string }>;
-    liveEvents?: unknown[];
-    verification?: unknown;
+
+  let parsed: Record<string, unknown> & {
+    location?: { lat?: unknown; lng?: unknown; city?: unknown; country?: unknown; region?: unknown };
+    relatedEvents?: unknown;
   };
   try {
     parsed = extractJSON(block.text) as typeof parsed;
@@ -331,61 +322,35 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
     parsed = fallback as typeof parsed;
   }
 
-  // Normalize primary location (strings like "31.5" or missing lng must not 500)
-  if (!parsed.location || typeof parsed.location !== "object") {
-    parsed.location = { city: "", country: "", region: "", lat: 0, lng: 0 };
-  }
-  const loc = normalizeLatLng(parsed.location.lat, parsed.location.lng);
-  parsed.location.lat = loc.lat;
-  parsed.location.lng = loc.lng;
+  const str = (v: unknown) => (typeof v === "string" ? v : "");
+  const rawLoc = parsed.location && typeof parsed.location === "object" ? parsed.location : {};
 
-  // Clamp related event coordinates
-  if (Array.isArray(parsed.relatedEvents)) {
-    parsed.relatedEvents = parsed.relatedEvents.map(ev => {
-      const coords = normalizeLatLng(ev.lat, ev.lng);
-      return {
+  // Only allowlisted model fields pass through; provenance fields (retrieved
+  // coverage, generation time) are set by the server and never by the model.
+  const brief: Record<string, unknown> = {
+    generatedAt: new Date().toISOString(),
+    inScope: parsed["inScope"] !== false,
+  };
+  for (const key of MODEL_FIELDS) brief[key] = parsed[key];
+
+  brief["location"] = {
+    city: str(rawLoc.city),
+    country: str(rawLoc.country),
+    region: str(rawLoc.region),
+    ...normalizeLatLng(rawLoc.lat, rawLoc.lng),
+  };
+
+  brief["relatedEvents"] = Array.isArray(parsed.relatedEvents)
+    ? (parsed.relatedEvents as Array<Record<string, unknown>>).map(ev => ({
         ...ev,
-        lat: coords.lat,
-        lng: coords.lng,
-        searchQuery: typeof ev.searchQuery === "string" ? ev.searchQuery : "",
-      };
-    });
-  }
+        ...normalizeLatLng(ev["lat"], ev["lng"]),
+        searchQuery: str(ev["searchQuery"]),
+      }))
+    : [];
 
-  // Inject real GDELT live news
-  parsed.liveEvents = liveNews;
+  brief["liveEvents"] = liveNews;
 
-  // Pass 2: Claude verification using perspectives
-  try {
-    const verifyMsg = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2500,
-      system: "You are a conflict verification researcher. Return only valid JSON.",
-      messages: [{ role: "user", content: buildVerificationPrompt(parsed) }],
-    });
-    const vBlock = verifyMsg.content[0];
-    if (vBlock.type === "text") {
-      try {
-        parsed.verification = extractJSON(vBlock.text);
-      } catch {
-        parsed.verification =
-          tryExtractJsonFallback(vBlock.text) ?? {
-            sources: [],
-            consensus: "Verification temporarily unavailable.",
-            divergence: "Verification temporarily unavailable.",
-          };
-      }
-    }
-  } catch {
-    // Verification is non-blocking — degrade gracefully
-    parsed.verification = {
-      sources: [],
-      consensus: "Verification temporarily unavailable.",
-      divergence: "Verification temporarily unavailable.",
-    };
-  }
-
-  return parsed;
+  return brief;
 }
 
 // ─── Routes ───────────────────────────────────────────────────────────────

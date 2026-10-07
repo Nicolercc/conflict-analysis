@@ -3,9 +3,10 @@ import { adaptBrief } from "./adapter";
 
 type Brief = Parameters<typeof adaptBrief>[0];
 
-function brief(overrides: Record<string, unknown> = {}): Brief {
+function brief(overrides: Partial<Brief> = {}): Brief {
   return {
     headline: "Aid access to El Fasher remains blocked",
+    inScope: true,
     generatedAt: "2026-09-12T10:00:00.000Z",
     location: {
       city: "El Fasher",
@@ -16,10 +17,6 @@ function brief(overrides: Record<string, unknown> = {}): Brief {
     },
     summary: "Fighting continues.",
     actors: ["SAF", "RSF"],
-    // Legacy fields the current contract still requires; removed in PR 1.
-    credibility: { score: 80, label: "High", reason: "r" },
-    verification: { sources: [], consensus: "c", divergence: "d" },
-    sources: [],
     perspectives: [],
     relatedEvents: [
       {
@@ -60,22 +57,19 @@ describe("adaptBrief — baseline", () => {
   });
 });
 
-// Known defects from the audit; `it.fails` is removed when PR 1 fixes each one.
+// Regression gates for the trust defects found in the audit.
 describe("adaptBrief — trust contract", () => {
-  it.fails("shows the server generation time, not the time the page was opened", () => {
+  it("shows the server generation time, not the time the page was opened", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-10-06T00:00:00.000Z"));
     expect(adaptBrief(brief()).publishedAt).toBe("2026-09-12T10:00:00.000Z");
   });
 
-  it.fails("counts retrieved articles and distinct outlets, not invented sources", () => {
-    const a = adaptBrief(brief()) as unknown as {
-      coverage: { articles: number; outlets: number };
-    };
-    expect(a.coverage).toEqual({ articles: 3, outlets: 2 });
+  it("counts retrieved articles and distinct outlets, not invented sources", () => {
+    expect(adaptBrief(brief()).coverage).toEqual({ articles: 3, outlets: 2 });
   });
 
-  it.fails("leaves places with unknown coordinates off the map", () => {
+  it("leaves places with unknown coordinates off the map", () => {
     const a = adaptBrief(
       brief({
         location: { city: "", country: "Sudan", region: "Sub-Saharan Africa", lat: null, lng: null },

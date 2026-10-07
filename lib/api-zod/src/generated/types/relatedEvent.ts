@@ -12,8 +12,13 @@ export interface RelatedEvent {
   title: string;
   description: string;
   type: RelatedEventType;
-  lat: number;
-  lng: number;
+  /**
+   * Null when the event has no known location. Lat and lng are null together.
+   * @nullable
+   */
+  lat: number | null;
+  /** @nullable */
+  lng: number | null;
   /** Google News search query to verify this event */
   searchQuery: string;
 }

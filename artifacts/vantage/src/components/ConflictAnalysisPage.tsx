@@ -6,41 +6,35 @@ import {
 } from "@workspace/api-client-react";
 import { SiteHeader } from "./LiveTicker";
 import { AnalysisLoader } from "./AnalysisLoader";
-import { AnimatedScore } from "./AnimatedScore";
 import { EscalationMeter } from "./EscalationMeter";
 import { PerspectivesPanel } from "./PerspectivesPanel";
 import { EventTimeline } from "./EventTimeline";
 import { CasualtyPanel } from "./CasualtyPanel";
 import { InteractiveConflictMap } from "./InteractiveConflictMap";
-import { SourceDiversity } from "./SourceDiversity";
 import { TypewriterSummary } from "./TypewriterSummary";
 import { ConflictBackground } from "./ConflictBackground";
 import { LiveEventsPanel } from "./LiveEventsPanel";
 import { adaptBrief } from "./conflict/adapter";
 import type { CSSProperties } from "react";
-import { ConsensusBlocks } from "./ConsensusBlocks";
 import { PartiesPanel } from "./PartiesPanel";
-import { SourcesSidebar } from "./SourcesSidebar";
-import { DisplacedMetric } from "./DisplacedMetric";
+import { CoverageCard } from "./CoverageCard";
 import "./ConflictAnalysisPageLayout.css";
 
 function formatPublishedAt(iso: string) {
 	try {
-		return new Date(iso).toLocaleDateString(undefined, { dateStyle: "medium" });
+		const d = new Date(iso);
+		if (Number.isNaN(d.getTime())) return "date unavailable";
+		return d.toLocaleString(undefined, {
+			dateStyle: "medium",
+			timeStyle: "short",
+		});
 	} catch {
 		return iso;
 	}
 }
 
 function isOutOfScopeBrief(data: IntelligenceBrief): boolean {
-	const score = data.credibility?.score ?? 0;
-	const risk = data.escalationRisk as string;
-	const headline = data.headline ?? "";
-	return (
-		score === 0 ||
-		risk === "N/A" ||
-		headline.includes("Outside Research Scope")
-	);
+	return data.inScope === false;
 }
 
 export function ConflictAnalysisPageRoute() {
@@ -253,7 +247,6 @@ export function ConflictAnalysisPageRoute() {
 	}
 
 	const analysis = adaptBrief(briefData);
-	const sourceCount = analysis.sources.length;
 	const regionBits = analysis.region.split("·").map((s) => s.trim());
 	const regionBadge = regionBits[0]?.toUpperCase() ?? "";
 	const regionSubtitle =
@@ -321,52 +314,37 @@ export function ConflictAnalysisPageRoute() {
 							) : null}
 							<span className="ci-hero__locations">{regionSubtitle}</span>
 						</div>
-						<div className="ci-hero__live">
-							<span className="ci-hero__live-dot" aria-hidden />
-							<span
-								style={{
-									fontFamily: "'IBM Plex Mono', monospace",
-									fontSize: "9px",
-									letterSpacing: "0.1em",
-									color: "var(--risk-high)",
-								}}
-							>
-								LIVE
-							</span>
-						</div>
 					</div>
 
 					<h1 style={S.title}>{analysis.title}</h1>
 
 					<div style={S.metaRow}>
-						<span>{formatPublishedAt(analysis.publishedAt)}</span>
+						<span>Generated {formatPublishedAt(analysis.publishedAt)}</span>
 						<span style={{ color: "var(--border-medium)" }}>·</span>
 						<span>
-							{sourceCount} sources verified
+							{analysis.coverage.articles}{" "}
+							{analysis.coverage.articles === 1 ? "article" : "articles"} retrieved
 						</span>
 						<span style={{ color: "var(--border-medium)" }}>·</span>
 						<span>{analysis.credit}</span>
 					</div>
 				</div>
 
+				<p className="ci-ai-notice">
+					<strong>AI-generated brief.</strong> Articles under Recent coverage
+					were retrieved from news sources and link to the originals. Everything
+					else — the summary, timeline, perspectives, figures and escalation
+					assessment — comes from the model&apos;s background knowledge and is
+					not individually sourced. Check original reporting before you cite it.
+				</p>
+
 				<div className="ci-score-row">
-					<AnimatedScore
-						score={analysis.credibilityScore}
-						label="Credibility"
-						reason={analysis.credibilityTag}
-						active={true}
-					/>
 					<EscalationMeter
 						level={analysis.escalationLevel}
 						reason={analysis.escalationTag}
 						active={true}
 					/>
-					<DisplacedMetric
-						countLabel={analysis.displacedCount}
-						countriesCount={analysis.displacedCountries}
-						narrative={analysis.displacedNarrative}
-						active={true}
-					/>
+					<CoverageCard coverage={analysis.coverage} />
 				</div>
 			</div>
 
@@ -421,20 +399,13 @@ export function ConflictAnalysisPageRoute() {
 						)}
 
 						<div className="ci-section-block">
-							<h3 style={S.sectionTitle}>Timeline of events</h3>
+							<h3 style={S.sectionTitle}>Background timeline</h3>
 							<EventTimeline events={briefData.relatedEvents} active={true} />
 						</div>
 
 						<div className="ci-section-block">
 							<PerspectivesPanel
 								perspectives={briefData.perspectives}
-								active={true}
-							/>
-						</div>
-
-						<div className="ci-section-block">
-							<ConsensusBlocks
-								verification={briefData.verification}
 								active={true}
 							/>
 						</div>
@@ -448,7 +419,7 @@ export function ConflictAnalysisPageRoute() {
 
 						{briefData.liveEvents && briefData.liveEvents.length > 0 && (
 							<div className="ci-section-block">
-								<h3 style={S.sectionTitle}>Latest developments</h3>
+								<h3 style={S.sectionTitle}>Recent coverage</h3>
 								<LiveEventsPanel events={briefData.liveEvents} active={true} />
 							</div>
 						)}
@@ -456,10 +427,6 @@ export function ConflictAnalysisPageRoute() {
 
 					<aside className="ci-sidebar">
 						<PartiesPanel parties={analysis.parties} active={true} />
-						<SourcesSidebar sources={briefData.verification?.sources} active={true} />
-						<div>
-							<SourceDiversity sources={briefData.verification?.sources} />
-						</div>
 						<div>
 							<span className="section-label">Historical context</span>
 							<ConflictBackground

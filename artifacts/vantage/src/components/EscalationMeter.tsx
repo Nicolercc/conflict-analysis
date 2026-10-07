@@ -54,9 +54,9 @@ export function EscalationMeter({
 						textTransform: "uppercase",
 					}}
 				>
-					Escalation
+					Escalation risk
 					<br />
-					risk
+					model assessment
 				</span>
 				<span
 					style={{

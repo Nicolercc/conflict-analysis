@@ -6,23 +6,18 @@ export interface ConflictAnalysis {
   title: string;
   location: string;
   region: string;
+  /** Server generation time (ISO 8601). Never the time the page was opened. */
   publishedAt: string;
   summary: string;
   keyQuestion: string;
-  credibilityScore: number;
-  credibilityTag: string;
   escalationLevel: EscalationLevel;
   escalationTag: string;
-  displacedCount: string;
-  displacedCountries: number;
-  /** When API has no headcount, narrative from affectedPopulation / casualtyData fills the card. */
-  displacedNarrative: string;
+  /** Counts of articles actually returned by retrieval. */
+  coverage: Coverage;
   parties: Party[];
   timeline: TimelineEvent[];
   perspectives: PerspectiveItem[];
-  sources: SourceItem[];
   mapEvents: MapEvent[];
-  consensus: Consensus;
   historicalContext: string;
   credit: string;
 }
@@ -38,8 +33,8 @@ export interface TimelineEvent {
   title: string;
   subtitle: string;
   detail: string;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface PerspectiveItem {
@@ -50,11 +45,9 @@ export interface PerspectiveItem {
   interest: string;
 }
 
-export interface SourceItem {
-  name: string;
-  flag: string;
-  region: string;
-  summary: string;
+export interface Coverage {
+  articles: number;
+  outlets: number;
 }
 
 export interface MapEvent {
@@ -63,9 +56,4 @@ export interface MapEvent {
   type: MapEventType;
   name: string;
   desc: string;
-}
-
-export interface Consensus {
-  agree: string;
-  diverge: string;
 }
