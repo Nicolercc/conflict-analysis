@@ -10,6 +10,7 @@ export interface ExploreConflictBody {
   /**
    * Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
    * @minLength 3
+   * @maxLength 240
    */
   topic: string;
 }

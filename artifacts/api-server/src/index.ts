@@ -30,6 +30,11 @@ const shutdown = () => {
     logger.info("Server closed cleanly");
     process.exit(0);
   });
+  // An in-flight generation must not hold the process open indefinitely.
+  setTimeout(() => {
+    logger.warn("Forcing exit after shutdown grace period");
+    process.exit(1);
+  }, 15_000).unref();
 };
 
 process.on('SIGTERM', shutdown);

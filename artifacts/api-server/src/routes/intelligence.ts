@@ -1,13 +1,22 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import crypto from "crypto";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
+import {
+  AnalyzeArticleBody,
+  ExploreConflictBody,
+  ExploreConflictResponse,
+} from "@workspace/api-zod";
+import type { BriefState } from "../lib/brief-state";
+import { AppError, invalidInput, sendError } from "../lib/errors";
+import { fetchPublicPage } from "../lib/safe-fetch";
 
 const router: IRouter = Router();
 
-function getAnthropicCache(req: Parameters<IRouter["use"]>[0] & { app: { locals: Record<string, unknown> } }) {
-  const cache = req.app.locals["anthropicCache"];
-  return cache instanceof Map ? (cache as Map<string, unknown>) : undefined;
-}
+const briefState = (req: Request) => req.app.locals["briefs"] as BriefState;
+
+const BRIEF_MODEL = process.env["BRIEF_MODEL"] ?? "claude-haiku-4-5-20251001";
+/** One retry when the model's answer is unusable; provider errors are not retried here. */
+const MAX_GENERATION_ATTEMPTS = 2;
 
 // ─── JSON Extraction Helper ───────────────────────────────────────────────
 // Robustly extract valid JSON from Claude response that may contain:
@@ -143,15 +152,7 @@ function tryExtractJsonFallback(text: string): object | null {
 // ─── URL Scraper ──────────────────────────────────────────────────────────
 
 async function scrapeArticle(url: string): Promise<string> {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (compatible; ConflictIntelBot/2.0; +https://conflict.intel)",
-      "Accept": "text/html,application/xhtml+xml",
-    },
-    signal: AbortSignal.timeout(12000),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} fetching article URL`);
-  const html = await res.text();
+  const html = await fetchPublicPage(url);
   // Strip scripts, styles, nav, and extract text
   const stripped = html
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, " ")
@@ -169,7 +170,7 @@ async function scrapeArticle(url: string): Promise<string> {
     .replace(/\s+/g, " ")
     .trim();
   if (stripped.length < 100) {
-    throw new Error("Could not extract article text from this URL. Try pasting the article text directly.");
+    throw new AppError(422, "FETCH_FAILED", "We couldn't find article text on that page. Try pasting the article text instead.");
   }
   return stripped.slice(0, 8000);
 }
@@ -182,7 +183,7 @@ async function fetchGdeltNews(query: string): Promise<Array<{ title: string; sou
     const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
     if (!res.ok) return [];
     const data = await res.json() as { articles?: Array<{ title?: string; domain?: string; url?: string; seendate?: string }> };
-    return (data.articles || []).slice(0, 6).map(a => ({
+    return (data.articles || []).filter(a => /^https?:\/\//i.test(a.url ?? "")).slice(0, 6).map(a => ({
       title: a.title || "Untitled",
       source: a.domain || "Unknown",
       url: a.url || "",
@@ -272,19 +273,80 @@ Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
 
 // ─── Core Analysis Engine ─────────────────────────────────────────────────
 
-/** Fields the model may author. Anything else it returns is dropped. */
-const MODEL_FIELDS = [
-  "headline",
-  "summary",
-  "actors",
-  "perspectives",
-  "escalationRisk",
-  "escalationReason",
-  "historicalContext",
-  "affectedPopulation",
-  "keyQuestion",
-  "casualtyData",
-] as const;
+type RetrievedContext = {
+  liveNews: Awaited<ReturnType<typeof fetchGdeltNews>>;
+  systemPrompt: string;
+  userContent: string;
+};
+
+const providerUnavailable = (cause: unknown) =>
+  new AppError(502, "PROVIDER_UNAVAILABLE", "The analysis service is unavailable right now. Please try again later.", { cause });
+
+/** One model call, parsed and checked against the response contract. Throws on unusable output. */
+async function generateOnce(ctx: RetrievedContext): Promise<object> {
+  let analysisMsg;
+  try {
+    analysisMsg = await anthropic.messages.create(
+      {
+        model: BRIEF_MODEL,
+        max_tokens: 6000,
+        system: ctx.systemPrompt,
+        messages: [{ role: "user", content: ctx.userContent }],
+      },
+      { timeout: 60_000, maxRetries: 1 },
+    );
+  } catch (err) {
+    throw providerUnavailable(err);
+  }
+
+  const block = analysisMsg.content[0];
+  if (!block || block.type !== "text") throw new Error("model returned no text");
+
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = extractJSON(block.text) as typeof parsed;
+  } catch (parseErr) {
+    // Sometimes the model wraps JSON in extra prose — take last ```json block or last { ... }
+    const fallback = tryExtractJsonFallback(block.text);
+    if (!fallback) throw parseErr;
+    parsed = fallback as typeof parsed;
+  }
+
+  const str = (v: unknown) => (typeof v === "string" ? v : "");
+  const rawLoc = (parsed["location"] && typeof parsed["location"] === "object" ? parsed["location"] : {}) as Record<string, unknown>;
+
+  // Provenance fields (retrieved coverage, generation time) are set here and
+  // never by the model. The schema parse below strips any field outside the
+  // contract and rejects a brief with missing or mistyped fields.
+  const candidate = {
+    ...parsed,
+    generatedAt: new Date().toISOString(),
+    inScope: parsed["inScope"] !== false,
+    location: {
+      city: str(rawLoc["city"]),
+      country: str(rawLoc["country"]),
+      region: str(rawLoc["region"]),
+      ...normalizeLatLng(rawLoc["lat"], rawLoc["lng"]),
+    },
+    relatedEvents: Array.isArray(parsed["relatedEvents"])
+      ? (parsed["relatedEvents"] as Array<Record<string, unknown>>).map(ev => ({
+          ...ev,
+          ...normalizeLatLng(ev?.["lat"], ev?.["lng"]),
+          searchQuery: str(ev?.["searchQuery"]),
+        }))
+      : parsed["relatedEvents"],
+    liveEvents: ctx.liveNews,
+  };
+
+  const checked = ExploreConflictResponse.safeParse(candidate);
+  if (!checked.success) {
+    throw new Error(`brief failed contract: ${checked.error.issues.slice(0, 5).map(i => `${i.path.join(".")} ${i.message}`).join("; ")}`);
+  }
+  if (!checked.data.headline.trim() || !checked.data.summary.trim()) {
+    throw new Error("brief has an empty headline or summary");
+  }
+  return checked.data;
+}
 
 async function buildBrief(topic: string, articleText?: string): Promise<object> {
   const [liveNews, wikiSummary] = await Promise.all([
@@ -293,135 +355,80 @@ async function buildBrief(topic: string, articleText?: string): Promise<object> 
   ]);
 
   const newsContext = liveNews.map(n => `[${n.date}] ${n.title} (${n.source})`).join("\n");
-  const systemPrompt = buildAnalysisPrompt(wikiSummary, newsContext);
-
-  const userContent = articleText
-    ? `Analyze this conflict news article:\n\n${articleText.trim()}`
-    : `Generate a comprehensive conflict intelligence brief for this topic: "${topic}". Draw on the Wikipedia and news context above. Provide full multi-perspective analysis.`;
-
-  const analysisMsg = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 6000,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userContent }],
-  });
-
-  const block = analysisMsg.content[0];
-  if (block.type !== "text") throw new Error("Unexpected AI response format");
-
-  let parsed: Record<string, unknown> & {
-    location?: { lat?: unknown; lng?: unknown; city?: unknown; country?: unknown; region?: unknown };
-    relatedEvents?: unknown;
+  const ctx: RetrievedContext = {
+    liveNews,
+    systemPrompt: buildAnalysisPrompt(wikiSummary, newsContext),
+    userContent: articleText
+      ? `Analyze this conflict news article:\n\n${articleText.trim()}`
+      : `Generate a comprehensive conflict intelligence brief for this topic: "${topic}". Draw on the Wikipedia and news context above. Provide full multi-perspective analysis.`,
   };
-  try {
-    parsed = extractJSON(block.text) as typeof parsed;
-  } catch (parseErr) {
-    // Retry: sometimes the model wraps JSON in extra prose — take last ```json block or last { ... }
-    const fallback = tryExtractJsonFallback(block.text);
-    if (!fallback) throw parseErr;
-    parsed = fallback as typeof parsed;
+
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= MAX_GENERATION_ATTEMPTS; attempt++) {
+    try {
+      return await generateOnce(ctx);
+    } catch (err) {
+      if (err instanceof AppError) throw err;
+      lastError = err;
+    }
   }
-
-  const str = (v: unknown) => (typeof v === "string" ? v : "");
-  const rawLoc = parsed.location && typeof parsed.location === "object" ? parsed.location : {};
-
-  // Only allowlisted model fields pass through; provenance fields (retrieved
-  // coverage, generation time) are set by the server and never by the model.
-  const brief: Record<string, unknown> = {
-    generatedAt: new Date().toISOString(),
-    inScope: parsed["inScope"] !== false,
-  };
-  for (const key of MODEL_FIELDS) brief[key] = parsed[key];
-
-  brief["location"] = {
-    city: str(rawLoc.city),
-    country: str(rawLoc.country),
-    region: str(rawLoc.region),
-    ...normalizeLatLng(rawLoc.lat, rawLoc.lng),
-  };
-
-  brief["relatedEvents"] = Array.isArray(parsed.relatedEvents)
-    ? (parsed.relatedEvents as Array<Record<string, unknown>>).map(ev => ({
-        ...ev,
-        ...normalizeLatLng(ev["lat"], ev["lng"]),
-        searchQuery: str(ev["searchQuery"]),
-      }))
-    : [];
-
-  brief["liveEvents"] = liveNews;
-
-  return brief;
+  throw new AppError(502, "MODEL_OUTPUT_INVALID", "The analysis came back incomplete. Please try again.", { cause: lastError });
 }
 
 // ─── Routes ───────────────────────────────────────────────────────────────
 
+/** Rate-limit, then serve from cache or share one generation per key. */
+async function respondWithBrief(req: Request, key: string, make: () => Promise<object>) {
+  const { cache, gate } = briefState(req);
+  return cache.getOrCreate(key, () => gate.run(make));
+}
+
+const firstIssue = (issues: Array<{ path: Array<string | number>; message: string }>) =>
+  issues[0] ? `${issues[0].path.join(".") || "body"}: ${issues[0].message}` : "Invalid request.";
+
 router.post("/analyze", async (req, res) => {
-  const { article, url } = req.body as { article?: string; url?: string };
-
-  if (!article && !url) {
-    res.status(400).json({ error: "INVALID_INPUT", message: "Provide either article text or a URL." });
-    return;
-  }
-
   try {
-    const cache = getAnthropicCache(req as never);
-    let articleText: string | undefined = article;
+    briefState(req).limiter.take(req.ip ?? "unknown");
 
-    if (url && !articleText) {
-      articleText = await scrapeArticle(url);
+    const body = AnalyzeArticleBody.safeParse(req.body);
+    if (!body.success) throw invalidInput(firstIssue(body.error.issues));
+    const { article, url } = body.data;
+    if ((article === undefined) === (url === undefined)) {
+      throw invalidInput("Provide either article text or a URL, not both.");
+    }
+    if (url !== undefined && !/^https?:\/\//i.test(url.trim())) {
+      throw invalidInput("The link must start with http:// or https://.");
     }
 
-    if (!articleText || articleText.trim().length < 50) {
-      res.status(400).json({ error: "INVALID_INPUT", message: "Article must be at least 50 characters." });
-      return;
-    }
+    const articleText = (article ?? (await scrapeArticle(url!.trim()))).trim();
+    if (articleText.length < 50) throw invalidInput("Article must be at least 50 characters.");
 
-    const cacheKey = `paste:${crypto.createHash("sha256").update(articleText.trim()).digest("hex")}`;
-    const cached = cache?.get(cacheKey);
-    if (cached) {
-      res.json(cached);
-      return;
-    }
-
-    // Extract a search topic from the article text for GDELT/Wikipedia
-    const topicMatch = articleText.match(/(?:in|at|from|near)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
-    const topic = topicMatch?.[1] || articleText.slice(0, 80);
-
-    const result = await buildBrief(topic, articleText);
-    cache?.set(cacheKey, result);
+    const cacheKey = `article:${crypto.createHash("sha256").update(articleText).digest("hex")}`;
+    const result = await respondWithBrief(req, cacheKey, () => {
+      // Extract a search topic from the article text for GDELT/Wikipedia
+      const topicMatch = articleText.match(/(?:in|at|from|near)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
+      return buildBrief(topicMatch?.[1] || articleText.slice(0, 80), articleText);
+    });
     res.json(result);
   } catch (err) {
-    req.log.error({ err }, "Intelligence analysis failed");
-    const msg = err instanceof Error ? err.message : "Analysis failed. Please try again.";
-    const isSyntax = err instanceof SyntaxError;
-    res.status(isSyntax ? 400 : 500).json({ error: "SERVER_ERROR", message: isSyntax ? "AI returned malformed response. Please try again." : msg });
+    sendError(req, res, err);
   }
 });
 
 router.post("/explore", async (req, res) => {
-  const { topic } = req.body as { topic?: string };
-
-  if (!topic || typeof topic !== "string" || topic.trim().length < 3) {
-    res.status(400).json({ error: "INVALID_INPUT", message: "Topic must be at least 3 characters." });
-    return;
-  }
-
   try {
-    const cache = getAnthropicCache(req as never);
-    const cacheKey = `url:${req.originalUrl}?topic=${encodeURIComponent(topic.trim())}`;
-    const cached = cache?.get(cacheKey);
-    if (cached) {
-      res.json(cached);
-      return;
-    }
+    briefState(req).limiter.take(req.ip ?? "unknown");
 
-    const result = await buildBrief(topic.trim());
-    cache?.set(cacheKey, result);
+    const body = ExploreConflictBody.safeParse(req.body);
+    if (!body.success) throw invalidInput(firstIssue(body.error.issues));
+    const topic = body.data.topic.trim().replace(/\s+/g, " ");
+    if (topic.length < 3) throw invalidInput("Topic must be at least 3 characters.");
+
+    const cacheKey = `topic:${topic.toLowerCase()}`;
+    const result = await respondWithBrief(req, cacheKey, () => buildBrief(topic));
     res.json(result);
   } catch (err) {
-    req.log.error({ err }, "Conflict exploration failed");
-    const msg = err instanceof SyntaxError ? "AI returned malformed response. Please try again." : "Exploration failed. Please try again.";
-    res.status(500).json({ error: "SERVER_ERROR", message: msg });
+    sendError(req, res, err);
   }
 });
 

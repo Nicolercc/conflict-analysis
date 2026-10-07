@@ -7,11 +7,18 @@
  */
 
 /**
- * Provide either article text or a URL (not both)
+ * Provide exactly one of article or url. The server rejects both and neither.
  */
 export interface AnalyzeArticleBody {
-  /** Full text of the conflict news article */
+  /**
+   * Full text of the conflict news article
+   * @minLength 50
+   * @maxLength 20000
+   */
   article?: string;
-  /** URL of a publicly accessible conflict news article to scrape */
+  /**
+   * Public http(s) URL of a conflict news article to fetch
+   * @maxLength 2048
+   */
   url?: string;
 }

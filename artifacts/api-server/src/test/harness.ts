@@ -104,3 +104,8 @@ export function stubRetrieval(opts: { articles?: FakeArticle[] } = {}) {
 export function modelText(text: string) {
   return { content: [{ type: "text", text }] };
 }
+
+/** Clear cached briefs, in-flight work and rate-limit counters between tests. */
+export function resetBriefState(app: { locals: Record<string, unknown> }) {
+  (app.locals["briefs"] as { reset: () => void }).reset();
+}

@@ -33,6 +33,15 @@ function formatPublishedAt(iso: string) {
 	}
 }
 
+/** The server's own wording when it sent one; otherwise a plain fallback. */
+function errorMessage(error: unknown): string {
+	const data = (error as { data?: { message?: unknown } } | null)?.data;
+	if (data && typeof data.message === "string" && data.message) {
+		return data.message;
+	}
+	return "We couldn't generate this brief. Please try again.";
+}
+
 function isOutOfScopeBrief(data: IntelligenceBrief): boolean {
 	return data.inScope === false;
 }
@@ -120,9 +129,7 @@ export function ConflictAnalysisPageRoute() {
 							Analysis Failed
 						</h2>
 						<p style={{ color: "var(--text-secondary)", marginBottom: "24px" }}>
-							{error
-								? (error as any)?.message || "Unable to analyze this topic"
-								: "No data received"}
+							{error ? errorMessage(error) : "No data received"}
 						</p>
 						<a
 							href="/"

@@ -7,6 +7,10 @@
  */
 
 export interface ErrorResponse {
+  /** Stable machine-readable code, e.g. INVALID_INPUT, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL. */
   error: string;
+  /** Safe to show to the person using the site. */
   message?: string;
+  /** Matches the X-Request-Id header and the server log line. */
+  requestId?: string;
 }
