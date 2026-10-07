@@ -48,8 +48,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: The article URL could not be read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many requests from this client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: The model provider failed or returned an unusable brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Generation capacity or daily budget reached
           content:
             application/json:
               schema:
@@ -78,8 +102,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: The article URL could not be read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many requests from this client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: The model provider failed or returned an unusable brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Generation capacity or daily budget reached
           content:
             application/json:
               schema:
@@ -98,10 +146,13 @@ components:
         article:
           type: string
           description: Full text of the conflict news article
+          minLength: 50
+          maxLength: 20000
         url:
           type: string
-          description: URL of a publicly accessible conflict news article to scrape
-      description: Provide either article text or a URL (not both)
+          description: Public http(s) URL of a conflict news article to fetch
+          maxLength: 2048
+      description: Provide exactly one of article or url. The server rejects both and neither.
     ExploreConflictBody:
       type: object
       properties:
@@ -109,6 +160,7 @@ components:
           type: string
           description: Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
           minLength: 3
+          maxLength: 240
       required: [topic]
     Location:
       type: object
@@ -251,6 +303,11 @@ components:
       properties:
         error:
           type: string
+          description: Stable machine-readable code, e.g. INVALID_INPUT, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL.
         message:
           type: string
+          description: Safe to show to the person using the site.
+        requestId:
+          type: string
+          description: Matches the X-Request-Id header and the server log line.
       required: [error]

@@ -10,12 +10,19 @@ export interface HealthStatus {
 }
 
 /**
- * Provide either article text or a URL (not both)
+ * Provide exactly one of article or url. The server rejects both and neither.
  */
 export interface AnalyzeArticleBody {
-  /** Full text of the conflict news article */
+  /**
+   * Full text of the conflict news article
+   * @minLength 50
+   * @maxLength 20000
+   */
   article?: string;
-  /** URL of a publicly accessible conflict news article to scrape */
+  /**
+   * Public http(s) URL of a conflict news article to fetch
+   * @maxLength 2048
+   */
   url?: string;
 }
 
@@ -23,6 +30,7 @@ export interface ExploreConflictBody {
   /**
    * Conflict topic to explore (e.g. "Gaza conflict", "Sudan civil war")
    * @minLength 3
+   * @maxLength 240
    */
   topic: string;
 }
@@ -135,6 +143,10 @@ export interface IntelligenceBrief {
 }
 
 export interface ErrorResponse {
+  /** Stable machine-readable code, e.g. INVALID_INPUT, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL. */
   error: string;
+  /** Safe to show to the person using the site. */
   message?: string;
+  /** Matches the X-Request-Id header and the server log line. */
+  requestId?: string;
 }

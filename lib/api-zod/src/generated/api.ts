@@ -17,18 +17,28 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary Analyze a conflict article (URL or text)
  */
+export const analyzeArticleBodyArticleMin = 50;
+export const analyzeArticleBodyArticleMax = 20000;
+
+export const analyzeArticleBodyUrlMax = 2048;
+
 export const AnalyzeArticleBody = zod
   .object({
     article: zod
       .string()
+      .min(analyzeArticleBodyArticleMin)
+      .max(analyzeArticleBodyArticleMax)
       .optional()
       .describe("Full text of the conflict news article"),
     url: zod
       .string()
+      .max(analyzeArticleBodyUrlMax)
       .optional()
-      .describe("URL of a publicly accessible conflict news article to scrape"),
+      .describe("Public http(s) URL of a conflict news article to fetch"),
   })
-  .describe("Provide either article text or a URL (not both)");
+  .describe(
+    "Provide exactly one of article or url. The server rejects both and neither.",
+  );
 
 export const AnalyzeArticleResponse = zod.object({
   generatedAt: zod
@@ -132,11 +142,13 @@ export const AnalyzeArticleResponse = zod.object({
  * @summary Explore a conflict by topic
  */
 export const exploreConflictBodyTopicMin = 3;
+export const exploreConflictBodyTopicMax = 240;
 
 export const ExploreConflictBody = zod.object({
   topic: zod
     .string()
     .min(exploreConflictBodyTopicMin)
+    .max(exploreConflictBodyTopicMax)
     .describe(
       'Conflict topic to explore (e.g. \"Gaza conflict\", \"Sudan civil war\")',
     ),

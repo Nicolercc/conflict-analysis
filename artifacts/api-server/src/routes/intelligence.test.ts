@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import request from "supertest";
-import { modelBrief, modelText, stubRetrieval } from "../test/harness";
+import { modelBrief, modelText, resetBriefState, stubRetrieval } from "../test/harness";
 
 const { create } = vi.hoisted(() => ({ create: vi.fn() }));
 
@@ -20,7 +20,7 @@ function modelAnswers(brief: unknown) {
 
 beforeEach(() => {
   create.mockReset();
-  (app.locals["anthropicCache"] as Map<string, unknown>).clear();
+  resetBriefState(app);
   stubRetrieval();
   modelAnswers(modelBrief());
 });
