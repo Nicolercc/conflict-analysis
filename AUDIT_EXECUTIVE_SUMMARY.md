@@ -105,7 +105,7 @@ User Input → React → HTTP POST → Express API → GDELT/Wikipedia → Claud
 
 ### Monorepo Structure
 - **lib/**: Shared utilities (API client, Anthropic integration)
-- **artifacts/**: Standalone apps (api-server, vantage, mockup-sandbox)
+- **artifacts/**: Standalone apps (api-server, vantage)
 - **Build**: TypeScript project references (tsc --build)
 
 ---

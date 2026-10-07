@@ -12,7 +12,6 @@ node_modules
 !.env.example
 *.md
 !README.md
-attached_assets
 coverage
 *.log
 pnpm-debug.log*
