@@ -15,7 +15,9 @@
     "dev": "cd artifacts/vantage && BASE_PATH=/ PORT=5173 pnpm run dev",
     "dev:api": "cd artifacts/api-server && pnpm run dev",
     "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "test": "pnpm -r --if-present run test",
+    "codegen": "pnpm --filter @workspace/api-spec run codegen"
   },
 	"private": true,
 	"devDependencies": {

@@ -30,7 +30,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generated code is up to date
+        run: pnpm run codegen && git diff --exit-code -- lib
+
       - name: Typecheck and build
         run: pnpm run build
         env:
           CI: "true"
+
+      - name: Test
+        run: pnpm run test
