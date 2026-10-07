@@ -15,7 +15,7 @@ export function LiveEventsPanel({ events, active }: { events: LiveEvent[]; activ
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", paddingBottom: "12px", borderBottom: "1px solid var(--border-light)" }}>
         <span className="section-label" style={{ margin: 0, padding: 0, border: "none" }}>Recent Coverage</span>
-        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "8px", color: "var(--text-faint)", letterSpacing: "0.1em" }}>
+        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: "var(--text-faint)", letterSpacing: "0.1em" }}>
           via GDELT
         </span>
       </div>
@@ -38,7 +38,7 @@ export function LiveEventsPanel({ events, active }: { events: LiveEvent[]; activ
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                fontFamily: "'Source Serif 4', Georgia, serif",
+                fontFamily: "'Newsreader', Georgia, serif",
                 fontSize: "14px",
                 color: "var(--text-primary)",
                 textDecoration: "underline",
@@ -53,8 +53,8 @@ export function LiveEventsPanel({ events, active }: { events: LiveEvent[]; activ
               <ExternalLink style={{ width: "12px", height: "12px", flexShrink: 0, marginTop: "4px", color: "var(--text-muted)" }} />
             </a>
             <div style={{ marginTop: "4px", display: "flex", gap: "10px" }}>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--accent-navy)" }}>{ev.source}</span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--text-faint)" }}>{ev.date}</span>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: "var(--accent-navy)" }}>{ev.source}</span>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: "var(--text-faint)" }}>{ev.date}</span>
             </div>
           </div>
         ))}

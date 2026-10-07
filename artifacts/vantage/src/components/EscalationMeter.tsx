@@ -47,7 +47,7 @@ export function EscalationMeter({
 				<span
 					style={{
 						fontFamily: "'IBM Plex Mono', monospace",
-						fontSize: "8px",
+						fontSize: "11px",
 						letterSpacing: "0.1em",
 						color: "var(--text-muted)",
 						lineHeight: 1.3,
@@ -96,7 +96,7 @@ export function EscalationMeter({
 					className="ci-score-reason-text"
 					style={{
 						fontFamily: "'IBM Plex Mono', monospace",
-						fontSize: "9px",
+						fontSize: "11px",
 						color: "var(--text-muted)",
 						lineHeight: 1.45,
 						margin: 0,

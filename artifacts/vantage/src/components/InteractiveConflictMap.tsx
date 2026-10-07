@@ -43,13 +43,7 @@ const TYPE_META: Record<
 
 const HUB_COLOR = "#1a3a52";
 
-function getTileUrl() {
-	const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-	if (dark) {
-		return "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-	}
-	return "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
-}
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 /** Null when either coordinate is unknown, so nothing is plotted at a default point. */
 function toLatLng(p: {
@@ -157,7 +151,7 @@ const TOOLTIP_OPTS: L.TooltipOptions = {
 };
 
 const TILE_ATTR =
-	'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>';
+	'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 interface InteractiveConflictMapProps {
 	data: IntelligenceBrief;
@@ -198,7 +192,7 @@ export function InteractiveConflictMap({
 			map.zoomControl.setPosition("bottomright");
 		}
 
-		L.tileLayer(getTileUrl(), {
+		L.tileLayer(TILE_URL, {
 			maxZoom: 19,
 			attribution: TILE_ATTR,
 		}).addTo(map);
@@ -211,22 +205,7 @@ export function InteractiveConflictMap({
 		});
 		ro.observe(el);
 
-		const mq = window.matchMedia("(prefers-color-scheme: dark)");
-		const onScheme = () => {
-			map.eachLayer((layer) => {
-				if (layer instanceof L.TileLayer) {
-					map.removeLayer(layer);
-				}
-			});
-			L.tileLayer(getTileUrl(), {
-				maxZoom: 19,
-				attribution: TILE_ATTR,
-			}).addTo(map);
-		};
-		mq.addEventListener("change", onScheme);
-
 		return () => {
-			mq.removeEventListener("change", onScheme);
 			ro.disconnect();
 			map.remove();
 			mapRef.current = null;
@@ -416,8 +395,8 @@ export function InteractiveConflictMap({
 					clip: "rect(0 0 0 0)",
 				}}
 			>
-				Map shows the primary briefing location and related events. Hover
-				markers for details; scroll or pinch to zoom.
+				Map of the primary briefing location and related events. Every mapped
+				event is also listed in the background timeline below.
 			</p>
 
 			<div

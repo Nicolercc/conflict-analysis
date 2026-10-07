@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
-import { useSearch } from "wouter";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import type { ReactNode } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import {
+	useAnalyzeArticle,
 	useExploreConflict,
 	type IntelligenceBrief,
 } from "@workspace/api-client-react";
+import { briefPath, parseBriefRequest } from "@/lib/brief-request";
 import { SiteHeader } from "./LiveTicker";
 import { AnalysisLoader } from "./AnalysisLoader";
 import { EscalationMeter } from "./EscalationMeter";
@@ -11,7 +14,6 @@ import { PerspectivesPanel } from "./PerspectivesPanel";
 import { EventTimeline } from "./EventTimeline";
 import { CasualtyPanel } from "./CasualtyPanel";
 import { InteractiveConflictMap } from "./InteractiveConflictMap";
-import { TypewriterSummary } from "./TypewriterSummary";
 import { ConflictBackground } from "./ConflictBackground";
 import { LiveEventsPanel } from "./LiveEventsPanel";
 import { adaptBrief } from "./conflict/adapter";
@@ -46,210 +48,168 @@ function isOutOfScopeBrief(data: IntelligenceBrief): boolean {
 	return data.inScope === false;
 }
 
+const SUGGESTED_TOPICS = [
+	"Gaza ceasefire reporting",
+	"Red Sea shipping tensions",
+	"Sudan humanitarian access",
+	"Ukraine front-line updates",
+];
+
+/** Shared frame: header, a live status line for assistive tech, and the main landmark. */
+function Shell({ status, children }: { status: string; children: ReactNode }) {
+	return (
+		<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
+			<SiteHeader />
+			<div role="status" className="sr-only">
+				{status}
+			</div>
+			<main>{children}</main>
+		</div>
+	);
+}
+
+function Notice({
+	eyebrow,
+	title,
+	children,
+}: {
+	eyebrow: string;
+	title: string;
+	children: ReactNode;
+}) {
+	const headingRef = useRef<HTMLHeadingElement | null>(null);
+	useEffect(() => {
+		headingRef.current?.focus();
+	}, [title]);
+
+	return (
+		<div className="ci-notice">
+			<p className="ci-notice__eyebrow">{eyebrow}</p>
+			<h1 ref={headingRef} tabIndex={-1} className="ci-notice__title">
+				{title}
+			</h1>
+			{children}
+		</div>
+	);
+}
+
 export function ConflictAnalysisPageRoute() {
 	const search = useSearch();
-	const params = new URLSearchParams(search);
-	const topic = params.get("topic") || "";
+	const [, navigate] = useLocation();
+	const request = useMemo(() => parseBriefRequest(search), [search]);
 
-	const [phase, setPhase] = useState<"idle" | "loading" | "loaded" | "error">(
-		topic ? "loading" : "idle",
-	);
-	const { mutate, data: briefData, error, isPending } = useExploreConflict();
+	const explore = useExploreConflict();
+	const analyze = useAnalyzeArticle();
+	const active = request?.kind === "topic" ? explore : analyze;
+	const { mutate: runExplore } = explore;
+	const { mutate: runAnalyze } = analyze;
+
+	const run = useCallback(() => {
+		if (!request) return;
+		if (request.kind === "topic") {
+			runExplore({ data: { topic: request.topic } });
+		} else if (request.kind === "url") {
+			runAnalyze({ data: { url: request.url } });
+		} else {
+			runAnalyze({ data: { article: request.text } });
+		}
+	}, [request, runExplore, runAnalyze]);
 
 	useEffect(() => {
-		if (!topic) {
-			setPhase("idle");
-			return;
-		}
+		run();
+	}, [run]);
 
-		setPhase("loading");
-		mutate({ data: { topic } });
-	}, [topic, mutate]);
+	const briefData = active.data;
+	const phase: "empty" | "loading" | "error" | "loaded" = !request
+		? "empty"
+		: active.isPending || active.isIdle
+			? "loading"
+			: active.error || !briefData
+				? "error"
+				: "loaded";
 
+	const titleRef = useRef<HTMLHeadingElement | null>(null);
 	useEffect(() => {
-		if (isPending) {
-			setPhase("loading");
-		} else if (briefData) {
-			setPhase("loaded");
-		} else if (error) {
-			setPhase("error");
-		}
-	}, [isPending, briefData, error]);
+		document.title =
+			phase === "loaded" && briefData
+				? `${isOutOfScopeBrief(briefData) ? "Outside scope" : briefData.headline} · Vantage`
+				: phase === "loading"
+					? "Generating brief · Vantage"
+					: "Vantage";
+		if (phase === "loaded") titleRef.current?.focus();
+	}, [phase, briefData]);
 
-	if (!topic) {
+	if (phase === "empty") {
 		return (
-			<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
-				<SiteHeader />
-				<div
-					style={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						minHeight: "calc(100vh - 56px)",
-						padding: "24px",
-					}}
-				>
-					<p style={{ color: "var(--text-muted)" }}>No topic provided</p>
-				</div>
-			</div>
+			<Shell status="Nothing to brief.">
+				<Notice eyebrow="Nothing to brief" title="Start with a topic, a link or an article">
+					<p className="ci-notice__text">
+						This page needs something to brief. Pasted article text is kept only
+						in the tab it was pasted into, so it is not available after the tab
+						is closed or the link is shared.
+					</p>
+					<Link href="/" className="ci-notice__primary">
+						Back to search
+					</Link>
+				</Notice>
+			</Shell>
 		);
 	}
 
 	if (phase === "loading") {
 		return (
-			<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
-				<SiteHeader />
+			<Shell status="Generating your brief.">
 				<div style={{ paddingTop: "56px" }}>
 					<AnalysisLoader />
 				</div>
-			</div>
+			</Shell>
 		);
 	}
 
 	if (phase === "error" || !briefData) {
+		const message = errorMessage(active.error);
 		return (
-			<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
-				<SiteHeader />
-				<div
-					style={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						minHeight: "calc(100vh - 56px)",
-						padding: "24px",
-					}}
-				>
-					<div
-						style={{
-							textAlign: "center" as const,
-							maxWidth: "480px",
-						}}
-					>
-						<h2 style={{ color: "var(--text-primary)", marginBottom: "12px" }}>
-							Analysis Failed
-						</h2>
-						<p style={{ color: "var(--text-secondary)", marginBottom: "24px" }}>
-							{error ? errorMessage(error) : "No data received"}
-						</p>
-						<a
-							href="/"
-							style={{
-								display: "inline-block",
-								padding: "12px 24px",
-								background: "var(--accent, #C2536A)",
-								color: "#fff",
-								borderRadius: "8px",
-								textDecoration: "none",
-								fontFamily: "Syne, sans-serif",
-								fontSize: "14px",
-							}}
-						>
-							Back to Search
-						</a>
+			<Shell status={`The brief could not be generated. ${message}`}>
+				<Notice eyebrow="Brief not generated" title="We couldn't generate this brief">
+					<p className="ci-notice__text">{message}</p>
+					<div className="ci-notice__actions">
+						<button type="button" className="ci-notice__primary" onClick={run}>
+							Try again
+						</button>
+						<Link href="/" className="ci-notice__secondary">
+							Change the search
+						</Link>
 					</div>
-				</div>
-			</div>
+				</Notice>
+			</Shell>
 		);
 	}
 
 	if (isOutOfScopeBrief(briefData)) {
 		return (
-			<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
-				<SiteHeader onReset={() => (window.location.href = "/")} />
-				<div
-					style={{
-						maxWidth: "560px",
-						margin: "80px auto",
-						textAlign: "center",
-						fontFamily: "var(--serif)",
-						padding: "0 24px",
-					}}
-				>
-					<p
-						style={{
-							fontFamily: "var(--mono)",
-							fontSize: "10px",
-							textTransform: "uppercase",
-							letterSpacing: ".08em",
-							color: "var(--color-text-secondary)",
-							marginBottom: "16px",
-						}}
-					>
-						Outside scope
+			<Shell status="This is outside what Vantage briefs.">
+				<Notice eyebrow="Outside scope" title="We couldn't find a conflict to brief">
+					<p className="ci-notice__text">
+						Vantage covers geopolitical conflicts, humanitarian crises and
+						regional tensions. Try one of these:
 					</p>
-					<h2
-						style={{
-							fontSize: "28px",
-							fontWeight: 600,
-							fontStyle: "italic",
-							marginBottom: "12px",
-						}}
-					>
-						We couldn&apos;t find a conflict to brief
-					</h2>
-					<p
-						style={{
-							fontSize: "16px",
-							lineHeight: 1.7,
-							color: "var(--color-text-secondary)",
-							marginBottom: "32px",
-						}}
-					>
-						Vantage works best with ongoing geopolitical conflicts, humanitarian
-						crises, and regional tensions. Try one of these:
-					</p>
-					<div
-						style={{
-							display: "flex",
-							gap: "8px",
-							flexWrap: "wrap",
-							justifyContent: "center",
-						}}
-					>
-						{[
-							"Gaza ceasefire reporting",
-							"Red Sea shipping tensions",
-							"Sudan humanitarian access",
-							"Ukraine front-line updates",
-						].map((s) => (
+					<div className="ci-notice__actions">
+						{SUGGESTED_TOPICS.map((topic) => (
 							<button
-								key={s}
+								key={topic}
 								type="button"
-								onClick={() => {
-									window.location.href = `/analysis?topic=${encodeURIComponent(s)}`;
-								}}
-								style={{
-									fontFamily: "var(--mono)",
-									fontSize: "11px",
-									padding: "8px 14px",
-									border: "1px solid var(--color-border-secondary)",
-									borderRadius: "4px",
-									background: "transparent",
-									cursor: "pointer",
-									color: "var(--color-text-primary)",
-								}}
+								className="ci-notice__chip"
+								onClick={() => navigate(briefPath({ kind: "topic", topic }))}
 							>
-								{s}
+								{topic}
 							</button>
 						))}
 					</div>
-					<button
-						type="button"
-						onClick={() => window.history.back()}
-						style={{
-							marginTop: "32px",
-							fontFamily: "var(--mono)",
-							fontSize: "11px",
-							color: "var(--accent)",
-							background: "none",
-							border: "none",
-							cursor: "pointer",
-						}}
-					>
-						← Try a different search
-					</button>
-				</div>
-			</div>
+					<Link href="/" className="ci-notice__secondary">
+						Change the search
+					</Link>
+				</Notice>
+			</Shell>
 		);
 	}
 
@@ -261,8 +221,6 @@ export function ConflictAnalysisPageRoute() {
 
 	const S: Record<string, CSSProperties> = {
 		page: {
-			minHeight: "100vh",
-			background: "var(--bg-primary)",
 			paddingTop: "56px",
 			paddingBottom: "48px",
 		},
@@ -272,13 +230,14 @@ export function ConflictAnalysisPageRoute() {
 			padding: "0 18px",
 		},
 		title: {
-			fontFamily: "Georgia, 'Cormorant Garamond', serif",
+			fontFamily: "'Newsreader', Georgia, serif",
 			fontStyle: "italic",
 			fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)",
 			fontWeight: 400,
 			lineHeight: 1.22,
 			margin: "0 0 9px",
 			color: "var(--text-primary)",
+			outline: "none",
 		},
 		metaRow: {
 			display: "flex",
@@ -288,7 +247,7 @@ export function ConflictAnalysisPageRoute() {
 			paddingBottom: "14px",
 			borderBottom: "1px solid var(--border-light)",
 			fontFamily: "'IBM Plex Mono', monospace",
-			fontSize: "10px",
+			fontSize: "11px",
 			color: "var(--text-muted)",
 		},
 		panel: {
@@ -302,16 +261,14 @@ export function ConflictAnalysisPageRoute() {
 			fontSize: "16px",
 			fontWeight: 600,
 			color: "var(--text-primary)",
-			marginBottom: "12px",
-			fontFamily: "Syne, sans-serif",
-			letterSpacing: "0.5px",
+			fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+			margin: "0 0 12px",
 		},
 	};
 
 	return (
+		<Shell status={`Brief ready: ${analysis.title}`}>
 		<div style={S.page}>
-			<SiteHeader onReset={() => (window.location.href = "/")} />
-
 			<div style={S.wrap}>
 				<div style={{ paddingTop: "8px" }}>
 					<div className="ci-hero__top">
@@ -323,7 +280,9 @@ export function ConflictAnalysisPageRoute() {
 						</div>
 					</div>
 
-					<h1 style={S.title}>{analysis.title}</h1>
+					<h1 ref={titleRef} tabIndex={-1} style={S.title}>
+						{analysis.title}
+					</h1>
 
 					<div style={S.metaRow}>
 						<span>Generated {formatPublishedAt(analysis.publishedAt)}</span>
@@ -365,8 +324,8 @@ export function ConflictAnalysisPageRoute() {
 				<div className="ci-columns">
 					<div className="ci-main">
 						<div className="ci-section-block">
-							<h3 style={S.sectionTitle}>What happened</h3>
-							<TypewriterSummary text={analysis.summary} active={true} />
+							<h2 style={S.sectionTitle}>What happened</h2>
+							<p className="ci-summary">{analysis.summary}</p>
 						</div>
 
 						{analysis.keyQuestion && (
@@ -392,7 +351,7 @@ export function ConflictAnalysisPageRoute() {
 								</p>
 								<p
 									style={{
-										fontFamily: "Georgia, serif",
+										fontFamily: "'Newsreader', Georgia, serif",
 										fontStyle: "italic",
 										fontSize: "14px",
 										color: "var(--text-secondary)",
@@ -406,11 +365,12 @@ export function ConflictAnalysisPageRoute() {
 						)}
 
 						<div className="ci-section-block">
-							<h3 style={S.sectionTitle}>Background timeline</h3>
+							<h2 style={S.sectionTitle}>Background timeline</h2>
 							<EventTimeline events={briefData.relatedEvents} active={true} />
 						</div>
 
 						<div className="ci-section-block">
+							<h2 style={S.sectionTitle}>Perspectives</h2>
 							<PerspectivesPanel
 								perspectives={briefData.perspectives}
 								active={true}
@@ -419,14 +379,14 @@ export function ConflictAnalysisPageRoute() {
 
 						{briefData.casualtyData && (
 							<div className="ci-section-block">
-								<h3 style={S.sectionTitle}>Affected population</h3>
+								<h2 style={S.sectionTitle}>Affected population</h2>
 								<CasualtyPanel data={briefData.casualtyData} active={true} />
 							</div>
 						)}
 
 						{briefData.liveEvents && briefData.liveEvents.length > 0 && (
 							<div className="ci-section-block">
-								<h3 style={S.sectionTitle}>Recent coverage</h3>
+								<h2 style={S.sectionTitle}>Recent coverage</h2>
 								<LiveEventsPanel events={briefData.liveEvents} active={true} />
 							</div>
 						)}
@@ -459,5 +419,6 @@ export function ConflictAnalysisPageRoute() {
 				</div>
 			</div>
 		</div>
+		</Shell>
 	);
 }
