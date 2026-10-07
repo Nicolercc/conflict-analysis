@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Syne:wght@400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -17,8 +16,8 @@
 
 	--text-primary: #1a1614;
 	--text-secondary: #3d3835;
-	--text-muted: #7a7470;
-	--text-faint: #b0aba6;
+	--text-muted: #6b6561;
+	--text-faint: #6b6561;
 
 	--accent-navy: #2b4c7e;
 	--accent-navy-light: #ebf0f8;
@@ -42,10 +41,10 @@
 	--region-asia: #5a3a7e;
 	--region-africa: #2d6a4f;
 	--region-latam: #3a6b8b;
-	--region-state: #7a7470;
+	--region-state: #6b6561;
 
 	/* Conflict Analysis Design System */
-	--accent: #c2536a;
+	--accent: #b0455c;
 	--accent-light: rgba(194, 83, 106, 0.09);
 	--accent-mid: rgba(194, 83, 106, 0.2);
 	--strike: #c2536a;
@@ -116,7 +115,7 @@ html {
 body {
 	background: var(--bg-primary);
 	color: var(--text-primary);
-	font-family: "Cormorant Garamond", Georgia, serif;
+	font-family: "Newsreader", Georgia, serif;
 	line-height: 1.75;
 	min-height: 100vh;
 	-webkit-font-smoothing: antialiased;
@@ -313,16 +312,16 @@ body {
 }
 
 .font-display {
-	font-family: "Cormorant Garamond", Georgia, serif;
+	font-family: "Newsreader", Georgia, serif;
 }
 
 .font-mono-data {
-	font-family: "DM Mono", monospace;
+	font-family: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 .section-label {
-	font-family: "DM Mono", monospace;
-	font-size: 10px;
+	font-family: "IBM Plex Mono", ui-monospace, monospace;
+	font-size: 11px;
 	font-weight: 500;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;

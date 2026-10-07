@@ -4,7 +4,22 @@ import { useLocation } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
 import { Search, ShieldCheck, MapPinned, Clock3 } from "lucide-react";
 import { SiteHeader } from "@/components/LiveTicker";
+import {
+	briefPath,
+	looksLikeUrl,
+	validateBriefInput,
+	ARTICLE_MAX,
+	type BriefRequest,
+} from "@/lib/brief-request";
 import "./HomePage.css";
+
+type Mode = BriefRequest["kind"];
+
+const MODES: { id: Mode; label: string }[] = [
+	{ id: "topic", label: "Topic" },
+	{ id: "url", label: "Article link" },
+	{ id: "article", label: "Paste text" },
+];
 
 const QUICK_TOPICS = [
 	"Red Sea shipping tensions",
@@ -18,66 +33,24 @@ const fadeUp = {
 	animate: { opacity: 1, y: 0 },
 };
 
-function isLikelyGeopolitical(query: string): boolean {
-	const words = query.trim().split(/\s+/).filter(Boolean);
-	if (words.length < 2) return false;
-	const keywords = [
-		"war",
-		"conflict",
-		"crisis",
-		"ceasefire",
-		"strike",
-		"attack",
-		"tension",
-		"sanctions",
-		"troops",
-		"humanitarian",
-		"coup",
-		"protest",
-		"siege",
-		"invasion",
-		"occupation",
-		"refugee",
-		"displacement",
-		"nuclear",
-		"drone",
-		"missile",
-		"militia",
-		"insurgency",
-		"treaty",
-		"negotiation",
-		"peace",
-		"blockade",
-		"airstrike",
-		"coalition",
-		"hostage",
-		"famine",
-		"massacre",
-		"bombing",
-		"withdrawal",
-		"offensive",
-		"frontline",
-		"airspace",
-		"embargo",
-		"proxy",
-		"detention",
-		"uprising",
-	];
-	const q = query.toLowerCase();
-	if (words.length >= 5) return true;
-	return keywords.some((k) => q.includes(k));
-}
-
 export function Home() {
-	const [topic, setTopic] = useState("");
-	const [offTopicHint, setOffTopicHint] = useState(false);
+	const [mode, setMode] = useState<Mode>("topic");
+	const [value, setValue] = useState("");
+	const [problem, setProblem] = useState<string | null>(null);
 	const [, setLocation] = useLocation();
-	const canSearch = topic.trim().length >= 3;
 	const reduceMotion = useReducedMotion();
 
 	const transition = reduceMotion
 		? { duration: 0 }
 		: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const };
+
+	useEffect(() => {
+		document.title = "Vantage — conflict, in context";
+		// Wake the API while the reader types; a sleeping server otherwise adds
+		// its whole start-up time to the first brief.
+		const base = import.meta.env.VITE_API_BASE_URL || "";
+		fetch(`${base}/api/healthz`).catch(() => {});
+	}, []);
 
 	useEffect(() => {
 		const html = document.documentElement;
@@ -95,20 +68,44 @@ export function Home() {
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const query = topic.trim();
-		if (!query) return;
-		if (!isLikelyGeopolitical(query)) {
-			setOffTopicHint(true);
+		const input = value.trim();
+		// A link typed into the topic box is still a link.
+		const effective: Mode =
+			mode === "topic" && looksLikeUrl(input) ? "url" : mode;
+		const issue = validateBriefInput(effective, input);
+		if (issue) {
+			setProblem(issue);
+			document.getElementById("search-input")?.focus();
 			return;
 		}
-		setOffTopicHint(false);
-		setLocation(`/analysis?topic=${encodeURIComponent(query)}`);
+		setProblem(null);
+		const request: BriefRequest =
+			effective === "topic"
+				? { kind: "topic", topic: input }
+				: effective === "url"
+					? { kind: "url", url: input }
+					: { kind: "article", text: input };
+		setLocation(briefPath(request));
+	};
+
+	const changeMode = (next: Mode) => {
+		setMode(next);
+		setProblem(null);
 	};
 
 	const applyQuickTopic = (q: string) => {
-		setTopic(q);
+		setMode("topic");
+		setValue(q);
+		setProblem(null);
 		document.getElementById("search-input")?.focus();
 	};
+
+	const inputLabel =
+		mode === "topic"
+			? "Conflict, crisis or country to brief"
+			: mode === "url"
+				? "Link to a news article"
+				: "Article text";
 
 	return (
 		<div className="home">
@@ -152,55 +149,102 @@ export function Home() {
 								{...fadeUp}
 								transition={{ ...transition, delay: reduceMotion ? 0 : 0.28 }}
 							>
-							<form className="home-search" onSubmit={handleSubmit} role="search">
+							<form
+								className="home-search"
+								onSubmit={handleSubmit}
+								role="search"
+								noValidate
+							>
+								<div
+									className="home-modes"
+									role="radiogroup"
+									aria-label="What do you want briefed?"
+								>
+									{MODES.map((m) => (
+										<label
+											key={m.id}
+											className={`home-mode${mode === m.id ? " home-mode--on" : ""}`}
+										>
+											<input
+												type="radio"
+												name="mode"
+												value={m.id}
+												checked={mode === m.id}
+												onChange={() => changeMode(m.id)}
+											/>
+											{m.label}
+										</label>
+									))}
+								</div>
+
 								<label htmlFor="search-input" className="sr-only">
-									Search for a conflict topic
+									{inputLabel}
 								</label>
-								<div className="home-search__row">
-									<span className="home-search__icon" aria-hidden>
-										<Search size={22} strokeWidth={2} />
-									</span>
-									<input
-										id="search-input"
-										className="home-search__input"
-										type="search"
-										value={topic}
-										onChange={(e) => {
-											setTopic(e.currentTarget.value);
-											setOffTopicHint(false);
-										}}
-										placeholder="e.g. Gaza ceasefire, Red Sea tensions, Sudan crisis..."
-										autoComplete="off"
-										autoCapitalize="sentences"
-										enterKeyHint="search"
-									/>
-									<button
-										type="submit"
-										className="home-search__submit"
-										disabled={!canSearch}
-									>
+								<div
+									className={`home-search__row${mode === "article" ? " home-search__row--stack" : ""}`}
+								>
+									{mode === "article" ? (
+										<textarea
+											id="search-input"
+											className="home-search__textarea"
+											value={value}
+											onChange={(e) => {
+												setValue(e.currentTarget.value);
+												setProblem(null);
+											}}
+											placeholder="Paste the full text of a news article…"
+											rows={7}
+											aria-invalid={problem ? true : undefined}
+											aria-describedby="search-help"
+										/>
+									) : (
+										<>
+											<span className="home-search__icon" aria-hidden>
+												<Search size={22} strokeWidth={2} />
+											</span>
+											<input
+												id="search-input"
+												className="home-search__input"
+												type={mode === "url" ? "url" : "search"}
+												inputMode={mode === "url" ? "url" : undefined}
+												value={value}
+												onChange={(e) => {
+													setValue(e.currentTarget.value);
+													setProblem(null);
+												}}
+												placeholder={
+													mode === "url"
+														? "https://…"
+														: "e.g. Gaza ceasefire, Red Sea tensions, Sudan…"
+												}
+												autoComplete="off"
+												autoCapitalize={mode === "url" ? "off" : "sentences"}
+												enterKeyHint="search"
+												aria-invalid={problem ? true : undefined}
+												aria-describedby="search-help"
+											/>
+										</>
+									)}
+									<button type="submit" className="home-search__submit">
 										Run briefing
 									</button>
 								</div>
-								<p className="home-search__hint">
-									Works best with specific conflicts and crises · No account
-									required
-								</p>
+								<div id="search-help">
+									{problem ? (
+										<p className="home-search__error" role="alert">
+											{problem}
+										</p>
+									) : (
+										<p className="home-search__hint">
+											{mode === "topic"
+												? "Search a conflict, crisis or country · No account required"
+												: mode === "url"
+													? "We fetch the public page and brief that article"
+													: `Up to ${ARTICLE_MAX.toLocaleString()} characters · Pasted text stays out of the page address`}
+										</p>
+									)}
+								</div>
 							</form>
-							{offTopicHint ? (
-								<p
-									style={{
-										fontFamily: "var(--mono)",
-										fontSize: "11px",
-										color: "var(--accent)",
-										marginTop: "8px",
-										marginBottom: "0",
-									}}
-								>
-									Try a specific conflict — e.g. &quot;Gaza ceasefire&quot; or
-									&quot;Red Sea shipping tensions&quot;
-								</p>
-							) : null}
 							</motion.div>
 						</div>
 
@@ -215,7 +259,7 @@ export function Home() {
 									flexBasis: "100%",
 									textAlign: "center",
 									fontFamily: "var(--mono)",
-									fontSize: "10px",
+									fontSize: "11px",
 									textTransform: "uppercase",
 									letterSpacing: ".08em",
 									color: "var(--color-text-secondary)",
