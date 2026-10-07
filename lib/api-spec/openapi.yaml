@@ -225,19 +225,77 @@ components:
         allSides:
           type: string
       required: [description, civilianImpact, allSides]
-    LiveEvent:
+    Source:
       type: object
-      description: A news article returned by retrieval. Title, source, url and date come from the retrieval provider, never from the model.
+      description: A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.
       properties:
+        id:
+          type: string
+          description: Stable within one brief, e.g. "S1". Claims refer to sources by this id.
+        kind:
+          type: string
+          enum: [news, reference, article]
+          description: news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied.
+        provider:
+          type: string
+          description: Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.
+        publisher:
+          type: string
         title:
           type: string
-        source:
-          type: string
         url:
+          type: [string, "null"]
+        publishedAt:
+          type: [string, "null"]
+          description: ISO 8601 publication time when the provider gave one, otherwise null.
+        retrievedAt:
           type: string
-        date:
+          description: ISO 8601 time the server retrieved the record.
+        language:
+          type: [string, "null"]
+        country:
+          type: [string, "null"]
+          description: Country of the outlet when the provider reports it.
+        excerpt:
+          type: [string, "null"]
+          description: The publisher's own summary or the reference extract, when available.
+      required: [id, kind, provider, publisher, title, url, publishedAt, retrievedAt, language, country, excerpt]
+    Claim:
+      type: object
+      description: A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.
+      properties:
+        text:
           type: string
-      required: [title, source, url, date]
+        sourceIds:
+          type: array
+          items:
+            type: string
+          minItems: 1
+      required: [text, sourceIds]
+    CoverageComparison:
+      type: object
+      properties:
+        agreements:
+          type: array
+          items:
+            $ref: "#/components/schemas/Claim"
+        differences:
+          type: array
+          items:
+            $ref: "#/components/schemas/Claim"
+      required: [agreements, differences]
+    RetrievalStatus:
+      type: object
+      properties:
+        provider:
+          type: string
+        status:
+          type: string
+          enum: [ok, empty, failed]
+          description: empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.
+        count:
+          type: integer
+      required: [provider, status, count]
     IntelligenceBrief:
       type: object
       properties:
@@ -278,10 +336,21 @@ components:
           type: string
         casualtyData:
           $ref: "#/components/schemas/CasualtyData"
-        liveEvents:
+        sources:
           type: array
           items:
-            $ref: "#/components/schemas/LiveEvent"
+            $ref: "#/components/schemas/Source"
+        keyFacts:
+          type: array
+          description: Statements supported by the cited sources. Empty when nothing retrieved supports a claim.
+          items:
+            $ref: "#/components/schemas/Claim"
+        coverage:
+          $ref: "#/components/schemas/CoverageComparison"
+        retrieval:
+          type: array
+          items:
+            $ref: "#/components/schemas/RetrievalStatus"
       required:
         - generatedAt
         - inScope
@@ -297,7 +366,10 @@ components:
         - affectedPopulation
         - keyQuestion
         - casualtyData
-        - liveEvents
+        - sources
+        - keyFacts
+        - coverage
+        - retrieval
     ErrorResponse:
       type: object
       properties:

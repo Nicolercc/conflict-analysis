@@ -48,6 +48,7 @@ export interface PerspectiveItem {
 export interface Coverage {
   articles: number;
   outlets: number;
+  countries: number;
 }
 
 export interface MapEvent {

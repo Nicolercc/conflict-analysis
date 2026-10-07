@@ -37,11 +37,9 @@ describe("POST /api/intelligence/explore — baseline", () => {
     const res = await explore("Sudan humanitarian access");
     expect(res.status).toBe(200);
     expect(res.body.headline).toMatch(/El Fasher/);
-    expect(res.body.liveEvents).toHaveLength(2);
-    expect(res.body.liveEvents[0]).toMatchObject({
-      source: "example-news.org",
-      url: "https://example-news.org/el-fasher",
-    });
+    const urls = res.body.sources.map((s: { url: string }) => s.url);
+    expect(urls).toContain("https://example-news.org/el-fasher");
+    expect(res.body).not.toHaveProperty("liveEvents");
   });
 
   it("serves a repeated topic from cache without new model calls", async () => {
@@ -85,7 +83,7 @@ describe("POST /api/intelligence/explore — trust contract", () => {
     );
     const res = await explore("Sudan humanitarian access");
     expect(res.body).not.toHaveProperty("verification");
-    expect(res.body).not.toHaveProperty("sources");
+    expect(JSON.stringify(res.body)).not.toMatch(/made-up/);
   });
 
   it("drops a model-invented credibility score", async () => {

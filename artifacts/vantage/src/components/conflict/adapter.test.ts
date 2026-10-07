@@ -35,11 +35,15 @@ function brief(overrides: Partial<Brief> = {}): Brief {
     affectedPopulation: "Civilians remain trapped.",
     keyQuestion: "Will corridors open?",
     casualtyData: { description: "d", civilianImpact: "c", allSides: "a" },
-    liveEvents: [
-      { title: "A", source: "example-news.org", url: "https://example-news.org/a", date: "Sep 10, 2026" },
-      { title: "B", source: "example-news.org", url: "https://example-news.org/b", date: "Sep 11, 2026" },
-      { title: "C", source: "example-wire.com", url: "https://example-wire.com/c", date: "Sep 11, 2026" },
+    sources: [
+      { id: "S1", kind: "news", provider: "p", publisher: "Al Jazeera", title: "T1", url: "https://x.example/1", publishedAt: null, retrievedAt: "2026-09-12T10:00:00.000Z", language: "English", country: "Qatar", excerpt: null },
+      { id: "S2", kind: "news", provider: "p", publisher: "Al Jazeera", title: "T2", url: "https://x.example/2", publishedAt: null, retrievedAt: "2026-09-12T10:00:00.000Z", language: "English", country: "Qatar", excerpt: null },
+      { id: "S3", kind: "news", provider: "p", publisher: "The Hindu", title: "T3", url: "https://x.example/3", publishedAt: null, retrievedAt: "2026-09-12T10:00:00.000Z", language: "English", country: "India", excerpt: null },
+      { id: "S4", kind: "reference", provider: "p", publisher: "Wikipedia", title: "T4", url: "https://x.example/4", publishedAt: null, retrievedAt: "2026-09-12T10:00:00.000Z", language: "English", country: null, excerpt: null },
     ],
+    keyFacts: [],
+    coverage: { agreements: [], differences: [] },
+    retrieval: [],
     ...overrides,
   } as unknown as Brief;
 }
@@ -65,8 +69,8 @@ describe("adaptBrief — trust contract", () => {
     expect(adaptBrief(brief()).publishedAt).toBe("2026-09-12T10:00:00.000Z");
   });
 
-  it("counts retrieved articles and distinct outlets, not invented sources", () => {
-    expect(adaptBrief(brief()).coverage).toEqual({ articles: 3, outlets: 2 });
+  it("counts retrieved news articles, outlets and countries; background references are not coverage", () => {
+    expect(adaptBrief(brief()).coverage).toEqual({ articles: 3, outlets: 2, countries: 2 });
   });
 
   it("leaves places with unknown coordinates off the map", () => {
