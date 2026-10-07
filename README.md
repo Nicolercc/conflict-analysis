@@ -2,13 +2,13 @@
 
 ### AI-Powered Conflict Intelligence & Geopolitical Analysis
 
-**Vantage transforms news articles and conflict topics into structured, interactive intelligence briefs using live news data, historical context, and multi-stage AI analysis.**
+**Vantage turns a conflict topic or a news article into a structured brief whose key facts link back to the reporting they came from.**
 
-Users can paste an article, submit a URL, or explore a geopolitical conflict directly. Vantage enriches the request with current global reporting and historical context, analyzes it through a structured AI pipeline, and presents the result as an interactive intelligence dashboard.
+Readers can search a topic, submit an article link, or paste article text. Vantage retrieves current coverage from news outlets in several countries, asks Claude to brief it, and keeps only the claims it can tie to a retrieved source. Everything the model adds from background knowledge is labelled as such.
 
 **Built end-to-end by Nicole Rodriguez as a full-stack applied AI engineering project.**
 
-[Live Demo](https://conflict-analysis-vantage.vercel.app) · [Architecture](./ARCHITECTURE.md)
+[Live Demo](https://conflict-analysis-vantage.vercel.app)
 
 ---
 
@@ -30,360 +30,141 @@ The project gave me an opportunity to work across the complete product lifecycle
 
 Vantage accepts three forms of input:
 
-* **Article URL** — fetches and extracts article text
-* **Pasted article text** — analyzes user-provided reporting directly
-* **Conflict topic** — explores a geopolitical issue without requiring an article
+* **Topic** — a conflict, crisis or country, e.g. "Sudan" or "Red Sea shipping tensions"
+* **Article link** — the public page is fetched and briefed
+* **Pasted article text** — briefed directly; the text stays in the browser tab and out of the page address
 
-The system produces a structured intelligence brief containing:
+Each brief contains two clearly separated kinds of content.
 
-* geographic location and interactive map context
-* key state and non-state actors
-* conflict summary
-* competing political and civilian perspectives
-* credibility assessment
-* historical context
-* escalation-risk analysis
-* affected-population context
-* related events
-* current reporting from GDELT
-* cross-regional media framing
-* consensus and divergence analysis
+**Sourced, with numbered citations**
+
+* key facts, each citing the retrieved sources that state it
+* a coverage comparison: where outlets agree and where their framing differs
+* the source list itself: publisher, country, date, link and the publisher's summary
+
+**Model background, labelled as unsourced**
+
+* summary, actors and competing perspectives
+* background timeline and historical context
+* escalation assessment and affected-population context
+* an interactive map of the places involved
 
 ---
 
 # System Architecture
 
 ```text
-                         ┌────────────────────┐
-                         │       User         │
-                         │ URL / Text / Topic │
-                         └─────────┬──────────┘
-                                   │
-                                   ▼
-                    ┌─────────────────────────┐
-                    │   React + TypeScript    │
-                    │     Vantage Client      │
-                    └────────────┬────────────┘
-                                 │
-                                 │ HTTP
-                                 ▼
-                    ┌─────────────────────────┐
-                    │      Express API        │
-                    │      TypeScript         │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────┴────────────┐
-                    │                         │
-                    ▼                         ▼
-             ┌──────────────┐          ┌──────────────┐
-             │    GDELT     │          │  Wikipedia   │
-             │  Live News   │          │   Context    │
-             └──────┬───────┘          └──────┬───────┘
-                    │                         │
-                    └────────────┬────────────┘
-                                 ▼
-                    ┌─────────────────────────┐
-                    │   Claude Analysis Pass  │
-                    │ Structured Intelligence │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │ Validation + Normalize  │
-                    │ JSON / Maps / Metadata  │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │ Perspective-Mapping Pass│
-                    │ Consensus / Divergence  │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │ SHA-256 Request Cache   │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │ Interactive Intelligence│
-                    │       Dashboard         │
-                    └─────────────────────────┘
+            Topic / article link / pasted text
+                          │
+                          ▼
+              React + TypeScript client
+                          │  HTTP
+                          ▼
+   ┌──────────────── Express API ────────────────┐
+   │ validate input · rate limit · dedupe · cache │
+   └──────────────────────┬──────────────────────┘
+                          ▼
+        Retrieval (all providers concurrently)
+   19 publisher RSS feeds · GDELT · Wikipedia · reader's article
+                          │
+                          ▼
+     Select: match topic · dedupe · cap per outlet ·
+             spread across countries · assign ids
+                          │
+                          ▼
+     Claude — fixed system prompt; sources in the user turn
+                          │
+                          ▼
+     Check: schema · every cited id was retrieved ·
+            figures appear in the cited text
+                          │
+                          ▼
+            Brief with numbered citations
 ```
 
 ---
 
 # Engineering Highlights
 
-## 1. Multi-Source Context Pipeline
+## 1. Sources come from retrieval, never from the model
 
-Rather than sending raw user input directly to an LLM, Vantage builds additional context first.
+A source record — publisher, URL, date, country — can only be created by the retrieval layer. The model refers to sources by id (`S1`, `S2`…) and anything it writes into a `sources`, `url` or date field is discarded.
 
-For each analysis, the backend concurrently retrieves:
-
-* **GDELT** — recent global news coverage
-* **Wikipedia** — historical and geopolitical background
-
-The retrieved context is then incorporated into the analysis request.
+Providers are queried concurrently and report their own outcome (`ok`, `empty`, `failed`), so a slow or unavailable provider neither blocks the brief nor silently looks like "no coverage".
 
 ```ts
-const [liveNews, wikiSummary] = await Promise.all([
-  fetchGdeltNews(topic),
-  fetchWikipediaSummary(topic),
+const [gdelt, wiki, ...feeds] = await Promise.all([
+  searchGdelt(topic),
+  searchWikipedia(topic),
+  ...FEEDS.map((feed) => searchFeed(feed, topic)),
 ]);
 ```
 
-Parallelizing independent network calls reduces unnecessary request latency while keeping the orchestration logic simple.
+## 2. Claims are checked before they are shown
 
----
+The model returns key facts and a coverage comparison, each citing source ids. The server drops a claim when:
 
-## 2. Structured AI Analysis
+* a cited id was never retrieved
+* a figure in the claim does not appear in the cited text
+* the claim shares no vocabulary with an English-language source it cites
 
-The primary Claude pass converts unstructured conflict information into a defined intelligence schema.
+These checks are deterministic and cheap. They catch invented citations and invented numbers; they do not prove a claim is a fair summary. That needs a reviewed evaluation set, which is the next step below.
 
-Instead of requesting free-form prose, Vantage constrains the model toward structured fields including:
+## 3. Unknown stays unknown
 
-```text
-headline
-location
-summary
-actors
-credibility
-perspectives
-relatedEvents
-escalationRisk
-historicalContext
-affectedPopulation
-casualtyData
-sources
-```
+* Missing or invalid coordinates are `null` and are left off the map — there is no default point.
+* Dates come from the provider; when it gives none, the date is `null`.
+* The generation time is stamped by the server once and survives caching, so an old brief never looks new.
 
-This makes AI output directly consumable by application components instead of treating the model response as a block of text.
+## 4. Retrieved text cannot act as instructions
 
----
+The system prompt is a constant. Retrieved headlines and the reader's article travel in the user turn inside labelled `<source>` blocks, with markup stripped so a source cannot close its own block. A test feeds an article containing "ignore all previous instructions" and asserts it never reaches the system prompt.
 
-## 3. Defensive LLM Output Handling
+## 5. Contract-first API
 
-LLM output is probabilistic, even when a model is instructed to return JSON.
+`lib/api-spec/openapi.yaml` is the source of truth. The React Query client and Zod schemas are generated from it, CI fails if generated code drifts, and the server validates both request bodies and the model's brief against the same schemas. An incomplete brief gets one retry, then a typed error — never a 200 the UI crashes on.
 
-Vantage therefore includes defensive parsing for responses containing:
+## 6. Protecting an expensive public endpoint
 
-* Markdown code fences
-* text before or after JSON
-* nested objects and arrays
-* escaped strings
-* malformed responses
+* **Guarded fetching** for article links: http(s) only, default ports, private and reserved addresses refused at connect time and on every redirect, size-capped.
+* **Per-client rate limit**, a **concurrency cap** and a **daily generation budget**.
+* **In-flight dedupe**: identical concurrent requests share one generation.
+* **Bounded cache** with a TTL that never stores failures.
+* **Typed errors** with a stable code, a safe message and a request id; upstream provider messages are logged, never returned.
 
-The API attempts structured extraction and a secondary fallback strategy before failing the request.
+## 7. Accessible by default
 
-Coordinates generated by the model are also normalized and range-checked before reaching the map interface.
-
-```text
-Latitude  → -90 ... 90
-Longitude → -180 ... 180
-```
-
-This prevents unreliable model output from cascading directly into the presentation layer.
-
----
-
-## 4. Live Data + Generated Analysis Separation
-
-Current news displayed by Vantage comes directly from **GDELT retrieval**, rather than being generated by the model.
-
-The architecture separates:
-
-```text
-Retrieved information
-        ↓
-GDELT + Wikipedia
-
-Generated analysis
-        ↓
-Claude
-
-Application normalization
-        ↓
-TypeScript API
-
-Presentation
-        ↓
-React dashboard
-```
-
-Keeping these responsibilities separate makes it easier to reason about where information originates and where additional verification is needed.
-
----
-
-## 5. Graceful Degradation
-
-The secondary perspective-mapping stage is deliberately **non-blocking**.
-
-If it fails, Vantage can still return the primary intelligence brief rather than failing the entire request.
-
-```ts
-try {
-  // secondary analysis
-} catch {
-  parsed.verification = {
-    sources: [],
-    consensus: "Verification temporarily unavailable.",
-    divergence: "Verification temporarily unavailable.",
-  };
-}
-```
-
-This was an intentional reliability decision: optional enrichment should not make the core product unavailable.
-
----
-
-## 6. Request Caching
-
-Repeated AI requests are expensive and unnecessary.
-
-For pasted articles, Vantage generates a SHA-256 hash of the normalized article text:
-
-```text
-Article
-   ↓
-SHA-256
-   ↓
-paste:<hash>
-   ↓
-In-memory cache
-```
-
-Identical requests can therefore bypass external AI processing and immediately reuse the previous analysis.
-
-The current implementation uses an in-memory `Map`; a distributed cache such as Redis would be the natural production evolution.
-
----
-
-## 7. Article Extraction
-
-URL-based analysis includes a backend article-extraction pipeline that:
-
-* fetches the supplied page
-* enforces a network timeout
-* removes scripts and styles
-* removes common navigation/layout elements
-* strips remaining HTML
-* normalizes whitespace
-* validates extracted-content length
-* limits the amount of text passed downstream
-
-If extraction fails, the interface can fall back to pasted article text.
+Nothing is hidden behind hover. Pages have titles, a status region, ordered headings and managed focus; text is at least 11px and meets 4.5:1 contrast; pinch zoom works; reduced motion is respected.
 
 ---
 
 # API
 
-The backend exposes the intelligence engine through an Express API.
-
-### Analyze an article
-
 ```http
-POST /api/intelligence/analyze
+POST /api/intelligence/explore     { "topic": "Sudan civil war" }
+POST /api/intelligence/analyze     { "article": "Article text…" }  or  { "url": "https://…" }
+GET  /api/healthz
 ```
+
+Errors share one shape:
 
 ```json
-{
-  "article": "Article text..."
-}
+{ "error": "RATE_LIMITED", "message": "Too many requests. Please wait a few minutes and try again.", "requestId": "…" }
 ```
 
-or:
-
-```json
-{
-  "url": "https://example.com/article"
-}
-```
-
-### Explore a conflict
-
-```http
-POST /api/intelligence/explore
-```
-
-```json
-{
-  "topic": "Sudan civil war"
-}
-```
-
-### Health check
-
-```http
-GET /api/healthz
-```
+Codes: `INVALID_INPUT`, `FETCH_BLOCKED`, `FETCH_FAILED`, `RATE_LIMITED`, `OVERLOADED`, `PROVIDER_UNAVAILABLE`, `MODEL_OUTPUT_INVALID`, `INTERNAL`.
 
 ---
 
-# Reliability & Operational Design
+# Testing
 
-Vantage includes several production-oriented safeguards beyond the core feature set:
+```bash
+pnpm test        # API and frontend unit/route tests
+pnpm typecheck
+pnpm codegen     # regenerate client and schemas from the OpenAPI spec
+```
 
-**External request timeouts**
-
-Third-party requests use bounded timeouts so unavailable services do not hang requests indefinitely.
-
-**Input validation**
-
-Article and topic requests are validated before entering the expensive analysis pipeline.
-
-**Structured logging**
-
-The Express API uses Pino-based HTTP logging while avoiding logging article bodies or API credentials.
-
-**Health checks**
-
-A dedicated health endpoint allows deployment infrastructure to confirm API availability.
-
-**Graceful shutdown**
-
-`SIGTERM` and `SIGINT` handlers close the HTTP server cleanly before process termination.
-
-**Environment isolation**
-
-Anthropic credentials remain server-side and are supplied through environment variables rather than exposed to the browser.
-
----
-
-# Frontend
-
-The Vantage interface is built as a high-density analytical dashboard rather than a conversational chatbot.
-
-The frontend uses:
-
-* React
-* TypeScript
-* Vite
-* TanStack Query
-* Leaflet
-* Recharts
-* Radix UI
-* Tailwind CSS
-* Framer Motion
-
-The UI translates the structured API response into dedicated visual surfaces for geography, timelines, actors, risk, perspectives, and source context.
-
----
-
-# Backend
-
-The API layer uses:
-
-* Node.js
-* TypeScript
-* Express 5
-* Anthropic Claude API
-* GDELT API
-* Wikipedia API
-* Pino
-* esbuild
-
-The backend owns external-data retrieval, prompt orchestration, parsing, normalization, caching, validation, and failure handling.
+Route tests run the real Express app against a fake model and fake retrieval, so they need no network and no API key. Each defect found in the project's audit was first captured as a failing test.
 
 ---
 
@@ -391,163 +172,88 @@ The backend owns external-data retrieval, prompt orchestration, parsing, normali
 
 ```text
 conflict-analysis/
-│
 ├── artifacts/
-│   ├── vantage/              # React visualization application
-│   └── api-server/           # Express intelligence API
-│
-├── lib/                      # Shared workspace packages
-├── scripts/                  # Development/build utilities
-├── .github/workflows/        # CI workflows
-│
-├── ARCHITECTURE.md           # System architecture & business logic
-├── LOCAL_SETUP.md            # Local development documentation
-├── Dockerfile                # Production API container
-├── pnpm-workspace.yaml       # Monorepo workspace configuration
-└── package.json              # Root build + workspace scripts
+│   ├── vantage/              # React client
+│   └── api-server/           # Express API
+│       └── src/brief/        # retrieval, prompt, generation, claim checks
+├── lib/
+│   ├── api-spec/             # OpenAPI contract + codegen config
+│   ├── api-zod/              # generated Zod schemas
+│   ├── api-client-react/     # generated React Query client
+│   └── integrations-anthropic-ai/
+├── .github/workflows/        # CI: codegen drift, typecheck, build, tests
+├── Dockerfile                # production API image
+└── pnpm-workspace.yaml
 ```
 
 ---
 
 # Tech Stack
 
-| Layer               | Technology         |
-| ------------------- | ------------------ |
-| Language            | TypeScript         |
-| Frontend            | React 19, Vite     |
-| API                 | Node.js, Express 5 |
-| AI                  | Anthropic Claude   |
-| Live News           | GDELT              |
-| Historical Context  | Wikipedia API      |
-| Data Fetching       | TanStack Query     |
-| Maps                | Leaflet            |
-| Visualization       | Recharts           |
-| Logging             | Pino               |
-| Build               | esbuild            |
-| Package Management  | pnpm workspaces    |
-| Containerization    | Docker             |
-| Frontend Deployment | Vercel             |
+| Layer              | Technology                                   |
+| ------------------ | -------------------------------------------- |
+| Language           | TypeScript                                   |
+| Frontend           | React 19, Vite, TanStack Query, Tailwind CSS |
+| Maps               | Leaflet, OpenStreetMap tiles                 |
+| API                | Node.js 22, Express 5, Zod                   |
+| AI                 | Anthropic Claude                             |
+| News retrieval     | Publisher RSS feeds, GDELT                   |
+| Background         | Wikipedia API                                |
+| Contract           | OpenAPI + Orval code generation              |
+| Testing            | Vitest, Supertest                            |
+| Logging            | Pino                                         |
+| Package management | pnpm workspaces                              |
+| Deployment         | Vercel (client), Docker image (API)          |
 
 ---
 
 # Running Locally
 
-## Requirements
-
-* **Node.js 22+**
-* **pnpm 9.9.0**
-* Anthropic API key
-
-Clone the repository:
+Requirements: **Node.js 22+**, **pnpm 9.9.0**, an Anthropic API key.
 
 ```bash
 git clone https://github.com/Nicolercc/conflict-analysis.git
 cd conflict-analysis
-```
-
-Install dependencies:
-
-```bash
 pnpm install
+cp .env.example .env      # add your API key
+pnpm dev:api              # API on http://localhost:3001
+pnpm dev                  # client on http://localhost:5173
 ```
 
-Configure environment variables:
+`.env.example` documents the optional limits (rate limit, daily budget, cache TTL, allowed origins).
 
-```bash
-cp .env.example .env
-```
-
-Start the backend:
-
-```bash
-pnpm dev:api
-```
-
-Start the frontend:
-
-```bash
-pnpm dev
-```
-
-Frontend:
-
-```text
-http://localhost:5173
-```
-
-API:
-
-```text
-http://localhost:3001
-```
-
----
-
-# Docker
-
-Build the production API image:
+## Docker
 
 ```bash
 docker build -t vantage-api .
+docker run --rm -p 3001:3001 --env-file .env vantage-api
 ```
-
-Run it:
-
-```bash
-docker run \
-  --rm \
-  -p 3001:3001 \
-  --env-file .env \
-  vantage-api
-```
-
-The production image uses a multi-stage Node 22 build and runs the application as a non-root user.
 
 ---
 
-# Current Tradeoffs & Next Steps
+# Current Limits & Next Steps
 
-Vantage is a working product, but several architectural improvements would be required before treating the platform as a high-trust production intelligence system.
+Vantage is honest about what it can and cannot support today.
 
-### Source-backed verification
+### Headlines and summaries, not full articles
 
-The current secondary analysis pass performs **perspective mapping**, using the model to reason about how coverage may differ across regions.
+RSS feeds supply a headline and the publisher's summary; GDELT supplies headlines only. Claims are therefore checked against that text, not the full article. Retrieving permitted full text is the next evidence step.
 
-A stronger production implementation would retrieve every cited source directly, preserve provenance, and restrict claims to evidence available in those retrieved documents.
+### A feed is a window, not an archive
 
-### Persistent caching
+Publisher feeds hold only recent items, so a quieter conflict may return little coverage. The brief says how many providers were checked and how many had something.
 
-The current in-memory cache is fast and simple but disappears when the API process restarts.
+### Claim checks are necessary, not sufficient
 
-A production implementation would use Redis or another distributed cache with explicit TTL and invalidation policies.
+The deterministic checks stop invented citations and figures. A reviewed evaluation set — fixed evidence with human-checked expected claims — is needed to measure whether summaries are fair, and to compare models.
 
-### Rate limiting and request queues
+### In-memory state
 
-AI inference is comparatively expensive. Production traffic would require:
+The cache, rate limits and daily budget live in the API process and reset on restart. Persistent briefs with stable, shareable links need a database.
 
-* per-client rate limits
-* concurrency controls
-* request queues
-* retry policies
-* cost and token telemetry
+### No streaming yet
 
-### Stronger schema enforcement
-
-Model responses are currently defensively parsed and normalized.
-
-A future iteration would add stricter runtime schema validation and automated repair/retry strategies around invalid model responses.
-
-### Observability
-
-A larger deployment would add:
-
-* distributed request tracing
-* external API latency metrics
-* model latency/token metrics
-* structured error monitoring
-* cache hit-rate monitoring
-
-These are deliberate next steps rather than abstractions added before the system needs them.
+The brief arrives in one response. Streaming validated sections as they complete would shorten the wait.
 
 ---
 
