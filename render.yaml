@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: conflict-analysis-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AI_INTEGRATIONS_ANTHROPIC_BASE_URL
+        value: https://api.anthropic.com
+      - key: AI_INTEGRATIONS_ANTHROPIC_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://conflict-analysis-vantage.vercel.app,http://localhost:5173
+      - key: RATE_LIMIT_MAX
+        value: "20"
+      - key: RATE_LIMIT_WINDOW_MINUTES
+        value: "10"
+      - key: BRIEF_MAX_CONCURRENT
+        value: "4"
+      - key: BRIEF_DAILY_BUDGET
+        value: "300"
+      - key: BRIEF_CACHE_TTL_MINUTES
+        value: "360"
+      - key: BRIEF_CACHE_MAX_ENTRIES
+        value: "200"
+      - key: BRIEF_MODEL
+        value: claude-haiku-4-5-20251001
+      - key: GEOCODER_USER_AGENT
+        value: Vantage/1.0 (+https://conflict-analysis-vantage.vercel.app)

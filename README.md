@@ -183,6 +183,7 @@ conflict-analysis/
 │   └── integrations-anthropic-ai/
 ├── .github/workflows/        # CI: codegen drift, typecheck, build, tests
 ├── Dockerfile                # production API image
+├── render.yaml               # Render API blueprint
 └── pnpm-workspace.yaml
 ```
 
@@ -229,6 +230,24 @@ pnpm dev                  # client on http://localhost:5173
 docker build -t vantage-api .
 docker run --rm -p 3001:3001 --env-file .env vantage-api
 ```
+
+## Deploying the API on Render
+
+The API is deployed as a Docker web service. `render.yaml` lives at the repo root
+so Render can create or update the service from a Blueprint.
+
+1. Create a Render Blueprint from this repository.
+2. When Render asks for unsynced secrets, set
+   `AI_INTEGRATIONS_ANTHROPIC_API_KEY` to a workspace-scoped Anthropic API key.
+3. Leave `PORT` unset in Render; the platform supplies it and the server binds to
+   `0.0.0.0`.
+4. Keep `CORS_ORIGINS` set to the Vercel frontend origin:
+   `https://conflict-analysis-vantage.vercel.app`.
+5. Set the Vercel frontend build env var
+   `VITE_API_BASE_URL=https://conflict-analysis.onrender.com`, then redeploy the
+   frontend so browser requests go to the Render API.
+
+Render checks `/api/healthz`, which returns a small JSON status response.
 
 ---
 
