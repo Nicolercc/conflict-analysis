@@ -5,6 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+	/* Stacking order, lowest to highest. Anything that floats uses one of these,
+	   so nothing in the page can end up drawn over the site header. */
+	--z-popover: 200;
+	--z-section-nav: 300;
+	--z-header: 400;
+	--z-skip-link: 500;
+
 	--bg-primary: #f7f4ef;
 	--bg-surface: #ffffff;
 	--bg-subtle: #f0ede8;
@@ -127,17 +134,16 @@ body {
 	top: 0;
 	left: 0;
 	right: 0;
-	z-index: 100;
+	z-index: var(--z-header);
 	min-height: 56px;
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 	align-items: center;
 	gap: 0.5rem 1rem;
 	padding: 0.5rem clamp(1rem, 3vw, 1.75rem);
-	background: rgba(247, 244, 239, 0.9);
-	backdrop-filter: blur(14px);
-	-webkit-backdrop-filter: blur(14px);
-	border-bottom: 1px solid rgba(10, 11, 13, 0.07);
+	/* Solid: page content scrolling underneath must not show through. */
+	background: var(--bg-primary);
+	border-bottom: 1px solid var(--border-light);
 	box-sizing: border-box;
 }
 
@@ -266,59 +272,6 @@ body {
 	}
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes ripple {
-	0% {
-		r: 5;
-		stroke-opacity: 0.6;
-	}
-	100% {
-		r: 18;
-		stroke-opacity: 0;
-	}
-}
-
-@keyframes barFill {
-	from {
-		width: 0;
-	}
-}
-
-@keyframes blink {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0;
-	}
-}
-
-@keyframes progressSweep {
-	0% {
-		transform: translateX(-100%);
-	}
-	100% {
-		transform: translateX(400%);
-	}
-}
-
-.font-display {
-	font-family: "Newsreader", Georgia, serif;
-}
-
-.font-mono-data {
-	font-family: "IBM Plex Mono", ui-monospace, monospace;
-}
-
 .section-label {
 	font-family: "IBM Plex Mono", ui-monospace, monospace;
 	font-size: 11px;
@@ -339,9 +292,3 @@ body {
 	padding: 24px;
 }
 
-.cursor-blink {
-	display: inline-block;
-	animation: blink 1s step-end infinite;
-	color: var(--accent-navy);
-	margin-left: 1px;
-}
