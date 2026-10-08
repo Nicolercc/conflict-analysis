@@ -280,7 +280,7 @@ Publisher feeds hold only recent items, so a quieter conflict relies on the news
 
 ### Claim checks are necessary, not sufficient
 
-The deterministic checks stop invented citations and figures, and catch 6 of the 10 unsupported claims in the labelled set. They cannot tell when a claim's words match its source but its meaning does not. In the recorded evaluation a second model judges about half of kept claims fully supported and most of the rest as adding a detail the cited text lacks; the expected-fact lists it uses still need review by a person.
+The deterministic checks stop invented citations and figures, and catch 6 of the 10 unsupported claims in the labelled set. They cannot tell when a claim's words match its source but its meaning does not. In the recorded evaluation a second model judges 82–86% of kept claims fully supported (54–66% before the prompt was tightened against it) and 1–2% unsupported; most of the rest add a detail the cited text lacks. The expected-fact lists it uses still need review by a person.
 
 ### Rate limits live in memory
 

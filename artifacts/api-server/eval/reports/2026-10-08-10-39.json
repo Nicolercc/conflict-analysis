@@ -1,0 +1,682 @@
+{
+  "ranAt": "2026-10-08T10:39:56.050Z",
+  "briefModel": "claude-haiku-4-5-20251001",
+  "judgeModel": "claude-sonnet-5-5",
+  "results": [
+    {
+      "id": "sudan",
+      "topic": "Sudan",
+      "sources": 10,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 1
+      },
+      "failures": [
+        {
+          "claim": "Paramilitary forces struck civilian targets including homes and aid convoys in recent days.",
+          "cites": [
+            "S1",
+            "S2"
+          ],
+          "verdict": "unsupported",
+          "why": "S1 does not attribute the aid truck strike to paramilitary forces; only the Blue Nile drone strike is blamed on the RSF."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 3,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2629,
+        "outputTokens": 2063
+      },
+      "ok": true,
+      "seconds": 22.609,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Khartoum (15.56, 32.53) vs Sudan"
+    },
+    {
+      "id": "gaza-ceasefire",
+      "topic": "Gaza ceasefire",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 9,
+        "kept": 9,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 8,
+        "partly": 0,
+        "unsupported": 1
+      },
+      "failures": [
+        {
+          "claim": "The October 7 anniversary occurs as the ceasefire enters its second or third year.",
+          "cites": [
+            "S3",
+            "S4"
+          ],
+          "verdict": "unsupported",
+          "why": "S3 and S4 do not mention a ceasefire or its duration; vague 'second or third year' claim not stated."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 2,
+        "missed": [
+          "A UN agency reported a surge in violence against women in Gaza."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2901,
+        "outputTokens": 2165
+      },
+      "ok": true,
+      "seconds": 26.638,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Gaza City (31.51, 34.46) vs Gaza Strip"
+    },
+    {
+      "id": "ukraine-front-line",
+      "topic": "Ukraine front-line updates",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 6,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Children were among casualties in Ukraine after Russian strikes in Pryluky, Chernigiv region, with a five-storey building reduced to rubble.",
+          "cites": [
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S2 gives children among heavy casualties and a five-storey building half destroyed in Pryluky, but not 'reduced to rubble' for the whole building; only one half was destroyed."
+        },
+        {
+          "claim": "The front line has remained largely static despite years of intensive fighting.",
+          "cites": [
+            "S5",
+            "S10"
+          ],
+          "verdict": "partly",
+          "why": "S5 says the front barely moved in four years, but S10 says Russia gained no territory in September; 'despite intensive fighting' is loosely supported, and S10 doesn't clearly state a static front line."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2900,
+        "outputTokens": 2096
+      },
+      "ok": true,
+      "seconds": 26.543,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Kyiv (50.45, 30.52) vs Ukraine"
+    },
+    {
+      "id": "red-sea-shipping",
+      "topic": "Red Sea shipping tensions",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 6,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Global shipping avoids the Suez route due to war-risk insurance premiums, with Middle East crude exports approaching pre-war levels via the Strait of Hormuz and alternatives.",
+          "cites": [
+            "S7"
+          ],
+          "verdict": "partly",
+          "why": "S7 mentions crude exports approaching pre-war levels via Hormuz and alternatives, but says nothing about shipping avoiding Suez due to war-risk premiums (it says Premier Alliance joins a Red Sea return)."
+        },
+        {
+          "claim": "Saudi-backed forces have launched aerial bombing in response to the Houthi advance.",
+          "cites": [
+            "S2",
+            "S5"
+          ],
+          "verdict": "partly",
+          "why": "S2 says the Saudis launched aerial bombing to help Aden retake territory; S5 does not mention it, and S2 gives no explicit 'response' framing beyond helping Aden."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2820,
+        "outputTokens": 2444
+      },
+      "ok": true,
+      "seconds": 30.267,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Mokha (13.32, 43.25) vs Red Sea and its coasts"
+    },
+    {
+      "id": "myanmar",
+      "topic": "Myanmar civil war",
+      "sources": 10,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "The Myanmar regime has killed 383 civilians in 21 Rakhine massacres according to an Irrawaddy tally, with airstrikes and ground raids killing hundreds and wounding 393 civilians since major fighting resumed in Rakhine nearly three years ago.",
+          "cites": [
+            "S7"
+          ],
+          "verdict": "partly",
+          "why": "S7's headline gives 383 civilians killed in 21 massacres and says hundreds were killed and 393 wounded since fighting resumed nearly three years ago, but the claim presents the 383 as the toll from airstrikes and ground raids, a link the snippet does not make."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2574,
+        "outputTokens": 2274
+      },
+      "ok": true,
+      "seconds": 26.466,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Yangon (16.80, 96.16) vs Myanmar"
+    },
+    {
+      "id": "dr-congo-m23",
+      "topic": "DR Congo M23",
+      "sources": 4,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 5,
+        "kept": 5,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2160,
+        "outputTokens": 1964
+      },
+      "ok": true,
+      "seconds": 21.895,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Goma (-1.67, 29.23) vs DR Congo and Rwanda border"
+    },
+    {
+      "id": "yemen-houthis",
+      "topic": "Yemen Houthis",
+      "sources": 12,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 10,
+        "kept": 10,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 9,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Houthis claimed they targeted Saudi airports including Abha International Airport near the Yemen border and King Khalid International Airport in Riyadh.",
+          "cites": [
+            "S8"
+          ],
+          "verdict": "partly",
+          "why": "S8 says the Saudi aviation authority reported both airports came under attack, not that the Houthis claimed to target them."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2826,
+        "outputTokens": 2259
+      },
+      "ok": true,
+      "seconds": 27.182,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "none",
+      "pinDetail": "Sana'a"
+    },
+    {
+      "id": "haiti-gangs",
+      "topic": "Haiti gangs",
+      "sources": 5,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 7,
+        "kept": 7,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2213,
+        "outputTokens": 2139
+      },
+      "ok": true,
+      "seconds": 22.781,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Port-au-Prince (18.55, -72.34) vs Haiti"
+    },
+    {
+      "id": "lebanon-israel",
+      "topic": "Lebanon Israel border",
+      "sources": 4,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 2,
+        "kept": 2,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 2,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2062,
+        "outputTokens": 1753
+      },
+      "ok": true,
+      "seconds": 554.153,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "South Lebanon (33.29, 35.30) vs Lebanon and northern Israel"
+    },
+    {
+      "id": "mali-sahel",
+      "topic": "Mali jihadists",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 2,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "The MNLA was initially allied with the jihadist group Ansar Dine, which was allied to al-Qaeda in the Islamic Maghreb (AQIM) and its splinter Movement for Oneness and Jihad in West Africa (MOJWA).",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 says Ansar Dine was allied to other Salafi jihadist groups such as AQIM and its splinter MOJWA, but the claim's wording suggests MOJWA is a splinter of AQIM, which S1 supports, and it omits nothing material; the only gap is that the claim presents the alliance as fact without 'such as'."
+        }
+      ],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1776,
+        "outputTokens": 1605
+      },
+      "ok": true,
+      "seconds": 19.154,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Bamako (12.61, -7.99) vs Mali"
+    },
+    {
+      "id": "taiwan-strait",
+      "topic": "Taiwan Strait tensions",
+      "sources": 2,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 2,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Taiwan has received two US-made fighter jets.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 is truncated: 'received two US-made ...' with no stated object, so 'fighter jets' is not confirmed."
+        },
+        {
+          "claim": "Taiwan's proposed military spending increase could heighten tensions across the Taiwan Strait.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 says China warned the spending increase could heighten tensions; the claim states it as fact rather than as China's warning."
+        }
+      ],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1786,
+        "outputTokens": 1623
+      },
+      "ok": true,
+      "seconds": 19.955,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Taiwan (23.60, 120.84) vs Taiwan and the strait"
+    },
+    {
+      "id": "south-sudan",
+      "topic": "South Sudan",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 9,
+        "kept": 9,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 9,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2979,
+        "outputTokens": 2262
+      },
+      "ok": true,
+      "seconds": 26.993,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Juba (4.85, 31.60) vs South Sudan"
+    },
+    {
+      "id": "oos-recipe",
+      "topic": "banana bread recipe",
+      "sources": 5,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 6,
+        "kept": 6,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2098,
+        "outputTokens": 589
+      },
+      "ok": true,
+      "seconds": 5.417,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-football",
+      "topic": "Premier League transfer news",
+      "sources": 7,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2285,
+        "outputTokens": 566
+      },
+      "ok": true,
+      "seconds": 5.693,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-phone",
+      "topic": "best phone camera review",
+      "sources": 3,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1942,
+        "outputTokens": 479
+      },
+      "ok": true,
+      "seconds": 4.312,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-python",
+      "topic": "how to learn Python programming",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 0,
+        "kept": 0,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0
+      },
+      "ok": false,
+      "error": "The analysis came back incomplete. Please try again. (No JSON object or array found in response)",
+      "seconds": 3.952,
+      "scope": {
+        "expected": false,
+        "got": null,
+        "correct": false
+      },
+      "pin": "n/a"
+    }
+  ]
+}

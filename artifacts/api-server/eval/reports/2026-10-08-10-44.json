@@ -1,0 +1,717 @@
+{
+  "ranAt": "2026-10-08T10:44:01.068Z",
+  "briefModel": "claude-haiku-4-5-20251001",
+  "judgeModel": "claude-sonnet-5-5",
+  "results": [
+    {
+      "id": "sudan",
+      "topic": "Sudan",
+      "sources": 10,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 7,
+        "kept": 7,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 3,
+        "conveyed": 3,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2677,
+        "outputTokens": 2003
+      },
+      "ok": true,
+      "seconds": 22.586,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Khartoum (15.56, 32.53) vs Sudan"
+    },
+    {
+      "id": "gaza-ceasefire",
+      "topic": "Gaza ceasefire",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 10,
+        "kept": 10,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 3,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Palestinians in Gaza face ongoing humanitarian hardship including food and water shortages, displacement, and lack of aid.",
+          "cites": [
+            "S8",
+            "S12"
+          ],
+          "verdict": "partly",
+          "why": "S8 and S12 mention hunger, limited food and water, displacement and aid shortage; S12 snippet doesn't state water shortage or displacement, but S8 covers them; mostly supported though 'lack of aid' is slightly stronger than 'shortage'."
+        },
+        {
+          "claim": "The October 7 anniversary marked three years since the initial Hamas attack and subsequent Israeli offensive.",
+          "cites": [
+            "S3",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "Sources give the third anniversary of Oct 7 attack, but neither S3 nor S4 mentions an Israeli offensive following it, nor names Hamas as attacker."
+        },
+        {
+          "claim": "HuffPost's headline describes Gaza's ceasefire as 'So-Called,' suggesting it is contested or incomplete; CBC.ca reports Palestinians 'continue to endure hunger, collapsing buildings and almost daily airstrikes — despite the year-old' ceasefire, similarly questioning its substance.",
+          "cites": [
+            "S8",
+            "S12"
+          ],
+          "verdict": "partly",
+          "why": "Quotes are accurate, but the interpretation that they suggest the ceasefire is contested or questioned in substance is an inference beyond the text."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 2,
+        "missed": [
+          "A UN agency reported a surge in violence against women in Gaza."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2949,
+        "outputTokens": 2417
+      },
+      "ok": true,
+      "seconds": 28.817,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Gaza City (31.51, 34.46) vs Gaza Strip"
+    },
+    {
+      "id": "ukraine-front-line",
+      "topic": "Ukraine front-line updates",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 7,
+        "kept": 6,
+        "dropped": [
+          "shares no substance with cited sources"
+        ]
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Russian forces are conducting sustained strikes on Ukrainian targets across multiple regions",
+          "cites": [
+            "S2",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "Multiple regions are supported by S3, but 'sustained' strikes is a characterization not stated; S2 covers a single strike in Pryluky."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "Zelenskyy said intelligence shows Russia is preparing a massive attack."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2948,
+        "outputTokens": 1767
+      },
+      "ok": true,
+      "seconds": 21.354,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Kyiv (50.45, 30.52) vs Ukraine"
+    },
+    {
+      "id": "red-sea-shipping",
+      "topic": "Red Sea shipping tensions",
+      "sources": 12,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 4,
+        "partly": 3,
+        "unsupported": 1
+      },
+      "failures": [
+        {
+          "claim": "Yemeni military said it has 'secured' the Red Sea waterway, though Saudi-backed forces gave conflicting reports on whether they had seized the port city of Mokha near the Bab al-Mandab Strait.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 gives the 'secured' statement and the conflicting reports, but 'Yemeni military' is as stated; the claim is accurate, though it doesn't say which side's military, which is fine; essentially supported with minor ambiguity."
+        },
+        {
+          "claim": "Global shipping avoids the Suez route due to war-risk insurance premiums, favoring the Cape of Good Hope route instead.",
+          "cites": [
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S4 snippet says shipping avoids Suez due to war-risk premiums and favors Cape of ..., but 'Good Hope' is truncated in the text."
+        },
+        {
+          "claim": "Houthi forces have taken control of strategic Red Sea territory in Yemen including the Mokha area.",
+          "cites": [
+            "S1",
+            "S5"
+          ],
+          "verdict": "unsupported",
+          "why": "Neither S1 nor S5 says the Houthis took Mokha; S1 describes conflicting reports about Saudi-backed forces seizing it."
+        },
+        {
+          "claim": "BBC News reports 'conflicting reports' from Saudi-backed forces on whether Mokha was seized; Moneycontrol describes the Houthi capture as a 'rapid offensive' that 'exposed divisions' within those same forces.",
+          "cites": [
+            "S1",
+            "S5"
+          ],
+          "verdict": "partly",
+          "why": "S1 gives the conflicting reports and S5 the rapid offensive and divisions, but the 'exposed divisions' quote is a paraphrase ('exposing divisions') and S1 doesn't say it's from BBC reporting of Mokha as stated here."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2868,
+        "outputTokens": 2178
+      },
+      "ok": true,
+      "seconds": 25.878,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Mokha (13.32, 43.25) vs Red Sea and its coasts"
+    },
+    {
+      "id": "myanmar",
+      "topic": "Myanmar civil war",
+      "sources": 10,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 9,
+        "kept": 9,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 9,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "The Irrawaddy counted 383 civilians killed in 21 massacres in Rakhine."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2622,
+        "outputTokens": 2438
+      },
+      "ok": true,
+      "seconds": 28.51,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Naypyidaw (19.78, 96.10) vs Myanmar"
+    },
+    {
+      "id": "dr-congo-m23",
+      "topic": "DR Congo M23",
+      "sources": 4,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 5,
+        "kept": 5,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2208,
+        "outputTokens": 1872
+      },
+      "ok": true,
+      "seconds": 21.526,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Goma (-1.67, 29.23) vs DR Congo and Rwanda border"
+    },
+    {
+      "id": "yemen-houthis",
+      "topic": "Yemen Houthis",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 9,
+        "kept": 9,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Yemen's president announced all-out war to reclaim land from Houthis amid an exchange of strikes between the Houthis and the Saudi-led coalition.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "Source says the Yemeni president announced all-out war amid an exchange of strikes, but the headline doesn't name the Saudi-led coalition's strikes as anything beyond that; actually it does mention it, so only minor wording differs."
+        },
+        {
+          "claim": "Saudi airports including Abha International Airport, near the Yemen border, and King Khalid International Airport in Riyadh have come under attack.",
+          "cites": [
+            "S8"
+          ],
+          "verdict": "partly",
+          "why": "S8 says both airports came under attack per Saudi aviation authority, but 'including' implies others and the claim omits attribution."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2874,
+        "outputTokens": 2047
+      },
+      "ok": true,
+      "seconds": 21.403,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Sana'a (15.35, 44.21) vs Yemen"
+    },
+    {
+      "id": "haiti-gangs",
+      "topic": "Haiti gangs",
+      "sources": 5,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 7,
+        "kept": 7,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 6,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Gang violence in Haiti has reached a critical level with significant loss of life and territorial control.",
+          "cites": [
+            "S1",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "Sources describe casualties and expanding gangs, but 'critical level' and territorial control are not stated in S1/S4 excerpts."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2261,
+        "outputTokens": 1990
+      },
+      "ok": true,
+      "seconds": 25.479,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Port-au-Prince (18.55, -72.34) vs Haiti"
+    },
+    {
+      "id": "lebanon-israel",
+      "topic": "Lebanon Israel border",
+      "sources": 4,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 4,
+        "kept": 2,
+        "dropped": [
+          "shares no substance with cited sources",
+          "shares no substance with cited sources"
+        ]
+      },
+      "judged": {
+        "supported": 2,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2110,
+        "outputTokens": 1701
+      },
+      "ok": true,
+      "seconds": 23.034,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Beirut (33.89, 35.50) vs Lebanon and northern Israel"
+    },
+    {
+      "id": "mali-sahel",
+      "topic": "Mali jihadists",
+      "sources": 1,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 4,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1824,
+        "outputTokens": 1657
+      },
+      "ok": true,
+      "seconds": 18.253,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Bamako (12.61, -7.99) vs Mali"
+    },
+    {
+      "id": "taiwan-strait",
+      "topic": "Taiwan Strait tensions",
+      "sources": 2,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 3,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Taiwan has received US-made fighter jets.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 says reports indicate the island received two US-made items, but the text is truncated and does not say they are fighter jets, and it frames this as reports."
+        }
+      ],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1834,
+        "outputTokens": 1512
+      },
+      "ok": true,
+      "seconds": 18.669,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Taipei (25.04, 121.56) vs Taiwan and the strait"
+    },
+    {
+      "id": "south-sudan",
+      "topic": "South Sudan",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 7,
+        "kept": 7,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "South Sudan moved to dispel reports that foreigners have been given seven days to leave the country, with the government saying it remains open to legally resident foreigners but wants them to stay out of small-scale retail.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 attributes the statement to Juba County Caretaker Commissioner, not the national government, and 'government remains open' is stated, but 'South Sudan moved to dispel' is fine; the national-level attribution is a slight stretch."
+        },
+        {
+          "claim": "Tuko News's headline says 'South Sudan Bans Foreigners From Retail Trade, Kenyan Traders at Risk of Closure'; AllAfrica's headline says 'South Sudan Rejects Claims of Foreigners' Expulsion Order' and quotes the government saying it 'remains open to legally resident foreigners but wants them to stay out of small-scale retail.'",
+          "cites": [
+            "S1",
+            "S11"
+          ],
+          "verdict": "partly",
+          "why": "Headlines are accurate, but the quote is paraphrased in S1 rather than a direct government quotation, and it is from a county commissioner."
+        }
+      ],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3027,
+        "outputTokens": 2187
+      },
+      "ok": true,
+      "seconds": 24.213,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Juba (4.85, 31.60) vs South Sudan"
+    },
+    {
+      "id": "oos-recipe",
+      "topic": "banana bread recipe",
+      "sources": 5,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 6,
+        "kept": 6,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2146,
+        "outputTokens": 553
+      },
+      "ok": true,
+      "seconds": 4.886,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-football",
+      "topic": "Premier League transfer news",
+      "sources": 7,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2333,
+        "outputTokens": 508
+      },
+      "ok": true,
+      "seconds": 5.394,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-phone",
+      "topic": "best phone camera review",
+      "sources": 3,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 5,
+        "kept": 5,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1990,
+        "outputTokens": 584
+      },
+      "ok": true,
+      "seconds": 4.875,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-python",
+      "topic": "how to learn Python programming",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1752,
+        "outputTokens": 397
+      },
+      "ok": true,
+      "seconds": 3.636,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    }
+  ]
+}

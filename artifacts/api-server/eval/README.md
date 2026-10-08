@@ -36,3 +36,12 @@ pnpm --filter @workspace/api-server eval:record     # snapshot topics that have 
 - One run is one sample. The same case can score differently twice in a row, so
   compare changes over two or three runs before believing a small difference.
 - A full run makes 16 brief calls and up to 12 grading calls.
+
+## History
+
+| Date | Change | Fully supported | Partly | Unsupported | Expected facts | Main pin correct |
+|---|---|---|---|---|---|---|
+| 2026-10-08 | Baseline (two runs) | 54–66% | 28–40% | 6% | 68–95% | 67–92% |
+| 2026-10-08 | Prompt: restate, one statement per claim, cite only sources that state it, no "frames/emphasises" (two runs) | 82–86% | 11–17% | 1–2% | 84–95% | 92–100% |
+
+The same change also stopped out-of-scope topics from occasionally being answered in prose instead of JSON (12 of 12 in three repeat runs).

@@ -57,7 +57,7 @@ export async function judge(input: {
         },
       ],
     },
-    { timeout: 90_000, maxRetries: 2 },
+    { timeout: 60_000, maxRetries: 1 },
   );
   const block = message.content.find((b) => b.type === "text");
   const parsed = extractJSON(block && block.type === "text" ? block.text : "") as {
