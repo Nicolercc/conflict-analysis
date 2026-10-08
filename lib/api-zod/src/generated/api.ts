@@ -64,7 +64,7 @@ export const AnalyzeArticleResponse = zod.object({
       .number()
       .nullable()
       .describe(
-        "Null when the location is unknown. Lat and lng are null together.",
+        "Set by geocoding the city and country, never by the model. Null when the place could not be confirmed. Lat and lng are null together.",
       ),
     lng: zod.number().nullable(),
   }),
@@ -102,11 +102,17 @@ export const AnalyzeArticleResponse = zod.object({
         "humanitarian",
         "political",
       ]),
+      place: zod
+        .string()
+        .nullable()
+        .describe(
+          'Where the event happened, as a place name (e.g. \"Jeddah, Saudi Arabia\"). Null when it has no single location.',
+        ),
       lat: zod
         .number()
         .nullable()
         .describe(
-          "Null when the event has no known location. Lat and lng are null together.",
+          "Set by geocoding the place, never by the model. Null when the place could not be confirmed. Lat and lng are null together.",
         ),
       lng: zod.number().nullable(),
       searchQuery: zod
@@ -140,7 +146,7 @@ export const AnalyzeArticleResponse = zod.object({
         provider: zod
           .string()
           .describe(
-            "Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.",
+            "Where the record came from, e.g. Bing News search, BBC News RSS, Wikipedia, Reader.",
           ),
         publisher: zod.string(),
         title: zod.string(),
@@ -259,7 +265,7 @@ export const ExploreConflictResponse = zod.object({
       .number()
       .nullable()
       .describe(
-        "Null when the location is unknown. Lat and lng are null together.",
+        "Set by geocoding the city and country, never by the model. Null when the place could not be confirmed. Lat and lng are null together.",
       ),
     lng: zod.number().nullable(),
   }),
@@ -297,11 +303,17 @@ export const ExploreConflictResponse = zod.object({
         "humanitarian",
         "political",
       ]),
+      place: zod
+        .string()
+        .nullable()
+        .describe(
+          'Where the event happened, as a place name (e.g. \"Jeddah, Saudi Arabia\"). Null when it has no single location.',
+        ),
       lat: zod
         .number()
         .nullable()
         .describe(
-          "Null when the event has no known location. Lat and lng are null together.",
+          "Set by geocoding the place, never by the model. Null when the place could not be confirmed. Lat and lng are null together.",
         ),
       lng: zod.number().nullable(),
       searchQuery: zod
@@ -335,7 +347,7 @@ export const ExploreConflictResponse = zod.object({
         provider: zod
           .string()
           .describe(
-            "Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.",
+            "Where the record came from, e.g. Bing News search, BBC News RSS, Wikipedia, Reader.",
           ),
         publisher: zod.string(),
         title: zod.string(),

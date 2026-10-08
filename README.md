@@ -65,7 +65,7 @@ Each brief contains two clearly separated kinds of content.
    └──────────────────────┬──────────────────────┘
                           ▼
         Retrieval (all providers concurrently)
-   19 publisher RSS feeds · GDELT · Wikipedia · reader's article
+   19 publisher RSS feeds · news search · Wikipedia · reader's article
                           │
                           ▼
      Select: match topic · dedupe · cap per outlet ·
@@ -93,8 +93,8 @@ A source record — publisher, URL, date, country — can only be created by the
 Providers are queried concurrently and report their own outcome (`ok`, `empty`, `failed`), so a slow or unavailable provider neither blocks the brief nor silently looks like "no coverage".
 
 ```ts
-const [gdelt, wiki, ...feeds] = await Promise.all([
-  searchGdelt(topic),
+const [search, wiki, ...feeds] = await Promise.all([
+  searchNews(topic),
   searchWikipedia(topic),
   ...FEEDS.map((feed) => searchFeed(feed, topic)),
 ]);
@@ -112,7 +112,7 @@ These checks are deterministic and cheap. They catch invented citations and inve
 
 ## 3. Unknown stays unknown
 
-* Missing or invalid coordinates are `null` and are left off the map — there is no default point.
+* Map coordinates come from a geocoder, not the model. The model names a place and gives its own estimate; a pin is drawn only when the looked-up place and the estimate agree. A vague name, a country-sized answer, a failed lookup or a disagreement leaves the place off the map — there is no default point.
 * Dates come from the provider; when it gives none, the date is `null`.
 * The generation time is stamped by the server once and survives caching, so an old brief never looks new.
 
@@ -197,7 +197,8 @@ conflict-analysis/
 | Maps               | Leaflet, OpenStreetMap tiles                 |
 | API                | Node.js 22, Express 5, Zod                   |
 | AI                 | Anthropic Claude                             |
-| News retrieval     | Publisher RSS feeds, GDELT                   |
+| News retrieval     | Publisher RSS feeds, Bing News search        |
+| Geocoding          | OpenStreetMap Nominatim                      |
 | Background         | Wikipedia API                                |
 | Contract           | OpenAPI + Orval code generation              |
 | Testing            | Vitest, Supertest                            |
@@ -237,11 +238,11 @@ Vantage is honest about what it can and cannot support today.
 
 ### Headlines and summaries, not full articles
 
-RSS feeds supply a headline and the publisher's summary; GDELT supplies headlines only. Claims are therefore checked against that text, not the full article. Retrieving permitted full text is the next evidence step.
+RSS feeds and the news search supply a headline and a short summary. Claims are therefore checked against that text, not the full article. Retrieving permitted full text is the next evidence step.
 
 ### A feed is a window, not an archive
 
-Publisher feeds hold only recent items, so a quieter conflict may return little coverage. The brief says how many providers were checked and how many had something.
+Publisher feeds hold only recent items, so a quieter conflict relies on the news search for coverage. The search uses a public results feed with no service agreement behind it, and it does not report an outlet's country; a licensed news API would be the dependable replacement. The brief says how many providers were checked and how many had something.
 
 ### Claim checks are necessary, not sufficient
 

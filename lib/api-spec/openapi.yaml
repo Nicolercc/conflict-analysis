@@ -174,7 +174,7 @@ components:
           description: Broader geopolitical region (e.g. "Eastern Europe", "Middle East")
         lat:
           type: [number, "null"]
-          description: Null when the location is unknown. Lat and lng are null together.
+          description: Set by geocoding the city and country, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
         lng:
           type: [number, "null"]
       required: [city, country, region, lat, lng]
@@ -206,15 +206,18 @@ components:
         type:
           type: string
           enum: [strike, escalation, negotiation, humanitarian, political]
+        place:
+          type: [string, "null"]
+          description: Where the event happened, as a place name (e.g. "Jeddah, Saudi Arabia"). Null when it has no single location.
         lat:
           type: [number, "null"]
-          description: Null when the event has no known location. Lat and lng are null together.
+          description: Set by geocoding the place, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
         lng:
           type: [number, "null"]
         searchQuery:
           type: string
           description: Google News search query to verify this event
-      required: [date, title, description, type, lat, lng, searchQuery]
+      required: [date, title, description, type, place, lat, lng, searchQuery]
     CasualtyData:
       type: object
       properties:
@@ -238,7 +241,7 @@ components:
           description: news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied.
         provider:
           type: string
-          description: Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.
+          description: Where the record came from, e.g. Bing News search, BBC News RSS, Wikipedia, Reader.
         publisher:
           type: string
         title:

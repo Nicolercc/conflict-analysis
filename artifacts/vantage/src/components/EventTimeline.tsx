@@ -100,6 +100,9 @@ export function EventTimeline({
 								}}
 							>
 								{label}
+								{evt.place ? (
+									<span style={{ color: "var(--text-muted)" }}> · {evt.place}</span>
+								) : null}
 							</div>
 							<div
 								style={{

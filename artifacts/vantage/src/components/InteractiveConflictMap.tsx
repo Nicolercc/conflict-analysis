@@ -55,6 +55,29 @@ function toLatLng(p: {
 		: null;
 }
 
+/**
+ * Events that happened in the same place would draw on top of each other (and
+ * on the primary pin). Each one after the first is drawn a fixed distance to
+ * the side, on a ring, so every marker stays visible and clickable. Only the
+ * drawing moves; the coordinates are unchanged.
+ */
+export function overlapOffsets(
+	hub: L.LatLngTuple | null,
+	positions: L.LatLngTuple[],
+	radius = 26,
+): Array<[number, number]> {
+	const key = (p: L.LatLngTuple) => `${p[0].toFixed(3)},${p[1].toFixed(3)}`;
+	const taken = new Map<string, number>();
+	if (hub) taken.set(key(hub), 1);
+	return positions.map((p) => {
+		const n = taken.get(key(p)) ?? 0;
+		taken.set(key(p), n + 1);
+		if (n === 0) return [0, 0];
+		const angle = -Math.PI / 6 + (n - 1) * (Math.PI / 3);
+		return [Math.round(radius * Math.cos(angle)), Math.round(radius * Math.sin(angle))];
+	});
+}
+
 function escapeHtml(s: string) {
 	return s
 		.replace(/&/g, "&amp;")
@@ -267,13 +290,15 @@ export function InteractiveConflictMap({
 
 		if (hubMarker) layersRef.current.markers.push(hubMarker);
 
-		located.forEach(({ evt, pos }) => {
+		const offsets = overlapOffsets(hub, located.map((l) => l.pos));
+		located.forEach(({ evt, pos }, i) => {
+			const [dx, dy] = offsets[i] ?? [0, 0];
 			const marker = L.marker(pos, {
 				icon: L.divIcon({
 					className: "ci-map-marker-wrap",
 					html: eventIconHtml(evt),
 					iconSize: [36, 36],
-					iconAnchor: [18, 18],
+					iconAnchor: [18 - dx, 18 - dy],
 				}),
 				keyboard: true,
 				title: evt.title,

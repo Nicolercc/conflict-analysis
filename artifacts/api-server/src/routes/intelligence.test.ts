@@ -113,7 +113,42 @@ describe("POST /api/intelligence/explore — trust contract", () => {
     expect(res.body.location.lng).toBeNull();
   });
 
-  it("does not pair one valid coordinate with a made-up zero", async () => {
+  it("puts the brief on the map where the geocoder finds the place, not where the model says", async () => {
+    modelAnswers(modelBrief({ location: { city: "El Fasher", country: "Sudan", region: "Sub-Saharan Africa", lat: 13.9, lng: 25.1 } }));
+    const res = await explore("Sudan humanitarian access");
+    expect(res.body.location).toMatchObject({ lat: 13.6279, lng: 25.3494 });
+    expect(res.body.relatedEvents[0]).toMatchObject({ place: "Khartoum, Sudan", lat: 15.5007, lng: 32.5599 });
+  });
+
+  it("leaves a place off the map when the lookup lands far from the model's estimate", async () => {
+    // Same name, different place: the geocoder answers with somewhere 1,800 km away.
+    stubRetrieval({ geocoder: { places: { "el fasher, sudan": { lat: "31.5", lon: "34.47" } } } });
+    const res = await explore("Sudan humanitarian access");
+    expect(res.body.location).toMatchObject({ city: "El Fasher", lat: null, lng: null });
+  });
+
+  it("leaves places off the map when the geocoder fails or does not know them", async () => {
+    stubRetrieval({ geocoder: { status: 503 } });
+    const down = await explore("Sudan humanitarian access");
+    expect(down.status).toBe(200);
+    expect(down.body.location).toMatchObject({ lat: null, lng: null });
+    expect(down.body.relatedEvents[0]).toMatchObject({ lat: null, lng: null });
+
+    resetBriefState(app);
+    stubRetrieval();
+    modelAnswers(modelBrief({ location: { city: "Atlantis", country: "Nowhere", region: "x", lat: 10, lng: 10 } }));
+    const unknown = await explore("Sudan humanitarian access");
+    expect(unknown.body.location).toMatchObject({ lat: null, lng: null });
+  });
+
+  it("does not pin an event to the centre of a country", async () => {
+    const event = { date: "Apr 2025", title: "Famine declared", description: "d", type: "humanitarian", place: "Sudan", lat: 14.6, lng: 29.5, searchQuery: "q" };
+    modelAnswers(modelBrief({ relatedEvents: [event] }));
+    const res = await explore("Sudan humanitarian access");
+    expect(res.body.relatedEvents[0]).toMatchObject({ place: "Sudan", lat: null, lng: null });
+  });
+
+  it("does not pair one valid coordinate with a made-up zero, and never maps an unnamed event", async () => {
     modelAnswers(
       modelBrief({
         location: {
@@ -137,7 +172,8 @@ describe("POST /api/intelligence/explore — trust contract", () => {
       }),
     );
     const res = await explore("Sudan humanitarian access");
+    // A half-valid pair is no estimate at all, so there is nothing to confirm the lookup against.
     expect(res.body.location).toMatchObject({ lat: null, lng: null });
-    expect(res.body.relatedEvents[0]).toMatchObject({ lat: null, lng: null });
+    expect(res.body.relatedEvents[0]).toMatchObject({ place: null, lat: null, lng: null });
   });
 });

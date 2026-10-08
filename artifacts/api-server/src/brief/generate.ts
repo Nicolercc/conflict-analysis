@@ -2,6 +2,7 @@ import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { ExploreConflictResponse } from "@workspace/api-zod";
 import { AppError } from "../lib/errors";
 import { logger } from "../lib/logger";
+import { locateBrief } from "./geocode";
 import { extractJSON, normalizeLatLng, tryExtractJsonFallback } from "./json";
 import { buildUserMessage, SYSTEM_PROMPT } from "./prompt";
 import { searchCoverage, type Coverage } from "./retrieval";
@@ -16,7 +17,7 @@ const providerUnavailable = (cause: unknown) =>
   new AppError(502, "PROVIDER_UNAVAILABLE", "The analysis service is unavailable right now. Please try again later.", { cause });
 
 /** One model call, parsed and checked against the evidence and the response contract. */
-async function generateOnce(coverage: Coverage, userMessage: string): Promise<object> {
+async function generateOnce(coverage: Coverage, userMessage: string) {
   let message;
   try {
     message = await anthropic.messages.create(
@@ -72,6 +73,7 @@ async function generateOnce(coverage: Coverage, userMessage: string): Promise<ob
       ? (parsed["relatedEvents"] as Array<Record<string, unknown>>).map((ev) => ({
           ...ev,
           ...normalizeLatLng(ev?.["lat"], ev?.["lng"]),
+          place: str(ev?.["place"]).trim() || null,
           searchQuery: str(ev?.["searchQuery"]),
         }))
       : parsed["relatedEvents"],
@@ -119,7 +121,9 @@ export async function buildBrief(input: BriefInput): Promise<object> {
   let lastError: unknown;
   for (let attempt = 1; attempt <= MAX_GENERATION_ATTEMPTS; attempt++) {
     try {
-      return await generateOnce(coverage, userMessage);
+      const brief = await generateOnce(coverage, userMessage);
+      // The model's coordinates are a guess; the map shows only looked-up places.
+      return await locateBrief(brief);
     } catch (err) {
       if (err instanceof AppError) throw err;
       lastError = err;

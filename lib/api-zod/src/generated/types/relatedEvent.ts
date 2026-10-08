@@ -13,7 +13,12 @@ export interface RelatedEvent {
   description: string;
   type: RelatedEventType;
   /**
-   * Null when the event has no known location. Lat and lng are null together.
+   * Where the event happened, as a place name (e.g. "Jeddah, Saudi Arabia"). Null when it has no single location.
+   * @nullable
+   */
+  place: string | null;
+  /**
+   * Set by geocoding the place, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
    * @nullable
    */
   lat: number | null;

@@ -18,10 +18,20 @@ const STOP = new Set([
 
 const digits = (s: string) => s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
 
-/** Figures in a text, normalised so "1,200", "1 200" and "1200" compare equal. */
+/**
+ * Figures in a text, normalised so "1,200", "1 200" and "1200" compare equal.
+ * Separators join digits only in groups of three, so "October 7, 2026" is the
+ * two figures 7 and 2026 and not one.
+ */
 export function numbersIn(text: string): string[] {
-  const found = digits(text).match(/\d[\d,. ]*\d|\d/g) ?? [];
-  return found.map((n) => n.replace(/[, ]/g, "").replace(/\.$/, "")).filter(Boolean);
+  const found = digits(text).match(/\d{1,3}(?:[, ]\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?/g) ?? [];
+  return found.map((n) => n.replace(/[, ]/g, "")).filter(Boolean);
+}
+
+/** The day, month and year a source was published: a claim may date an event by them. */
+function dateFigures(source: SourceRecord): string[] {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(source.publishedAt ?? "");
+  return m ? [m[1]!, String(Number(m[2])), String(Number(m[3]))] : [];
 }
 
 function contentWords(text: string): Set<string> {
@@ -44,7 +54,7 @@ export function checkClaim(raw: unknown, byId: Map<string, SourceRecord>): Claim
   const cited = ids.map((id) => byId.get(id)!);
   const citedText = digits(cited.map((s) => s.text).join(" \n "));
 
-  const sourceNumbers = new Set(numbersIn(citedText));
+  const sourceNumbers = new Set([...numbersIn(citedText), ...cited.flatMap(dateFigures)]);
   const missing = numbersIn(text).filter((n) => !sourceNumbers.has(n));
   if (missing.length > 0) {
     return { ok: false, reason: `figure not in cited sources: ${missing.join(", ")}` };

@@ -24,6 +24,7 @@ function brief(overrides: Partial<Brief> = {}): Brief {
         title: "Fighting begins in Khartoum",
         description: "Start of the war.",
         type: "escalation",
+        place: "Khartoum, Sudan",
         lat: 15.5,
         lng: 32.56,
         searchQuery: "q",

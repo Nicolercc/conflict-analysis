@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { articleSearchTopic } from "./article";
-import { parseGdeltDate } from "./retrieval/gdelt";
+import { distanceKm } from "./geocode";
+import { articleUrl, parseNewsSearch } from "./retrieval/news-search";
 import { canonicalUrl, cleanText, selectNews, topicMatcher, topicTerms, type Candidate } from "./sources";
 import { numbersIn } from "./support";
 
 const news = (over: Partial<Candidate>): Candidate => ({
-  kind: "news", provider: "GDELT", publisher: "x.example", title: "t", url: "https://x.example/1",
+  kind: "news", provider: "Bing News search", publisher: "x.example", title: "t", url: "https://x.example/1",
   publishedAt: null, language: "English", country: null, excerpt: null, ...over,
 });
 
@@ -55,14 +56,59 @@ describe("source helpers", () => {
     expect(cleanText("Ukraine&#8217;s <b>Flamingo</b> &amp; more&nbsp;")).toBe("Ukraine’s Flamingo & more");
   });
 
-  it("parses GDELT dates and leaves unusable ones unknown", () => {
-    expect(parseGdeltDate("20260910T120000Z")).toBe("2026-09-10T12:00:00.000Z");
-    expect(parseGdeltDate("")).toBeNull();
-    expect(parseGdeltDate("recently")).toBeNull();
+  it("does not let a longer place name stand in for the topic's", () => {
+    const sudan = topicMatcher("Sudan");
+    expect(sudan("South Sudan rejects claims of foreigners' expulsion order")).toBe(false);
+    expect(sudan("South Sudan: South Sudan Rejects Claims")).toBe(false);
+    expect(sudan("Sudan and South Sudan reopen border crossing")).toBe(true);
+    // asking for the longer name still works
+    expect(topicMatcher("South Sudan floods")("South Sudan floods displace thousands")).toBe(true);
+    expect(topicMatcher("Korea")("North Korea tests missile")).toBe(false);
+    expect(topicMatcher("Guinea coup")("Papua New Guinea votes")).toBe(false);
+  });
+
+  it("does not count a mention inside a multi-story digest", () => {
+    const sudan = topicMatcher("Sudan humanitarian access");
+    expect(sudan("World News in Brief: West Bank demolitions accelerate, urgent support for Sudan, Haiti displacement")).toBe(false);
+    expect(sudan("Africa weekly round-up: Sudan, Mali and Kenya")).toBe(false);
+    expect(sudan("UN Security Council briefing hears Sudan aid warning")).toBe(true);
+  });
+
+  it("reads the article's own address out of a search click-through link", () => {
+    expect(articleUrl("http://www.bing.com/news/apiclick.aspx?ref=FexRss&url=https%3a%2f%2fapnews.com%2farticle%2fx&c=1")).toBe("https://apnews.com/article/x");
+    expect(articleUrl("http://www.bing.com/news/apiclick.aspx?url=javascript%3aalert(1)")).toBeNull();
+    expect(articleUrl("http://www.bing.com/news/apiclick.aspx?ref=FexRss")).toBeNull();
+    expect(articleUrl("https://example.org/story")).toBe("https://example.org/story");
+    expect(articleUrl("nonsense")).toBeNull();
+  });
+
+  it("keeps search results that name the topic and takes the outlet from the feed", () => {
+    const item = (title: string, description: string, url: string, source = "") =>
+      `<item><title>${title}</title><link>http://www.bing.com/news/apiclick.aspx?url=${encodeURIComponent(url)}</link><description>${description}</description><pubDate>Wed, 07 Oct 2026 08:20:00 GMT</pubDate>${source ? `<News:Source>${source}</News:Source>` : ""}</item>`;
+    const xml = `<rss><channel>${[
+      item("Drone strike kills 4 women in Sudan's Blue Nile state", "A strike hit homes.", "https://apnews.com/a", "Associated Press News on MSN"),
+      item("South Sudan's aid crisis deepens", "Funding shrinks as arrivals from Sudan continue.", "https://example.org/b", "Example"),
+      item("Markets rally on rate hopes", "Nothing about the topic.", "https://example.org/c", "Example"),
+      item("Sudan's army chief vows to retake territory", "", "https://www.outlookindia.com/d"),
+    ].join("")}</channel></rss>`;
+    const found = parseNewsSearch(xml, "Sudan");
+    expect(found.map((c) => c.url)).toEqual(["https://apnews.com/a", "https://www.outlookindia.com/d"]);
+    expect(found[0]).toMatchObject({ publisher: "Associated Press News", publishedAt: "2026-10-07T08:20:00.000Z", country: null });
+    expect(found[1]?.publisher).toBe("outlookindia.com");
+  });
+
+  it("measures the distance between two points", () => {
+    // Gaza City to Ramallah is about 80 km; Gaza City to Khartoum about 1,800 km.
+    expect(distanceKm({ lat: 31.5, lng: 34.47 }, { lat: 31.9, lng: 35.2 })).toBeGreaterThan(60);
+    expect(distanceKm({ lat: 31.5, lng: 34.47 }, { lat: 31.9, lng: 35.2 })).toBeLessThan(100);
+    expect(distanceKm({ lat: 31.5, lng: 34.47 }, { lat: 15.5, lng: 32.56 })).toBeGreaterThan(1500);
   });
 
   it("normalises figures for comparison", () => {
     expect(numbersIn("1,200 people and 3.5 million, in ١٢ towns.")).toEqual(["1200", "3.5", "12"]);
+    expect(numbersIn("25 000 displaced; 1,234,567 in need.")).toEqual(["25000", "1234567"]);
+    // a date is a day and a year, not one figure
+    expect(numbersIn("On October 7, 2026, three people died.")).toEqual(["7", "2026"]);
   });
 
   it("derives search terms for an article from the names that recur in it", () => {

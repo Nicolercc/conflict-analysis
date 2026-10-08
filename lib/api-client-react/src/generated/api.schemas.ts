@@ -41,7 +41,7 @@ export interface Location {
   /** Broader geopolitical region (e.g. "Eastern Europe", "Middle East") */
   region: string;
   /**
-   * Null when the location is unknown. Lat and lng are null together.
+   * Set by geocoding the city and country, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
    * @nullable
    */
   lat: number | null;
@@ -87,7 +87,12 @@ export interface RelatedEvent {
   description: string;
   type: RelatedEventType;
   /**
-   * Null when the event has no known location. Lat and lng are null together.
+   * Where the event happened, as a place name (e.g. "Jeddah, Saudi Arabia"). Null when it has no single location.
+   * @nullable
+   */
+  place: string | null;
+  /**
+   * Set by geocoding the place, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
    * @nullable
    */
   lat: number | null;
@@ -122,7 +127,7 @@ export interface Source {
   id: string;
   /** news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied. */
   kind: SourceKind;
-  /** Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader. */
+  /** Where the record came from, e.g. Bing News search, BBC News RSS, Wikipedia, Reader. */
   provider: string;
   publisher: string;
   title: string;

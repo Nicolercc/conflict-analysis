@@ -23,11 +23,11 @@ Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
   "inScope": boolean (false if the input is not a conflict, humanitarian crisis or geopolitical tension — still fill the other fields as best you can),
   "headline": "string (8-10 words, factual, no editorializing)",
   "location": {
-    "city": "string",
-    "country": "string",
+    "city": "string (the main place, by its common English name)",
+    "country": "string (one country or territory name, e.g. 'Palestine', not a combination)",
     "region": "string (e.g. Middle East, Sub-Saharan Africa, Eastern Europe, South Asia)",
     "lat": number | null,
-    "lng": number | null (use null for both when the location is not known)
+    "lng": number | null (your best estimate, used only to cross-check a map lookup of the city and country; null for both when not known)
   },
   "summary": "string (2-3 sentences, neutral framing; prefer what the sources report)",
   "keyFacts": [
@@ -52,8 +52,9 @@ Return ONLY valid JSON — no markdown, no code fences, no preamble. Schema:
       "title": "string",
       "description": "string (1 sentence — why this event is relevant now)",
       "type": "strike" | "escalation" | "negotiation" | "humanitarian" | "political",
+      "place": "string | null (where it happened, as 'City, Country' or 'Region, Country', specific enough to find on a map; null when the event has no single location)",
       "lat": number | null,
-      "lng": number | null,
+      "lng": number | null (your best estimate for that place; null for both when not known),
       "searchQuery": "string (5-8 word Google News query)"
     }
   ] (EXACTLY 3 items, chronological, real documented events),

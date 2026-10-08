@@ -12,7 +12,7 @@ export interface Location {
   /** Broader geopolitical region (e.g. "Eastern Europe", "Middle East") */
   region: string;
   /**
-   * Null when the location is unknown. Lat and lng are null together.
+   * Set by geocoding the city and country, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
    * @nullable
    */
   lat: number | null;

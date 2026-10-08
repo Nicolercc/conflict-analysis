@@ -15,7 +15,7 @@ export interface Source {
   id: string;
   /** news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied. */
   kind: SourceKind;
-  /** Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader. */
+  /** Where the record came from, e.g. Bing News search, BBC News RSS, Wikipedia, Reader. */
   provider: string;
   publisher: string;
   title: string;

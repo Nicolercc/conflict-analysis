@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { resetGdeltThrottle } from "../brief/retrieval/gdelt";
+import { resetGeocoder } from "../brief/geocode";
 import { FEEDS, resetFeedCache } from "../brief/retrieval/rss";
 
 /**
@@ -7,31 +7,29 @@ import { FEEDS, resetFeedCache } from "../brief/retrieval/rss";
  * the network or spend tokens.
  */
 
+/** One result from the news search. */
 export type FakeArticle = {
   title?: string;
-  domain?: string;
+  source?: string;
   url?: string;
-  seendate?: string;
-  language?: string;
-  sourcecountry?: string;
+  description?: string;
+  pubDate?: string;
 };
 
 export const DEFAULT_ARTICLES: FakeArticle[] = [
   {
-    title: "Aid convoys blocked outside El Fasher as fighting continues",
-    domain: "example-news.org",
+    title: "Sudan: aid convoys blocked outside El Fasher as fighting continues",
+    source: "Example News",
     url: "https://example-news.org/el-fasher",
-    seendate: "20260910T120000Z",
-    language: "English",
-    sourcecountry: "Kenya",
+    description: "Convoys bound for the Sudan city were stopped at checkpoints.",
+    pubDate: "Thu, 10 Sep 2026 12:00:00 GMT",
   },
   {
-    title: "Talks on Sudan resume in Jeddah",
-    domain: "example-wire.com",
+    title: "Talks on Sudan's El Fasher resume in Jeddah",
+    source: "Example Wire",
     url: "https://example-wire.com/jeddah",
-    seendate: "20260911T080000Z",
-    language: "English",
-    sourcecountry: "Saudi Arabia",
+    description: "Delegations discussed access to El Fasher on Friday.",
+    pubDate: "Fri, 11 Sep 2026 08:00:00 GMT",
   },
 ];
 
@@ -60,6 +58,24 @@ export function rssXml(items: FakeFeedItem[]): string {
     .join("");
   return `<?xml version="1.0"?><rss version="2.0"><channel><title>Feed</title>${body}</channel></rss>`;
 }
+
+/** The search engine's feed: each link is a click-through carrying the article's own address. */
+export function newsSearchXml(articles: FakeArticle[]): string {
+  const body = articles
+    .map((a) => {
+      const link = `http://www.bing.com/news/apiclick.aspx?ref=FexRss&url=${encodeURIComponent(a.url ?? "")}&c=1`;
+      return `<item><title><![CDATA[${a.title ?? ""}]]></title><link>${link.replace(/&/g, "&amp;")}</link><description><![CDATA[${a.description ?? ""}]]></description>${a.pubDate ? `<pubDate>${a.pubDate}</pubDate>` : ""}${a.source ? `<News:Source>${a.source}</News:Source>` : ""}</item>`;
+    })
+    .join("");
+  return `<?xml version="1.0"?><rss version="2.0" xmlns:News="https://www.bing.com/news/search"><channel><title>Search</title>${body}</channel></rss>`;
+}
+
+/** Places the fake geocoder knows. Anything else is "not found". */
+export const KNOWN_PLACES: Record<string, { lat: string; lon: string; addresstype?: string }> = {
+  "el fasher, sudan": { lat: "13.6279", lon: "25.3494" },
+  "khartoum, sudan": { lat: "15.5007", lon: "32.5599" },
+  sudan: { lat: "14.5844", lon: "29.4918", addresstype: "country" },
+};
 
 /** A complete, well-formed model answer. Override fields per test. */
 export function modelBrief(overrides: Record<string, unknown> = {}) {
@@ -92,6 +108,7 @@ export function modelBrief(overrides: Record<string, unknown> = {}) {
         title: "Fighting begins in Khartoum",
         description: "Start of the current war.",
         type: "escalation",
+        place: "Khartoum, Sudan",
         lat: 15.5,
         lng: 32.56,
         searchQuery: "Khartoum fighting April 2023",
@@ -122,23 +139,31 @@ type RetrievalStub = {
   articles?: FakeArticle[];
   /** Feed items served by the Al Jazeera feed; the other feeds are empty unless set. */
   feedItems?: FakeFeedItem[];
-  /** Raw GDELT response override: a status, or a plain-text body returned with a 200. */
-  gdelt?: { status: number } | { text: string };
+  /** Raw news-search response override: a status, or a non-feed body returned with a 200. */
+  search?: { status: number } | { text: string };
   wikipedia?: boolean;
+  /** Geocoder override: a failing status, or a different set of known places. */
+  geocoder?: { status: number } | { places: Record<string, { lat: string; lon: string }> };
 };
 
-/** Replace global fetch with canned GDELT, RSS and Wikipedia answers. */
+/** Replace global fetch with canned news-search, RSS, Wikipedia and geocoder answers. */
 export function stubRetrieval(opts: RetrievalStub = {}) {
-  resetGdeltThrottle();
+  resetGeocoder();
   resetFeedCache();
   const articles = opts.articles ?? DEFAULT_ARTICLES;
   const feedItems = opts.feedItems ?? DEFAULT_FEED_ITEMS;
   const fetchMock = vi.fn(async (input: unknown) => {
     const url = String(input);
-    if (url.includes("api.gdeltproject.org")) {
-      if (opts.gdelt && "status" in opts.gdelt) return new Response("limit", { status: opts.gdelt.status });
-      if (opts.gdelt && "text" in opts.gdelt) return new Response(opts.gdelt.text, { status: 200 });
-      return jsonResponse({ articles });
+    if (url.includes("bing.com/news/search")) {
+      if (opts.search && "status" in opts.search) return new Response("limit", { status: opts.search.status });
+      if (opts.search && "text" in opts.search) return new Response(opts.search.text, { status: 200 });
+      return new Response(newsSearchXml(articles), { status: 200 });
+    }
+    if (url.includes("nominatim.openstreetmap.org")) {
+      if (opts.geocoder && "status" in opts.geocoder) return new Response("busy", { status: opts.geocoder.status });
+      const places = opts.geocoder && "places" in opts.geocoder ? opts.geocoder.places : KNOWN_PLACES;
+      const hit = places[(new URL(url).searchParams.get("q") ?? "").toLowerCase()];
+      return jsonResponse(hit ? [hit] : []);
     }
     if (url.includes("aljazeera.com/xml/rss")) return new Response(rssXml(feedItems), { status: 200 });
     if (FEEDS.some((f) => f.url === url)) return new Response(rssXml([]), { status: 200 });
@@ -165,5 +190,5 @@ export function modelText(text: string) {
 /** Clear cached briefs, in-flight work and rate-limit counters between tests. */
 export function resetBriefState(app: { locals: Record<string, unknown> }) {
   (app.locals["briefs"] as { reset: () => void }).reset();
-  resetGdeltThrottle();
+  resetGeocoder();
 }
