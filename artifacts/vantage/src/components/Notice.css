@@ -78,3 +78,26 @@
 	outline: 2px solid var(--border-focus);
 	outline-offset: 3px;
 }
+
+/* Hidden until focused by keyboard */
+.skip-link {
+	position: fixed;
+	top: 8px;
+	left: 8px;
+	z-index: 2000;
+	padding: 10px 16px;
+	border-radius: 8px;
+	background: var(--accent-navy);
+	color: #fff;
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	transform: translateY(-200%);
+}
+
+.skip-link:focus {
+	transform: none;
+	outline: 2px solid #fff;
+	outline-offset: 2px;
+}

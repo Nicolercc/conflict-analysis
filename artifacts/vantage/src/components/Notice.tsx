@@ -7,11 +7,25 @@ import "./Notice.css";
 export function Shell({ status, children }: { status: string; children: ReactNode }) {
 	return (
 		<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
+			{/* First tab stop: jump past the header straight to the page's content. */}
+			<a
+				href="#main"
+				className="skip-link"
+				onClick={(e) => {
+					// Move focus as well as the view, so the next Tab continues from the content.
+					e.preventDefault();
+					document.getElementById("main")?.focus();
+				}}
+			>
+				Skip to content
+			</a>
 			<SiteHeader />
 			<div role="status" className="sr-only">
 				{status}
 			</div>
-			<main>{children}</main>
+			<main id="main" tabIndex={-1} style={{ outline: "none" }}>
+				{children}
+			</main>
 		</div>
 	);
 }

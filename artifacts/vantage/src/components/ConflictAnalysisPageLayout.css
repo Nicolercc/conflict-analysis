@@ -1,13 +1,5 @@
 /* Layout only — positioning aligned with vantage_redesign_preview.html */
 
-.ci-hero__top {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	margin-bottom: 9px;
-	gap: 12px;
-}
-
 .ci-hero__region-row {
 	display: flex;
 	align-items: center;
@@ -59,69 +51,13 @@
 }
 
 /* Score cards — same interaction model as preview HTML (.sc) */
-.ci-score-card {
-	transition:
-		transform 0.15s ease,
-		border-color 0.15s ease,
-		box-shadow 0.15s ease;
-	border: 1px solid var(--border-light);
-	border-radius: 7px;
-	padding: 12px 14px;
-	background: var(--bg-surface);
-	box-sizing: border-box;
-}
-
-.ci-score-card:hover {
-	transform: translateY(-1px);
-	border-color: var(--border-medium);
-}
-
 /* The reason is always shown in full; it is the substance of the card. */
-.ci-score-reason-wrap {
-	overflow: visible;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.ci-score-card {
-		transition: none;
-	}
-	.ci-score-reason-wrap {
-		transition: none;
-		max-height: none;
-		overflow: visible;
-	}
-}
-
-.ci-ai-notice {
-	margin: 12px 0 0;
-	padding: 10px 14px;
-	border: 1px solid var(--border-light);
-	border-left: 3px solid var(--accent-navy);
-	border-radius: 6px;
-	background: var(--bg-surface);
-	font-size: 13px;
-	line-height: 1.55;
-	color: var(--text-secondary);
-}
-
-.ci-score-row {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 8px;
-	padding: 12px 0 20px;
-}
-
-@media (max-width: 900px) {
-	.ci-score-row {
-		grid-template-columns: 1fr;
-	}
-}
-
 .ci-map-outer {
 	position: relative;
 	width: 100%;
-	margin-bottom: 0;
-	border-bottom: 1px solid var(--border-light);
+	border: 1px solid var(--border-light);
+	border-radius: 8px;
+	overflow: hidden;
 }
 
 .ci-columns {
@@ -133,31 +69,42 @@
 .ci-main {
 	flex: 1;
 	min-width: 0;
-	padding: 18px 18px 24px 0;
-	border-right: 1px solid var(--border-light);
+	/* A comfortable line length for reading. */
+	max-width: 760px;
+	padding: 4px 32px 24px 0;
 }
 
 .ci-sidebar {
 	width: 250px;
 	flex-shrink: 0;
-	padding: 18px 0 24px 16px;
+	margin-left: auto;
+	padding: 22px 0 24px 20px;
+	border-left: 1px solid var(--border-light);
 	display: flex;
 	flex-direction: column;
 	gap: 22px;
+	/* Stays in view beside a long brief. */
+	position: sticky;
+	top: 112px;
 }
 
 @media (max-width: 960px) {
 	.ci-columns {
 		flex-direction: column;
+		/* Stretch, so a child's intrinsic width (the map's) cannot widen the page. */
+		align-items: stretch;
 	}
 	.ci-main {
-		border-right: none;
+		max-width: none;
 		padding-right: 0;
-		border-bottom: 1px solid var(--border-light);
 	}
 	.ci-sidebar {
+		position: static;
 		width: 100%;
+		margin-left: 0;
 		padding-left: 0;
+		border-left: none;
+		border-top: 1px solid var(--border-light);
 	}
 }
 
@@ -578,6 +525,7 @@
 }
 
 .ci-columns a:focus-visible,
+.ci-columns summary:focus-visible,
 .ci-actions a:focus-visible,
 .ci-actions button:focus-visible {
 	outline: 2px solid var(--border-focus);
@@ -586,9 +534,9 @@
 
 .ci-summary {
 	font-family: "Newsreader", Georgia, serif;
-	font-size: 17px;
-	line-height: 1.7;
-	color: var(--text-secondary);
+	font-size: 19px;
+	line-height: 1.65;
+	color: var(--text-primary);
 	margin: 0;
 }
 
@@ -765,4 +713,230 @@ span.ci-source__title {
 	padding: 136px 24px;
 	text-align: center;
 	color: var(--text-secondary);
+}
+
+/* ── Brief page frame ─────────────────────────────────────────────── */
+.ci-page {
+	padding: 56px 0 48px;
+}
+
+.ci-wrap {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 18px;
+}
+
+.ci-hero {
+	padding: 16px 0 14px;
+}
+
+.ci-hero__title {
+	font-family: "Newsreader", Georgia, serif;
+	font-style: italic;
+	font-size: clamp(1.45rem, 3vw, 2.2rem);
+	font-weight: 400;
+	line-height: 1.2;
+	margin: 8px 0 8px;
+	color: var(--text-primary);
+	outline: none;
+	max-width: 22em;
+}
+
+.ci-hero__meta {
+	margin: 0;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 12px;
+	line-height: 1.6;
+	color: var(--text-muted);
+}
+
+/* Section menu: stays under the site header while the brief scrolls */
+.ci-nav {
+	position: sticky;
+	top: 56px;
+	z-index: 600;
+	margin: 0 -18px;
+	padding: 0 18px;
+	background: var(--bg-primary);
+	border-top: 1px solid var(--border-light);
+	border-bottom: 1px solid var(--border-light);
+}
+
+.ci-nav__list {
+	display: flex;
+	gap: 4px;
+	margin: 0;
+	padding: 6px 0;
+	list-style: none;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.ci-nav__list::-webkit-scrollbar {
+	display: none;
+}
+
+.ci-nav__link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 32px;
+	padding: 0 12px;
+	border-radius: 999px;
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	white-space: nowrap;
+	color: var(--text-secondary);
+	text-decoration: none;
+}
+
+.ci-nav__link:hover {
+	background: var(--bg-subtle);
+	color: var(--text-primary);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.ci-section {
+	padding: 22px 0 4px;
+	/* Land below the site header and the section menu. */
+	scroll-margin-top: 108px;
+	outline: none;
+}
+
+.ci-section + .ci-section {
+	border-top: 1px solid var(--border-light);
+	margin-top: 18px;
+}
+
+.ci-section__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 6px 12px;
+	margin: 0 0 12px;
+}
+
+.ci-section__title {
+	margin: 0;
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 17px;
+	font-weight: 600;
+	color: var(--text-primary);
+}
+
+.ci-section__note {
+	margin: -4px 0 12px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--text-muted);
+}
+
+.ci-section__head--toggle {
+	cursor: pointer;
+	list-style: none;
+	margin-bottom: 0;
+	padding: 2px 0;
+}
+
+.ci-section__head--toggle::-webkit-details-marker {
+	display: none;
+}
+
+.ci-section__head--toggle::after {
+	content: "Show";
+	margin-left: auto;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--accent-navy);
+}
+
+.ci-section__details[open] > .ci-section__head--toggle {
+	margin-bottom: 12px;
+}
+
+.ci-section__details[open] > .ci-section__head--toggle::after {
+	content: "Hide";
+}
+
+/* Where a section's content comes from */
+.ci-kind {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	padding: 2px 8px;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	white-space: nowrap;
+}
+
+.ci-kind--sourced,
+.ci-kind--retrieved {
+	color: var(--risk-low);
+	background: var(--risk-low-bg);
+	border-color: color-mix(in srgb, var(--risk-low) 25%, transparent);
+}
+
+.ci-kind--background {
+	color: var(--text-muted);
+	background: var(--bg-subtle);
+	border-color: var(--border-light);
+}
+
+/* The model's own judgement, stated plainly and without a gauge */
+.ci-assessment {
+	margin: 0 0 10px;
+	font-family: "Newsreader", Georgia, serif;
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--text-secondary);
+}
+
+.ci-assessment__label {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	margin-right: 4px;
+}
+
+.ci-risk {
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.ci-risk--high {
+	color: var(--risk-high);
+}
+
+.ci-risk--medium {
+	color: var(--risk-medium);
+}
+
+.ci-risk--low {
+	color: var(--risk-low);
+}
+
+.ci-footnote {
+	margin: 18px 0 0;
+	padding: 12px 0;
+	border-top: 1px solid var(--border-light);
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 12px;
+	line-height: 1.6;
+	color: var(--text-muted);
+}
+
+.ci-nav a:focus-visible {
+	outline: 2px solid var(--border-focus);
+	outline-offset: -2px;
+}
+
+@media (max-width: 720px) {
+	.ci-summary {
+		font-size: 18px;
+	}
 }

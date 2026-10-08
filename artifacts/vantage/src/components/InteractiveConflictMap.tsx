@@ -43,6 +43,17 @@ const TYPE_META: Record<
 
 const HUB_COLOR = "#1a3a52";
 
+/** Events further than this from the main location are outside the opening view. */
+const NEARBY_METRES = 2_000_000;
+
+function metresBetween(a: L.LatLngTuple, b: L.LatLngTuple) {
+	const rad = (d: number) => (d * Math.PI) / 180;
+	const h =
+		Math.sin(rad(b[0] - a[0]) / 2) ** 2 +
+		Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(rad(b[1] - a[1]) / 2) ** 2;
+	return 6_371_000 * 2 * Math.asin(Math.sqrt(h));
+}
+
 const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 /** Null when either coordinate is unknown, so nothing is plotted at a default point. */
@@ -220,6 +231,16 @@ export function InteractiveConflictMap({
 			attribution: TILE_ATTR,
 		}).addTo(map);
 
+		// One tab stop for the whole map: arrow keys pan and +/- zoom once it has
+		// focus, so its buttons and credit links need not each be a stop. The
+		// credit is written when a layer is added, so this runs again then.
+		const singleTabStop = () =>
+			el.querySelectorAll<HTMLElement>("a, button").forEach((control) => {
+				control.tabIndex = -1;
+			});
+		singleTabStop();
+		map.on("layeradd", singleTabStop);
+
 		mapRef.current = map;
 		setMapReady(true);
 
@@ -258,7 +279,6 @@ export function InteractiveConflictMap({
 			map.setView([20, 0], 2);
 			return;
 		}
-		const bounds = L.latLngBounds(points);
 
 		const lineStyle: L.PolylineOptions = {
 			color: "#8a9aaa",
@@ -282,7 +302,8 @@ export function InteractiveConflictMap({
 				iconSize: [120, 48],
 				iconAnchor: [60, 44],
 			}),
-			keyboard: true,
+			// Every mapped event is also in the timeline, so markers stay out of the tab order.
+			keyboard: false,
 			title: `${data.location.city} — primary focus`,
 		})
 			.addTo(map)
@@ -300,7 +321,7 @@ export function InteractiveConflictMap({
 					iconSize: [36, 36],
 					iconAnchor: [18 - dx, 18 - dy],
 				}),
-				keyboard: true,
+				keyboard: false,
 				title: evt.title,
 			})
 				.addTo(map)
@@ -316,10 +337,15 @@ export function InteractiveConflictMap({
 			layersRef.current.markers.push(marker);
 		});
 
-		if (points.length === 1) {
-			map.setView(points[0], 6);
+		// Frame the region the brief is about. An event far away (talks in Geneva,
+		// a vote in New York) stays on the map but does not shrink the view to a
+		// whole hemisphere; the key says it is there.
+		const near = hub ? points.filter((p) => map.distance(hub, p) <= NEARBY_METRES) : points;
+		if (near.length <= 1) {
+			map.setView(near[0] ?? points[0], 6);
 		} else {
-			map.fitBounds(bounds, { padding: [36, 36], maxZoom: 8, animate: false });
+			// Extra room at the top: the main pin and its label stand above their point.
+			map.fitBounds(L.latLngBounds(near), { paddingTopLeft: [36, 84], paddingBottomRight: [36, 36], maxZoom: 8, animate: false });
 		}
 
 		queueMicrotask(() => map.invalidateSize());
@@ -343,6 +369,16 @@ export function InteractiveConflictMap({
 	}
 	if (presentKinds.includes("talks")) {
 		legend.push({ key: "talks", label: "Diplomacy", swatch: { shape: "dot", color: "#4A9B8B" } });
+	}
+	const hubPoint = toLatLng(data.location);
+	const elsewhere = hubPoint
+		? locatedEvents.filter((e) => metresBetween(hubPoint, toLatLng(e)!) > NEARBY_METRES).length
+		: 0;
+	if (elsewhere > 0) {
+		legend.push({
+			key: "elsewhere",
+			label: `${elsewhere} ${elsewhere === 1 ? "event" : "events"} further away: zoom out to see ${elsewhere === 1 ? "it" : "them"}`,
+		});
 	}
 	if (unplotted > 0) {
 		legend.push({
@@ -378,7 +414,7 @@ export function InteractiveConflictMap({
 						zIndex: 1,
 					}}
 					role="application"
-					aria-label="Interactive conflict map"
+					aria-label="Map of the places in this brief. Arrow keys pan; plus and minus zoom. Each mapped event is also listed in the timeline."
 					tabIndex={0}
 				/>
 			</div>
