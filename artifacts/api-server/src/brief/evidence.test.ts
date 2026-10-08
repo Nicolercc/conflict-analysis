@@ -63,36 +63,36 @@ describe("sources come from retrieval", () => {
     stubRetrieval({
       feedItems: [],
       articles: [
-        { title: "Sudan aid convoy attacked", domain: "a.example", url: "https://a.example/1", sourcecountry: "Kenya" },
-        { title: "Sudan Aid Convoy Attacked!", domain: "b.example", url: "https://b.example/1", sourcecountry: "India" },
-        { title: "Sudan talks stall", domain: "a.example", url: "https://a.example/2", sourcecountry: "Kenya" },
-        { title: "Sudan famine warning", domain: "a.example", url: "https://a.example/3", sourcecountry: "Kenya" },
-        { title: "Sudan talks stall", domain: "c.example", url: "javascript:alert(1)", sourcecountry: "Egypt" },
+        { title: "Sudan aid convoy attacked", source: "A", url: "https://a.example/1" },
+        { title: "Sudan Aid Convoy Attacked!", source: "B", url: "https://b.example/1" },
+        { title: "Sudan talks stall", source: "A", url: "https://a.example/2" },
+        { title: "Sudan famine warning", source: "A", url: "https://a.example/3" },
+        { title: "Sudan talks stall", source: "C", url: "javascript:alert(1)" },
       ],
     });
-    const res = await explore();
+    const res = await explore("Sudan");
     const news: Source[] = res.body.sources.filter((s: Source) => s.kind === "news");
     expect(news.map((s) => s.url)).toEqual(["https://a.example/1", "https://a.example/2"]);
   });
 
   it("reports each provider's outcome and still briefs when one fails", async () => {
-    stubRetrieval({ gdelt: { status: 429 } });
+    stubRetrieval({ search: { status: 429 } });
     const res = await explore();
     expect(res.status).toBe(200);
     const byProvider = Object.fromEntries(
       res.body.retrieval.map((r: { provider: string; status: string; count: number }) => [r.provider, r]),
     );
-    expect(byProvider["GDELT"]).toMatchObject({ status: "failed", count: 0 });
+    expect(byProvider["Bing News search"]).toMatchObject({ status: "failed", count: 0 });
     expect(byProvider["Al Jazeera RSS"]).toMatchObject({ status: "ok", count: 1 });
     expect(byProvider["BBC News RSS (World)"]).toMatchObject({ status: "empty", count: 0 });
     expect(byProvider["Wikipedia"]).toMatchObject({ status: "ok", count: 1 });
   });
 
-  it("treats GDELT's plain-text error with a 200 as a failure, not as no coverage", async () => {
-    stubRetrieval({ gdelt: { text: "Your search contained a keyword that was too short." } });
+  it("treats a non-feed answer with a 200 from the news search as a failure, not as no coverage", async () => {
+    stubRetrieval({ search: { text: "<html><body>Before you continue…</body></html>" } });
     const res = await explore();
-    const gdelt = res.body.retrieval.find((r: { provider: string }) => r.provider === "GDELT");
-    expect(gdelt.status).toBe("failed");
+    const search = res.body.retrieval.find((r: { provider: string }) => r.provider === "Bing News search");
+    expect(search.status).toBe("failed");
   });
 });
 
@@ -126,6 +126,16 @@ describe("claims must rest on cited sources", () => {
       { text: "Agencies say 450 aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
     ]);
     expect(body.keyFacts).toEqual([]);
+  });
+
+  it("lets a claim date an event by the day its source was published", async () => {
+    // S1 was published on 11 September 2026; its text never spells the date out.
+    const dated = "On September 11, 2026, agencies said 12 aid trucks were refused access to El Fasher.";
+    const body = await claims([
+      { text: dated, sourceIds: ["S1"] },
+      { text: "On March 3, 2019, agencies said 12 aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
+    ]);
+    expect(body.keyFacts).toEqual([{ text: dated, sourceIds: ["S1"] }]);
   });
 
   it("drops a claim that shares nothing with the source it cites", async () => {

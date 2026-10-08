@@ -7,7 +7,7 @@ export default defineConfig({
     env: {
       NODE_ENV: "production",
       LOG_LEVEL: "silent",
-      GDELT_MIN_GAP_MS: "0",
+      GEOCODER_MIN_GAP_MS: "0",
     },
     restoreMocks: false,
   },

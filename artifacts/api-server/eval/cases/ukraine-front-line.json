@@ -1,0 +1,296 @@
+{
+  "id": "ukraine-front-line",
+  "topic": "Ukraine front-line updates",
+  "recordedAt": "2026-10-08T02:52:21.942Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "BBC News RSS (Europe)",
+      "publisher": "BBC News",
+      "title": "Fear and disruption for Ukraine's rail passengers as Russia escalates drone attacks",
+      "url": "https://bbc.co.uk/news/articles/cr4g1qxzwyj1o",
+      "publishedAt": "2026-10-06T09:48:37.000Z",
+      "language": "English",
+      "country": "United Kingdom",
+      "excerpt": "Ukrainians travelling by train are increasingly caught in the crosshairs of Russia's attacks.",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Fear and disruption for Ukraine's rail passengers as Russia escalates drone attacks. Ukrainians travelling by train are increasingly caught in the crosshairs of Russia's attacks."
+    },
+    {
+      "kind": "news",
+      "provider": "The Hindu RSS",
+      "publisher": "The Hindu",
+      "title": "Children among heavy casualties in Ukraine after Russian strikes",
+      "url": "https://thehindu.com/news/international/russia-ukraine-strike-kyiv-latest-updates/article71554462.ece",
+      "publishedAt": "2026-10-07T17:23:10.000Z",
+      "language": "English",
+      "country": "India",
+      "excerpt": "Windows shattered in the powerful blast in Pryluky, in the Chernigiv region, reducing one half of the five-storey building into a smoking pile of charred concrete and twisted metal",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Children among heavy casualties in Ukraine after Russian strikes. Windows shattered in the powerful blast in Pryluky, in the Chernigiv region, reducing one half of the five-storey building into a smoking pile of charred concrete and twisted metal"
+    },
+    {
+      "kind": "news",
+      "provider": "teleSUR RSS",
+      "publisher": "teleSUR",
+      "title": "Russia Strikes Ukraine’s Flamingo Missile Facilities",
+      "url": "https://telesurenglish.net/russia-strikes-ukraines-flamingo-missile-facilities",
+      "publishedAt": "2026-10-07T11:50:58.000Z",
+      "language": "English",
+      "country": "Venezuela",
+      "excerpt": "The Russian troops’ advances are taking place on the day Putin turns 74. On Wednesday, the Russian Defense Ministry confirmed that its forces carried out multiple overnight strikes on Ukrainian military-industrial enterprises in several regions. RELATED: Putin Warns Against Seeking Russia’s Strategic Defeat In Kiev…",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Russia Strikes Ukraine’s Flamingo Missile Facilities. The Russian troops’ advances are taking place on the day Putin turns 74. On Wednesday, the Russian Defense Ministry confirmed that its forces carried out multiple overnight strikes on Ukrainian military-industrial enterprises in several regions. RELATED: Putin Warns Against Seeking Russia’s Strategic Defeat In Kiev…"
+    },
+    {
+      "kind": "news",
+      "provider": "UN News RSS",
+      "publisher": "UN News",
+      "title": "Ukraine war ‘a human rights catastrophe’ that must end, says Türk",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168513",
+      "publishedAt": "2026-10-02T12:00:00.000Z",
+      "language": "English",
+      "country": "United Nations",
+      "excerpt": "The war in Ukraine is a human rights catastrophe that is “growing and intensifying by the week” and threatening an even greater disaster across the region, UN High Commissioner for Human Rights Volker Türk said on Friday.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Ukraine war ‘a human rights catastrophe’ that must end, says Türk. The war in Ukraine is a human rights catastrophe that is “growing and intensifying by the week” and threatening an even greater disaster across the region, UN High Commissioner for Human Rights Volker Türk said on Friday."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "NPR",
+      "title": "Drones buzz overhead, troops hunker underground in Ukraine's hellish kill zone",
+      "url": "https://npr.org/2026/10/05/nx-s1-5925803/drones-buzz-overhead-troops-hunker-underground-in-ukraines-hellish-kill-zone",
+      "publishedAt": "2026-10-05T06:33:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The frontline in the Russia-Ukraine war stretches more than 700 miles and has barely moved in four years. Yet straddling this line is the Kill Zone, dominated by constantly evolving drone technology.",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Drones buzz overhead, troops hunker underground in Ukraine's hellish kill zone. The frontline in the Russia-Ukraine war stretches more than 700 miles and has barely moved in four years. Yet straddling this line is the Kill Zone, dominated by constantly evolving drone technology."
+    },
+    {
+      "kind": "news",
+      "provider": "The Hindu RSS",
+      "publisher": "The Hindu",
+      "title": "Ukraine’s Zelenskyy says intelligence shows Russia is preparing massive attack",
+      "url": "https://thehindu.com/news/international/ukraines-zelenskyy-says-intelligence-shows-russia-is-preparing-massive-attack/article71553096.ece",
+      "publishedAt": "2026-10-07T08:09:04.000Z",
+      "language": "English",
+      "country": "India",
+      "excerpt": "Mr. Zelenskyy said Ukraine’s position depended largely on what its ‌allies could provide ​in terms of weaponry to defend against a ⁠new Russian attack",
+      "id": "S6",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Ukraine’s Zelenskyy says intelligence shows Russia is preparing massive attack. Mr. Zelenskyy said Ukraine’s position depended largely on what its ‌allies could provide ​in terms of weaponry to defend against a ⁠new Russian attack"
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "nationalsecurityjournal",
+      "title": "Something Strange Just Happened in the Ukraine War: Putin’s Dangerous New Strategy Is That Europe and Kyiv Will Give Up First",
+      "url": "https://msn.com/en-us/news/other/something-strange-just-happened-in-the-ukraine-war-putin-s-dangerous-new-strategy-is-that-europe-and-kyiv-will-give-up-first/ar-AA2dLGtF",
+      "publishedAt": "2026-10-07T10:13:26.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "With peace talks stalled and drones keeping the front line nearly frozen, Russia is playing the long game in Ukraine, one analyst argues. Moscow is betting that Europe's economic troubles and war ...",
+      "id": "S7",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Something Strange Just Happened in the Ukraine War: Putin’s Dangerous New Strategy Is That Europe and Kyiv Will Give Up First. With peace talks stalled and drones keeping the front line nearly frozen, Russia is playing the long game in Ukraine, one analyst argues. Moscow is betting that Europe's economic troubles and war ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Newsweek",
+      "title": "Map reveals how Ukraine scored front line breakthrough with exploding APCs",
+      "url": "https://msn.com/en-us/news/other/map-reveals-how-ukraine-scored-front-line-breakthrough-with-exploding-apcs/ar-AA2dly6K",
+      "publishedAt": "2026-10-01T05:01:46.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Operation Vivaldi has thwarted Russian attempts to capture Ukraine's \"Fortress Belt\" of fortified cities .",
+      "id": "S8",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Map reveals how Ukraine scored front line breakthrough with exploding APCs. Operation Vivaldi has thwarted Russian attempts to capture Ukraine's \"Fortress Belt\" of fortified cities ."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "UNITED24 Media",
+      "title": "Ukraine Builds Airless Wheels to Keep Ground Robots Moving After Battlefield Damage",
+      "url": "https://united24media.com/defense-tech/ukraine-builds-airless-wheels-to-keep-ground-robots-moving-after-battlefield-damage-23221",
+      "publishedAt": "2026-10-07T12:05:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Ukrainian firms Print&Live UA and iSCALE 3D unveiled airless wheels for unmanned ground vehicles, enabling continued mobility after tire damage.",
+      "id": "S9",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Ukraine Builds Airless Wheels to Keep Ground Robots Moving After Battlefield Damage. Ukrainian firms Print&Live UA and iSCALE 3D unveiled airless wheels for unmanned ground vehicles, enabling continued mobility after tire damage."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Newsweek",
+      "title": "Map Shows Ukraine’s September Gains as Russian Casualties Hit 2026 High",
+      "url": "https://newsweek.com/map-shows-ukraines-september-gains-as-russian-casualties-hit-2026-high-12515343",
+      "publishedAt": "2026-10-02T07:24:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Russia suffered its highest monthly losses of the year in September but gained no territory in return, according to the Institute for the Study of War (ISW), whose latest map outlines the state of the ...",
+      "id": "S10",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Map Shows Ukraine’s September Gains as Russian Casualties Hit 2026 High. Russia suffered its highest monthly losses of the year in September but gained no territory in return, according to the Institute for the Study of War (ISW), whose latest map outlines the state of the ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "nationalsecurityjournal",
+      "title": "Russia Just Got Smacked with a New Crisis: 650 Drones Were Sent to Moscow by Ukraine and Putin Faces a Growing Crisis",
+      "url": "https://nationalsecurityjournal.org/russia-just-got-smacked-with-a-new-crisis-650-drones-were-sent-to-moscow-by-ukraine-and-putin-faces-a-growing-crisis",
+      "publishedAt": "2026-10-06T10:33:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Ukraine hit an oil depot that fuels Moscow's three biggest airports as six hundred fifty drones approached the capital, its mayor said.",
+      "id": "S11",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Russia Just Got Smacked with a New Crisis: 650 Drones Were Sent to Moscow by Ukraine and Putin Faces a Growing Crisis. Ukraine hit an oil depot that fuels Moscow's three biggest airports as six hundred fifty drones approached the capital, its mayor said."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Voennoe Delo",
+      "title": "Ukraine Frontline Update: Fighting Across Key Sectors on October 7",
+      "url": "https://voennoedelo.com/en/posts/id20674-ukraine-frontline-update-key-battles-and-russian-advances",
+      "publishedAt": "2026-10-07T03:00:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Latest frontline update from Ukraine on October 7, covering fighting near Sumy, Kharkov, Krasny Liman, Dobropolye, Gulyaypole, Zaporozhye and key advances.",
+      "id": "S12",
+      "retrievedAt": "2026-10-08T02:52:21.942Z",
+      "text": "Ukraine Frontline Update: Fighting Across Key Sectors on October 7. Latest frontline update from Ukraine on October 7, covering fighting near Sumy, Kharkov, Krasny Liman, Dobropolye, Gulyaypole, Zaporozhye and key advances."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Front line",
+      "url": "https://en.wikipedia.org/wiki/Front_line",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "A front line is the point at which the most advanced tactical combat units intersect, creating an area of potential or actual conflict. Leaders have often fought at the front lines either purposefully or due to a collapse in battle formation. While a calculated risk, fighting on the front has in instances reduced…",
+      "text": "Front line. A front line is the point at which the most advanced tactical combat units intersect, creating an area of potential or actual conflict. Leaders have often fought at the front lines either purposefully or due to a collapse in battle formation. While a calculated risk, fighting on the front has in instances reduced communication, and heightened morale. The front is in direct contrast to the rear, which is the position furthest from conflict.",
+      "id": "S13",
+      "retrievedAt": "2026-10-08T02:52:21.942Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 7
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "ok",
+      "count": 2
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

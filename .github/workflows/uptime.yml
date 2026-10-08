@@ -1,0 +1,28 @@
+name: Uptime
+
+# Checks that the site and the API answer. A failed run emails the repository
+# owner, which is the alert. The API's host puts an idle instance to sleep, so
+# the regular request also spares the next visitor a cold start.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: uptime
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: API answers its health check
+        run: |
+          curl --fail --silent --show-error --max-time 100 \
+            --retry 2 --retry-delay 10 --retry-all-errors \
+            https://conflict-analysis.onrender.com/api/healthz
+      - name: Site serves the app
+        run: |
+          curl --fail --silent --show-error --max-time 30 --retry 2 \
+            https://conflict-analysis-vantage.vercel.app/ | grep -q '<div id="root">'

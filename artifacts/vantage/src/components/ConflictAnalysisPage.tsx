@@ -1,52 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { ReactNode } from "react";
-import { Link, useLocation, useSearch } from "wouter";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useParams, useSearch } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-	useAnalyzeArticle,
-	useExploreConflict,
+	getGetBriefQueryKey,
+	useGetBrief,
 	type IntelligenceBrief,
+	type RetrievalStatus,
+	type Source,
 } from "@workspace/api-client-react";
 import { briefPath, parseBriefRequest } from "@/lib/brief-request";
-import { SiteHeader } from "./LiveTicker";
+import { BriefError, streamBrief, type BriefStage } from "@/lib/brief-stream";
+import { Notice, Shell } from "./Notice";
 import { AnalysisLoader } from "./AnalysisLoader";
-import { EscalationMeter } from "./EscalationMeter";
-import { PerspectivesPanel } from "./PerspectivesPanel";
-import { EventTimeline } from "./EventTimeline";
-import { CasualtyPanel } from "./CasualtyPanel";
-import { InteractiveConflictMap } from "./InteractiveConflictMap";
-import { ConflictBackground } from "./ConflictBackground";
-import { ClaimList, RetrievalSummary, SourceList } from "./Evidence";
-import { adaptBrief } from "./conflict/adapter";
-import type { CSSProperties } from "react";
-import { PartiesPanel } from "./PartiesPanel";
-import { CoverageCard } from "./CoverageCard";
+import { BriefView } from "./BriefView";
 import "./ConflictAnalysisPageLayout.css";
-
-function formatPublishedAt(iso: string) {
-	try {
-		const d = new Date(iso);
-		if (Number.isNaN(d.getTime())) return "date unavailable";
-		return d.toLocaleString(undefined, {
-			dateStyle: "medium",
-			timeStyle: "short",
-		});
-	} catch {
-		return iso;
-	}
-}
-
-/** The server's own wording when it sent one; otherwise a plain fallback. */
-function errorMessage(error: unknown): string {
-	const data = (error as { data?: { message?: unknown } } | null)?.data;
-	if (data && typeof data.message === "string" && data.message) {
-		return data.message;
-	}
-	return "We couldn't generate this brief. Please try again.";
-}
-
-function isOutOfScopeBrief(data: IntelligenceBrief): boolean {
-	return data.inScope === false;
-}
 
 const SUGGESTED_TOPICS = [
 	"Gaza ceasefire reporting",
@@ -55,91 +22,82 @@ const SUGGESTED_TOPICS = [
 	"Ukraine front-line updates",
 ];
 
-/** Shared frame: header, a live status line for assistive tech, and the main landmark. */
-function Shell({ status, children }: { status: string; children: ReactNode }) {
-	return (
-		<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
-			<SiteHeader />
-			<div role="status" className="sr-only">
-				{status}
-			</div>
-			<main>{children}</main>
-		</div>
-	);
-}
+type Generation =
+	| { phase: "loading"; stage: BriefStage | null; sources: Source[] | null; retrieval: RetrievalStatus[] }
+	| { phase: "error"; message: string }
+	| { phase: "out-of-scope" };
 
-function Notice({
-	eyebrow,
-	title,
-	children,
-}: {
-	eyebrow: string;
-	title: string;
-	children: ReactNode;
-}) {
-	const headingRef = useRef<HTMLHeadingElement | null>(null);
-	useEffect(() => {
-		headingRef.current?.focus();
-	}, [title]);
+const STARTING: Generation = { phase: "loading", stage: null, sources: null, retrieval: [] };
 
-	return (
-		<div className="ci-notice">
-			<p className="ci-notice__eyebrow">{eyebrow}</p>
-			<h1 ref={headingRef} tabIndex={-1} className="ci-notice__title">
-				{title}
-			</h1>
-			{children}
-		</div>
-	);
-}
-
+/**
+ * /analysis — generate a brief for a topic, link or pasted text, showing what
+ * the server is doing. A finished brief moves to its permanent address.
+ */
 export function ConflictAnalysisPageRoute() {
 	const search = useSearch();
 	const [, navigate] = useLocation();
+	const queryClient = useQueryClient();
 	const request = useMemo(() => parseBriefRequest(search), [search]);
-
-	const explore = useExploreConflict();
-	const analyze = useAnalyzeArticle();
-	const active = request?.kind === "topic" ? explore : analyze;
-	const { mutate: runExplore } = explore;
-	const { mutate: runAnalyze } = analyze;
+	const [state, setState] = useState<Generation>(STARTING);
+	const current = useRef<AbortController | null>(null);
 
 	const run = useCallback(() => {
 		if (!request) return;
-		if (request.kind === "topic") {
-			runExplore({ data: { topic: request.topic } });
-		} else if (request.kind === "url") {
-			runAnalyze({ data: { url: request.url } });
-		} else {
-			runAnalyze({ data: { article: request.text } });
-		}
-	}, [request, runExplore, runAnalyze]);
+		current.current?.abort();
+		const controller = new AbortController();
+		current.current = controller;
+		setState(STARTING);
+		streamBrief(
+			request,
+			(event) => {
+				if (controller.signal.aborted) return;
+				if (event.type === "stage") {
+					setState((s) => (s.phase === "loading" ? { ...s, stage: event.stage } : s));
+				} else if (event.type === "sources") {
+					setState((s) =>
+						s.phase === "loading" ? { ...s, sources: event.sources, retrieval: event.retrieval } : s,
+					);
+				}
+			},
+			controller.signal,
+		)
+			.then((brief: IntelligenceBrief) => {
+				if (controller.signal.aborted) return;
+				if (brief.inScope === false) {
+					setState({ phase: "out-of-scope" });
+					return;
+				}
+				// The brief is already in hand: its own page must not fetch it again.
+				queryClient.setQueryData(getGetBriefQueryKey(brief.id), brief);
+				navigate(`/brief/${brief.id}`, { replace: true });
+			})
+			.catch((err: unknown) => {
+				if (controller.signal.aborted) return;
+				setState({
+					phase: "error",
+					message:
+						err instanceof BriefError
+							? err.message
+							: "We couldn't generate this brief. Please try again.",
+				});
+			});
+	}, [request, navigate, queryClient]);
 
 	useEffect(() => {
 		run();
+		return () => current.current?.abort();
 	}, [run]);
 
-	const briefData = active.data;
-	const phase: "empty" | "loading" | "error" | "loaded" = !request
-		? "empty"
-		: active.isPending || active.isIdle
-			? "loading"
-			: active.error || !briefData
-				? "error"
-				: "loaded";
-
-	const titleRef = useRef<HTMLHeadingElement | null>(null);
 	useEffect(() => {
 		document.title =
-			phase === "loaded" && briefData
-				? `${isOutOfScopeBrief(briefData) ? "Outside scope" : briefData.headline} · Vantage`
-				: phase === "loading"
-					? "Generating brief · Vantage"
+			request && state.phase === "loading"
+				? "Generating brief · Vantage"
+				: state.phase === "out-of-scope"
+					? "Outside scope · Vantage"
 					: "Vantage";
-		if (phase === "loaded") titleRef.current?.focus();
-	}, [phase, briefData]);
+	}, [request, state.phase]);
 
-	if (phase === "empty") {
+	if (!request) {
 		return (
 			<Shell status="Nothing to brief.">
 				<Notice eyebrow="Nothing to brief" title="Start with a topic, a link or an article">
@@ -156,22 +114,25 @@ export function ConflictAnalysisPageRoute() {
 		);
 	}
 
-	if (phase === "loading") {
+	if (state.phase === "loading") {
+		const status =
+			state.sources === null
+				? "Generating your brief."
+				: `Found ${state.sources.length} ${state.sources.length === 1 ? "source" : "sources"}. Writing your brief.`;
 		return (
-			<Shell status="Generating your brief.">
+			<Shell status={status}>
 				<div style={{ paddingTop: "56px" }}>
-					<AnalysisLoader />
+					<AnalysisLoader stage={state.stage} sources={state.sources} retrieval={state.retrieval} />
 				</div>
 			</Shell>
 		);
 	}
 
-	if (phase === "error" || !briefData) {
-		const message = errorMessage(active.error);
+	if (state.phase === "error") {
 		return (
-			<Shell status={`The brief could not be generated. ${message}`}>
+			<Shell status={`The brief could not be generated. ${state.message}`}>
 				<Notice eyebrow="Brief not generated" title="We couldn't generate this brief">
-					<p className="ci-notice__text">{message}</p>
+					<p className="ci-notice__text">{state.message}</p>
 					<div className="ci-notice__actions">
 						<button type="button" className="ci-notice__primary" onClick={run}>
 							Try again
@@ -185,274 +146,76 @@ export function ConflictAnalysisPageRoute() {
 		);
 	}
 
-	if (isOutOfScopeBrief(briefData)) {
+	return (
+		<Shell status="This is outside what Vantage briefs.">
+			<Notice eyebrow="Outside scope" title="We couldn't find a conflict to brief">
+				<p className="ci-notice__text">
+					Vantage covers geopolitical conflicts, humanitarian crises and
+					regional tensions. Try one of these:
+				</p>
+				<div className="ci-notice__actions">
+					{SUGGESTED_TOPICS.map((topic) => (
+						<button
+							key={topic}
+							type="button"
+							className="ci-notice__chip"
+							onClick={() => navigate(briefPath({ kind: "topic", topic }))}
+						>
+							{topic}
+						</button>
+					))}
+				</div>
+				<Link href="/" className="ci-notice__secondary">
+					Change the search
+				</Link>
+			</Notice>
+		</Shell>
+	);
+}
+
+/** /brief/:id — a saved brief at its permanent address. Nothing is regenerated. */
+export function StoredBriefRoute() {
+	const { id = "" } = useParams<{ id: string }>();
+	const { data, isPending, error } = useGetBrief(id, {
+		query: {
+			queryKey: getGetBriefQueryKey(id),
+			// A saved brief never changes.
+			staleTime: Number.POSITIVE_INFINITY,
+			retry: (failures, err) => (err as { status?: number })?.status !== 404 && failures < 2,
+		},
+	});
+
+	useEffect(() => {
+		if (isPending) document.title = "Opening brief · Vantage";
+		else if (!data) document.title = "Brief not available · Vantage";
+	}, [isPending, data]);
+
+	if (data) return <BriefView brief={data} />;
+
+	if (isPending) {
 		return (
-			<Shell status="This is outside what Vantage briefs.">
-				<Notice eyebrow="Outside scope" title="We couldn't find a conflict to brief">
-					<p className="ci-notice__text">
-						Vantage covers geopolitical conflicts, humanitarian crises and
-						regional tensions. Try one of these:
-					</p>
-					<div className="ci-notice__actions">
-						{SUGGESTED_TOPICS.map((topic) => (
-							<button
-								key={topic}
-								type="button"
-								className="ci-notice__chip"
-								onClick={() => navigate(briefPath({ kind: "topic", topic }))}
-							>
-								{topic}
-							</button>
-						))}
-					</div>
-					<Link href="/" className="ci-notice__secondary">
-						Change the search
-					</Link>
-				</Notice>
+			<Shell status="Opening the brief.">
+				<p className="ci-opening">Opening the brief…</p>
 			</Shell>
 		);
 	}
 
-	const analysis = adaptBrief(briefData);
-	const regionBits = analysis.region.split("·").map((s) => s.trim());
-	const regionBadge = regionBits[0]?.toUpperCase() ?? "";
-	const regionSubtitle =
-		regionBits.slice(1).join(" · ").trim() || analysis.location;
-
-	const S: Record<string, CSSProperties> = {
-		page: {
-			paddingTop: "56px",
-			paddingBottom: "48px",
-		},
-		wrap: {
-			maxWidth: "1200px",
-			margin: "0 auto",
-			padding: "0 18px",
-		},
-		title: {
-			fontFamily: "'Newsreader', Georgia, serif",
-			fontStyle: "italic",
-			fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)",
-			fontWeight: 400,
-			lineHeight: 1.22,
-			margin: "0 0 9px",
-			color: "var(--text-primary)",
-			outline: "none",
-		},
-		metaRow: {
-			display: "flex",
-			alignItems: "center",
-			gap: "12px",
-			flexWrap: "wrap",
-			paddingBottom: "14px",
-			borderBottom: "1px solid var(--border-light)",
-			fontFamily: "'IBM Plex Mono', monospace",
-			fontSize: "11px",
-			color: "var(--text-muted)",
-		},
-		panel: {
-			background: "var(--bg-surface)",
-			border: "1px solid var(--border-light)",
-			borderRadius: "12px",
-			padding: "24px",
-			boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-		},
-		sectionTitle: {
-			fontSize: "16px",
-			fontWeight: 600,
-			color: "var(--text-primary)",
-			fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-			margin: "0 0 12px",
-		},
-	};
-
+	const missing = (error as { status?: number } | null)?.status === 404;
 	return (
-		<Shell status={`Brief ready: ${analysis.title}`}>
-		<div style={S.page}>
-			<div style={S.wrap}>
-				<div style={{ paddingTop: "8px" }}>
-					<div className="ci-hero__top">
-						<div className="ci-hero__region-row">
-							{regionBadge ? (
-								<span className="ci-hero__badge">{regionBadge}</span>
-							) : null}
-							<span className="ci-hero__locations">{regionSubtitle}</span>
-						</div>
-					</div>
-
-					<h1 ref={titleRef} tabIndex={-1} style={S.title}>
-						{analysis.title}
-					</h1>
-
-					<div style={S.metaRow}>
-						<span>Generated {formatPublishedAt(analysis.publishedAt)}</span>
-						<span style={{ color: "var(--border-medium)" }}>·</span>
-						<span>
-							{analysis.coverage.articles}{" "}
-							{analysis.coverage.articles === 1 ? "article" : "articles"} retrieved
-						</span>
-						<span style={{ color: "var(--border-medium)" }}>·</span>
-						<span>{analysis.credit}</span>
-					</div>
-				</div>
-
-				<p className="ci-ai-notice">
-					<strong>AI-generated brief.</strong> Key facts and the coverage
-					comparison cite numbered sources that were retrieved for this brief;
-					follow the numbers to the original reporting. Everything else — the
-					summary, timeline, perspectives, figures and escalation assessment —
-					is the model&apos;s background context and is not individually
-					sourced. Check original reporting before you cite it.
+		<Shell status={missing ? "This brief is no longer available." : "The brief could not be opened."}>
+			<Notice
+				eyebrow={missing ? "Brief not available" : "Brief not opened"}
+				title={missing ? "This brief is no longer available" : "We couldn't open this brief"}
+			>
+				<p className="ci-notice__text">
+					{missing
+						? "The link may be mistyped, or the saved copy may have been removed. You can generate a fresh brief on the same topic."
+						: "The server did not answer. Check your connection and reload the page."}
 				</p>
-
-				<div className="ci-score-row">
-					<EscalationMeter
-						level={analysis.escalationLevel}
-						reason={analysis.escalationTag}
-						active={true}
-					/>
-					<CoverageCard coverage={analysis.coverage} />
-				</div>
-			</div>
-
-			<div style={S.wrap}>
-				<div className="ci-map-outer">
-					<InteractiveConflictMap data={briefData} active={true} />
-				</div>
-			</div>
-
-			<div style={S.wrap}>
-				<div className="ci-columns">
-					<div className="ci-main">
-						<div className="ci-section-block">
-							<h2 style={S.sectionTitle}>What happened</h2>
-							<p className="ci-summary">{analysis.summary}</p>
-						</div>
-
-						<div className="ci-section-block">
-							<h2 style={S.sectionTitle}>Key facts from retrieved reporting</h2>
-							<ClaimList
-								claims={briefData.keyFacts}
-								sources={briefData.sources}
-								empty="Nothing in the retrieved sources could be tied to a specific claim, so none is shown."
-							/>
-						</div>
-
-						{(briefData.coverage.agreements.length > 0 ||
-							briefData.coverage.differences.length > 0) && (
-							<div className="ci-section-block">
-								<h2 style={S.sectionTitle}>How coverage compares</h2>
-								<div className="ci-compare">
-									<div>
-										<h3 className="ci-compare__head">Where outlets agree</h3>
-										<ClaimList
-											claims={briefData.coverage.agreements}
-											sources={briefData.sources}
-											empty="No shared point was found across the retrieved outlets."
-										/>
-									</div>
-									<div>
-										<h3 className="ci-compare__head">Where framing differs</h3>
-										<ClaimList
-											claims={briefData.coverage.differences}
-											sources={briefData.sources}
-											empty="No clear difference in framing was found."
-										/>
-									</div>
-								</div>
-							</div>
-						)}
-
-						{analysis.keyQuestion && (
-							<div
-								className="ci-section-block"
-								style={{
-									...S.panel,
-									borderLeft: "3px solid var(--risk-high)",
-									marginBottom: "22px",
-								}}
-							>
-								<p
-									style={{
-										fontSize: "11px",
-										fontFamily: "'IBM Plex Mono', monospace",
-										letterSpacing: "0.12em",
-										textTransform: "uppercase",
-										color: "var(--risk-high)",
-										margin: "0 0 8px",
-									}}
-								>
-									Key question
-								</p>
-								<p
-									style={{
-										fontFamily: "'Newsreader', Georgia, serif",
-										fontStyle: "italic",
-										fontSize: "14px",
-										color: "var(--text-secondary)",
-										margin: 0,
-										lineHeight: 1.6,
-									}}
-								>
-									{analysis.keyQuestion}
-								</p>
-							</div>
-						)}
-
-						<div className="ci-section-block">
-							<h2 style={S.sectionTitle}>Background timeline</h2>
-							<EventTimeline events={briefData.relatedEvents} active={true} />
-						</div>
-
-						<div className="ci-section-block">
-							<h2 style={S.sectionTitle}>Perspectives</h2>
-							<PerspectivesPanel
-								perspectives={briefData.perspectives}
-								active={true}
-							/>
-						</div>
-
-						{briefData.casualtyData && (
-							<div className="ci-section-block">
-								<h2 style={S.sectionTitle}>Affected population</h2>
-								<CasualtyPanel data={briefData.casualtyData} active={true} />
-							</div>
-						)}
-
-						<div className="ci-section-block">
-							<h2 style={S.sectionTitle}>Sources</h2>
-							<RetrievalSummary retrieval={briefData.retrieval} />
-							<SourceList sources={briefData.sources} />
-						</div>
-					</div>
-
-					<aside className="ci-sidebar">
-						<PartiesPanel parties={analysis.parties} active={true} />
-						<div>
-							<span className="section-label">Historical context</span>
-							<ConflictBackground
-								text={analysis.historicalContext}
-								active={true}
-							/>
-						</div>
-					</aside>
-				</div>
-
-				<div
-					style={{
-						borderTop: "1px solid var(--border-light)",
-						padding: "11px 0",
-						marginTop: "12px",
-						fontSize: "12px",
-						color: "var(--text-muted)",
-						fontFamily: "'IBM Plex Mono', monospace",
-						letterSpacing: "0.06em",
-					}}
-				>
-					{analysis.credit}
-				</div>
-			</div>
-		</div>
+				<Link href="/" className="ci-notice__primary">
+					New search
+				</Link>
+			</Notice>
 		</Shell>
 	);
 }

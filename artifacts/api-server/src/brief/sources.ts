@@ -158,18 +158,49 @@ const CONFLICT_VOCABULARY = new Set([
 ]);
 
 /**
+ * Places whose name contains another place's name. "South Sudan" is not
+ * "Sudan": unless the reader asked for the longer name, it is removed from a
+ * headline before matching so it cannot stand in for the shorter one.
+ */
+const COMPOUND_PLACES = [
+  "south sudan", "south africa", "central african republic", "north korea", "south korea",
+  "northern ireland", "new guinea", "equatorial guinea", "guinea bissau", "new mexico",
+  "new zealand", "western sahara", "west bank", "east timor", "south ossetia", "north macedonia",
+  "dominican republic", "new caledonia", "south china sea", "east china sea", "red sea",
+  "black sea", "nagorno karabakh", "democratic republic of congo", "dr congo", "congo brazzaville",
+];
+
+/** Digests list several unrelated stories under one headline; none of them is the subject. */
+const ROUNDUP = /\b(news in brief|in brief:|round-?up|daily digest|weekly digest|newsletter|top stories|week in review|this week in|what to know today)/i;
+
+const normalise = (s: string) =>
+  ` ${(s.toLowerCase().match(/[\p{L}\p{N}']+/gu) ?? []).join(" ").replace(/'s\b/g, "")} `;
+
+/**
  * Decide whether a headline is about the topic. Whole words only ("red" must
  * not match "secured"), and the topic's distinctive words — usually its place
  * or actor names — must all be present. A topic with no distinctive words has
- * to match in full.
+ * to match in full. A longer place name that merely contains the topic's
+ * ("South Sudan" for "Sudan") does not count, and neither does a mention in a
+ * multi-story digest.
  */
 export function topicMatcher(topic: string): (text: string) => boolean {
   const terms = topicTerms(topic);
   if (terms.length === 0) return () => false;
   const anchors = terms.filter((t) => !CONFLICT_VOCABULARY.has(t));
   const required = anchors.length > 0 ? anchors.slice(0, 3) : terms;
+  const topicText = normalise(topic);
+  const otherPlaces = COMPOUND_PLACES.filter((p) => !topicText.includes(` ${p} `));
+  // A compound name the reader did ask for has to appear as that phrase:
+  // "Sudan … South Kordofan" is not about South Sudan.
+  // (Headlines shorten the Congo's long names to "Congo", so those are exempt.)
+  const askedPlaces = COMPOUND_PLACES.filter((p) => !p.includes("congo") && topicText.includes(` ${p} `));
   return (text) => {
-    const words = new Set(text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []);
-    return required.every((t) => words.has(t) || words.has(`${t}s`) || words.has(`${t}'s`));
+    if (ROUNDUP.test(text)) return false;
+    let haystack = normalise(text);
+    if (!askedPlaces.every((p) => haystack.includes(` ${p} `))) return false;
+    for (const place of otherPlaces) haystack = haystack.replace(new RegExp(`(?<= )${place}(?= )`, "g"), "|");
+    const words = new Set(haystack.split(" "));
+    return required.every((t) => words.has(t) || words.has(`${t}s`));
   };
 }

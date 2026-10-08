@@ -1,0 +1,975 @@
+{
+  "ranAt": "2026-10-08T03:13:37.963Z",
+  "briefModel": "claude-haiku-4-5-20251001",
+  "judgeModel": "claude-sonnet-5-5",
+  "results": [
+    {
+      "id": "sudan",
+      "topic": "Sudan",
+      "sources": 10,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 10,
+        "kept": 9,
+        "dropped": [
+          "shares no substance with cited sources"
+        ]
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 3,
+        "unsupported": 1
+      },
+      "failures": [
+        {
+          "claim": "Sudan's gold exports earned US$2.29 billion from January to September 2026, while US sanctions target gold linked to the war.",
+          "cites": [
+            "S8"
+          ],
+          "verdict": "partly",
+          "why": "S8 gives the figure, but only says Jan to September without a year stated; the year is inferable from the publication date, and the sanctions point is stated, so the minor addition is the year."
+        },
+        {
+          "claim": "Multiple sources report that Sudan's military leadership has rejected negotiations and vowed to continue military operations against the RSF.",
+          "cites": [
+            "S5",
+            "S7"
+          ],
+          "verdict": "partly",
+          "why": "S5 and S7 both support rejecting talks and vowing to retake territory, but 'continue military operations' is a mild paraphrase; S5 snippet's rejection is truncated, S7 headline states rejection."
+        },
+        {
+          "claim": "Associated Press emphasizes paramilitary RSF responsibility for specific drone strikes on civilian areas, while broader coverage frames the conflict as a two-sided war without attributing every incident.",
+          "cites": [
+            "S2",
+            "S5"
+          ],
+          "verdict": "unsupported",
+          "why": "The cited S2 and S5 do not discuss AP's framing versus broader coverage; this is an editorial characterization not in the sources."
+        },
+        {
+          "claim": "La Civiltà Cattolica frames the situation through humanitarian and religious appeals for ceasefire, while other sources focus on military positions and diplomatic stalling.",
+          "cites": [
+            "S9",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S9 mentions Pope Leo XIV's call for ceasefire and humanitarian corridors, but 'religious appeals' framing and S3's description as focused on military positions is not stated; S3 does cover diplomacy, not stalling."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 3,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2393,
+        "outputTokens": 2411
+      },
+      "ok": true,
+      "seconds": 27.064,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Khartoum (15.56, 32.53) vs Sudan"
+    },
+    {
+      "id": "gaza-ceasefire",
+      "topic": "Gaza ceasefire",
+      "sources": 13,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 9,
+        "kept": 8,
+        "dropped": [
+          "figure not in cited sources: 2023"
+        ]
+      },
+      "judged": {
+        "supported": 3,
+        "partly": 5,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "A peace plan negotiated by the United States was announced on September 29, 2025, signed on October 9, and came into effect the following day, with UN Security Council endorsement on November 17.",
+          "cites": [
+            "S13"
+          ],
+          "verdict": "partly",
+          "why": "Dates and UNSC endorsement are stated, but S13 says it was negotiated by Israel/Hamas in consultation with Arab states and led by Trump; 'negotiated by the United States' is a slight mischaracterization, though broadly consistent with 'Led by US'."
+        },
+        {
+          "claim": "Israel struck Gaza on October 7 with at least three reported dead, with strikes audible from the Nova festival memorial site where families gathered to mourn more than 300 revellers killed three years earlier.",
+          "cites": [
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "Headline gives three dead and Nova mourning with bangs audible, but 'at least' and 'strikes audible' (bangs across the border) are close; however 'Israel struck' is supported; minor embellishment of 'at least'."
+        },
+        {
+          "claim": "Almost two million people live in ruins in Gaza, with the territory described as neither at war nor at peace, marked by disease, despair and collapsing buildings.",
+          "cites": [
+            "S4",
+            "S10",
+            "S12"
+          ],
+          "verdict": "partly",
+          "why": "Almost two million living in ruins (S4), 'neither war nor peace', disease and despair (S10), and collapsing buildings (S12) are given, but the claim merges them and the 'neither at war nor at peace' framing is a quote not a description of the territory in all sources."
+        },
+        {
+          "claim": "Multiple sources report that Palestinians in Gaza continue to endure airstrikes, limited humanitarian access, disease, malnutrition, displacement and devastated infrastructure despite the year-old ceasefire.",
+          "cites": [
+            "S8",
+            "S10",
+            "S12"
+          ],
+          "verdict": "partly",
+          "why": "Airstrikes, hunger, collapsing buildings, disease and ruins are covered, but malnutrition, limited humanitarian access and displacement are only partially supported across the cited sources (displacement and aid shortage in S8; hunger in S12)."
+        },
+        {
+          "claim": "Israeli and Palestinian positions on the October 7 anniversary are starkly divergent: Israelis commemorate the attack and remember hostages, while Palestinians mark the event amid ongoing ruins and strikes.",
+          "cites": [
+            "S3",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "Israelis commemorating and Palestinians in ruins are stated, but hostages are mentioned only as taken, and 'starkly divergent positions' is an interpretation not stated by the sources."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 3,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2665,
+        "outputTokens": 2472
+      },
+      "ok": true,
+      "seconds": 31.935,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Gaza City (31.51, 34.46) vs Gaza Strip"
+    },
+    {
+      "id": "ukraine-front-line",
+      "topic": "Ukraine front-line updates",
+      "sources": 13,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 11,
+        "kept": 9,
+        "dropped": [
+          "shares no substance with cited sources",
+          "shares no substance with cited sources"
+        ]
+      },
+      "judged": {
+        "supported": 4,
+        "partly": 3,
+        "unsupported": 2
+      },
+      "failures": [
+        {
+          "claim": "Russia carried out multiple overnight strikes on Ukrainian military-industrial enterprises in several regions, including the Flamingo Missile Facilities.",
+          "cites": [
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S3 says strikes hit military-industrial enterprises in several regions, and the headline mentions Flamingo missile facilities, but the claim's 'including' link to the overnight strikes is not stated in the text."
+        },
+        {
+          "claim": "Children were among heavy casualties in Ukraine after Russian strikes in Pryluky, in the Chernigiv region, with buildings reduced to charred concrete and twisted metal.",
+          "cites": [
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S2 supports children among heavy casualties and the Pryluky blast, but it describes one half of a single five-storey building, not 'buildings'."
+        },
+        {
+          "claim": "Multiple sources report Russian strikes on Ukrainian targets, including civilian areas and military infrastructure.",
+          "cites": [
+            "S1",
+            "S2",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S2 and S3 show strikes on civilian and military targets, and S1 mentions attacks on rail passengers, but the cited text is thin."
+        },
+        {
+          "claim": "BBC News emphasizes civilian disruption to rail travel, while The Hindu and Russian sources focus on military strikes and casualty figures respectively.",
+          "cites": [
+            "S1",
+            "S2",
+            "S3"
+          ],
+          "verdict": "unsupported",
+          "why": "The sources do not support the characterisation that The Hindu focuses on military strikes and 'Russian sources' on casualty figures; S2 is about casualties and S3 about military strikes, which reverses the claim."
+        },
+        {
+          "claim": "teleSUR frames Russian military actions in operational context, while Western sources (NPR, Newsweek) emphasize drone dominance and Ukrainian tactical gains.",
+          "cites": [
+            "S3",
+            "S5",
+            "S8",
+            "S10"
+          ],
+          "verdict": "unsupported",
+          "why": "The cited texts do not discuss source framing; S8 and S10 are about Ukrainian gains and Russian losses, and the claim about 'Western sources' framing is an unsupported editorial characterisation."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2664,
+        "outputTokens": 2278
+      },
+      "ok": true,
+      "seconds": 25.966,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "none",
+      "pinDetail": "Ukraine (multiple locations)"
+    },
+    {
+      "id": "red-sea-shipping",
+      "topic": "Red Sea shipping tensions",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 11,
+        "kept": 9,
+        "dropped": [
+          "figure not in cited sources: 1, 2, 5",
+          "figure not in cited sources: 3"
+        ]
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Multiple sources report that Houthis have seized control of Yemen's Red Sea coast, including or approaching the port city of Mokha",
+          "cites": [
+            "S1",
+            "S2",
+            "S5"
+          ],
+          "verdict": "partly",
+          "why": "S2 and S5 say the Houthis took the Red Sea coast, but S1 reports Yemeni military securing the waterway and conflicting Mokha reports, not a Houthi seizure."
+        },
+        {
+          "claim": "Saudi-backed forces are mounting a military response, including aerial bombing campaigns",
+          "cites": [
+            "S2",
+            "S5"
+          ],
+          "verdict": "partly",
+          "why": "S2 supports Saudi aerial bombing, but S5 does not mention a Saudi-backed military response."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2584,
+        "outputTokens": 2506
+      },
+      "ok": true,
+      "seconds": 30.195,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Mokha (13.32, 43.25) vs Red Sea and its coasts"
+    },
+    {
+      "id": "myanmar",
+      "topic": "Myanmar civil war",
+      "sources": 10,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 11,
+        "kept": 11,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 7,
+        "partly": 4,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Airstrikes and ground raids have killed hundreds and wounded 393 civilians since major fighting resumed in Rakhine nearly three years ago, with the military regime responsible for 383 civilian deaths in 21 massacres in that state.",
+          "cites": [
+            "S7"
+          ],
+          "verdict": "partly",
+          "why": "S7 gives 393 wounded and 383 killed in 21 massacres in the headline, but the cited text does not clearly link 'hundreds killed' to the regime and the 393 is stated as wounded; the combination is mostly there but the attribution is slightly merged."
+        },
+        {
+          "claim": "Multiple sources confirm that Min Aung Hlaing visited Malaysia in early October 2026 for diplomatic talks.",
+          "cites": [
+            "S2",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "Sources confirm the visit and talks, but the early October 2026 date is only implied by publication dates; S2 and S3 give Oct 7 so this is fine, though 'diplomatic talks' is accurate; minor inference."
+        },
+        {
+          "claim": "Reuters frames Min Aung Hlaing's Malaysia visit as a diplomatic breakthrough ('red carpet welcome'), while WWLP situates it within criticism of concurrent repatriations, emphasizing human rights concerns rather than diplomatic gains.",
+          "cites": [
+            "S2",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "'Red carpet welcome' is in S2's headline and S3 mentions criticism of repatriations, but 'diplomatic breakthrough' and the emphasis contrast are the brief's interpretation."
+        },
+        {
+          "claim": "The Irrawaddy documents specific casualty figures and military command shifts as evidence of intensifying conflict, while The Diplomat focuses on the junta's economic interests in reviving the Dawei special economic zone project, implying the regime's capacity for strategic planning despite war.",
+          "cites": [
+            "S5",
+            "S7",
+            "S8"
+          ],
+          "verdict": "partly",
+          "why": "S7 and S8 give casualty figures and command shift, but S5 does not mention the junta's economic interests or imply strategic planning capacity; that is interpretation."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2338,
+        "outputTokens": 2749
+      },
+      "ok": true,
+      "seconds": 31.792,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Naypyidaw (19.78, 96.10) vs Myanmar"
+    },
+    {
+      "id": "dr-congo-m23",
+      "topic": "DR Congo M23",
+      "sources": 4,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 6,
+        "kept": 6,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 1,
+        "partly": 5,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "African Union mediators met with Rwandan President Paul Kagame and M23 representatives on 7 October 2026 to address the peace process in eastern DRC.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 (published 7 Oct, says 'On Wednesday') supports the meeting, but the exact date 7 October isn't stated and Wednesday inference is not explicit; also 'AU delegation' matches."
+        },
+        {
+          "claim": "Six Ebola cases were reported in M23-controlled eastern Congo in October 2026, with all cases linked to a transmission chain originating in government-held Butembo.",
+          "cites": [
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S2 supports six cases and the Butembo chain, published 1 Oct, but 'October 2026' is fine; however the source says 'all linked' which matches; the minor gap is that four died before testing is omitted, not a problem—core is supported."
+        },
+        {
+          "claim": "M23 reignited conflict in late 2021 after a period of relative quiet following a 2013 peace agreement, and has since rapidly expanded control over vast regions of North Kivu.",
+          "cites": [
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S4 gives the 2013 agreement, 2021 reignition and expansion, but does not say there was 'relative quiet' in between, and the 2021 attack is said to have failed."
+        },
+        {
+          "claim": "Multiple sources confirm M23 is Rwanda-backed and controls territory in eastern DRC where they exercise authority over populations and economic activity.",
+          "cites": [
+            "S1",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S3 says Rwanda-backed and describes control over miners and trafficking, but S1 excerpt does not say Rwanda-backed or describe territorial control; 'multiple sources confirm' overstates."
+        },
+        {
+          "claim": "teleSUR frames the current situation as an 'escalating conflict' requiring AU mediation, while Impact Newswire emphasises the 'war economy' dimension and mineral trafficking as M23's primary strategic interest.",
+          "cites": [
+            "S1",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S1 does say 'Conflict Escalates' and S3 says 'war economy', but the claim that mineral trafficking is M23's 'primary strategic interest' is not stated."
+        }
+      ],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1924,
+        "outputTokens": 2176
+      },
+      "ok": true,
+      "seconds": 25.793,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Goma (-1.67, 29.23) vs DR Congo and Rwanda border"
+    },
+    {
+      "id": "yemen-houthis",
+      "topic": "Yemen Houthis",
+      "sources": 12,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 11,
+        "kept": 11,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 4,
+        "unsupported": 2
+      },
+      "failures": [
+        {
+          "claim": "Houthis claimed new attacks on Saudi airports including Abha International Airport near the Yemen border and King Khalid International Airport in Riyadh",
+          "cites": [
+            "S8"
+          ],
+          "verdict": "partly",
+          "why": "S8 says the airports came under attack per Saudi aviation authority; the claim says Houthis 'claimed' them, which S8's snippet doesn't state."
+        },
+        {
+          "claim": "Multiple outlets report that Yemen's government has launched a major military operation against the Houthis in early October 2026",
+          "cites": [
+            "S1",
+            "S9"
+          ],
+          "verdict": "partly",
+          "why": "S1 and S9 report an announced war and a major offensive, but S9 attributes it to Saudi and allied forces; 'Yemen's government launched' and 'early October' are loosely drawn from the dates."
+        },
+        {
+          "claim": "Both regional and Western outlets confirm that Houthis attacked targets including Aden airport and Saudi airports",
+          "cites": [
+            "S2",
+            "S3",
+            "S8"
+          ],
+          "verdict": "partly",
+          "why": "S2, S3 and S8 report attacks on Aden and Saudi airports, but 'regional and Western outlets confirm' is characterization, and S2 only reports Houthi claims."
+        },
+        {
+          "claim": "Sources report that the conflict centers on control of the Red Sea coast and Bab el-Mandeb Strait, with implications for oil prices and shipping",
+          "cites": [
+            "S4",
+            "S9"
+          ],
+          "verdict": "partly",
+          "why": "S9 gives the Red Sea coast and Bab el-Mandeb focus, and S4 mentions oil prices and Red Sea shipping lanes, but S4 says oil prices eased and doesn't state the conflict 'centers on' these."
+        },
+        {
+          "claim": "Western outlets (BBC, CNN, NBC) emphasize Saudi-led coalition operations and security threats to regional infrastructure, while South China Morning Post and The Hindu provide more detail on Houthi tactical operations and claims",
+          "cites": [
+            "S1",
+            "S2",
+            "S3",
+            "S8",
+            "S9"
+          ],
+          "verdict": "unsupported",
+          "why": "The cited snippets don't show the outlets' editorial emphases; this comparative characterization is not stated in the sources."
+        },
+        {
+          "claim": "CBS News frames the conflict in terms of global energy markets and oil prices, while other outlets focus on military operations and humanitarian impact",
+          "cites": [
+            "S4",
+            "S10"
+          ],
+          "verdict": "unsupported",
+          "why": "The sources do not describe how outlets frame the conflict; CBS's oil price angle is visible but the comparison with others is not supported."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2590,
+        "outputTokens": 2396
+      },
+      "ok": true,
+      "seconds": 27.792,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Aden (12.79, 45.03) vs Yemen"
+    },
+    {
+      "id": "haiti-gangs",
+      "topic": "Haiti gangs",
+      "sources": 5,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 3,
+        "partly": 5,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Armed gangs have controlled up to 90% of Port-au-Prince by 2023.",
+          "cites": [
+            "S5"
+          ],
+          "verdict": "partly",
+          "why": "S5 says gangs were 'speculated' to control up to 90%, but the claim states it as established fact."
+        },
+        {
+          "claim": "In February 2024, two rival gang coalitions united in a coalition called Viv Ansanm, formed to oppose the government and the UN mission.",
+          "cites": [
+            "S5"
+          ],
+          "verdict": "partly",
+          "why": "S5 says two rival groups united in Feb 2024 as Viv Ansanm, but not that they were 'gang coalitions'; the core is stated."
+        },
+        {
+          "claim": "A UN-backed international security mission has been deployed to Haiti to combat gang violence.",
+          "cites": [
+            "S3",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S3 says the mission is supported/reauthorized, and S4 mentions a UN-backed Gang Suppression Force, but neither states it has been deployed."
+        },
+        {
+          "claim": "Gang violence in Haiti has reached critical levels, with gangs controlling significant portions of the capital.",
+          "cites": [
+            "S1",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S1 gives continued expansion and threat to stability, and S4 mentions gangs taking Port-au-Prince, but 'critical levels' and 'significant portions' are not stated in the cited text."
+        },
+        {
+          "claim": "The BBC frames the crisis primarily through gang expansion and threat to state stability, while the Miami Herald emphasises institutional corruption as a root cause alongside gang violence.",
+          "cites": [
+            "S1",
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S1 and S2 headlines support the differing emphases, but 'primarily' and 'root cause' framing is interpretive and not stated."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1977,
+        "outputTokens": 2054
+      },
+      "ok": true,
+      "seconds": 24.472,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Port-au-Prince (18.55, -72.34) vs Haiti"
+    },
+    {
+      "id": "lebanon-israel",
+      "topic": "Lebanon Israel border",
+      "sources": 4,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 4,
+        "kept": 3,
+        "dropped": [
+          "shares no substance with cited sources"
+        ]
+      },
+      "judged": {
+        "supported": 2,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "The incident was described as 'unacceptable' by UNIFIL",
+          "cites": [
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S2's headline calls the shots 'unacceptable' but the cited text does not say UNIFIL used that word, so attributing it to UNIFIL goes beyond the text."
+        }
+      ],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1826,
+        "outputTokens": 1665
+      },
+      "ok": true,
+      "seconds": 23.422,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "South Lebanon (33.29, 35.30) vs Lebanon and northern Israel"
+    },
+    {
+      "id": "mali-sahel",
+      "topic": "Mali jihadists",
+      "sources": 1,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 4,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1540,
+        "outputTokens": 1650
+      },
+      "ok": true,
+      "seconds": 19.022,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Bamako (12.65, -8.00) vs Mali"
+    },
+    {
+      "id": "taiwan-strait",
+      "topic": "Taiwan Strait tensions",
+      "sources": 2,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 5,
+        "kept": 5,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 3,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Taiwan has received two US-made fighter jets.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 says reports the island received two US-made ... (truncated); 'fighter jets' is not confirmed and it is only reported."
+        },
+        {
+          "claim": "Both sources acknowledge that the Taiwan Strait remains a zone of political and military tension between China and Taiwan.",
+          "cites": [
+            "S1",
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S1 mentions heightened tensions, but S2 only describes relations and status controversy, not military tension; 'both sources acknowledge' overreaches."
+        }
+      ],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1550,
+        "outputTokens": 1807
+      },
+      "ok": true,
+      "seconds": 21.678,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Taipei (25.04, 121.56) vs Taiwan and the strait"
+    },
+    {
+      "id": "south-sudan",
+      "topic": "South Sudan",
+      "sources": 13,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 9,
+        "kept": 7,
+        "dropped": [
+          "figure not in cited sources: 1, 5, 11",
+          "figure not in cited sources: 8, 2"
+        ]
+      },
+      "judged": {
+        "supported": 5,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Multiple sources confirm South Sudan is preparing for a December 2026 election while facing significant obstacles including insecurity and governance challenges.",
+          "cites": [
+            "S4",
+            "S8",
+            "S10"
+          ],
+          "verdict": "partly",
+          "why": "S4, S8 and S10 support the election and S4 the insecurity, but none mentions governance challenges. S10 names only a caretaker government and S8 cites repression, which is not the same thing."
+        },
+        {
+          "claim": "South Sudan has implemented or is enforcing restrictions on foreign participation in retail trade, affecting traders from neighboring countries.",
+          "cites": [
+            "S11",
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S11 supports the ban on foreigners in retail affecting Kenyan traders. S1 only has the government saying foreigners should stay out of small-scale retail while denying an expulsion order, so it doesn't confirm enforcement."
+        }
+      ],
+      "expected": {
+        "total": 1,
+        "conveyed": 0,
+        "missed": [
+          "South Sudan rejected claims that it had ordered foreigners to leave."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2743,
+        "outputTokens": 2317
+      },
+      "ok": true,
+      "seconds": 28.613,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Juba (4.85, 31.60) vs South Sudan"
+    },
+    {
+      "id": "oos-recipe",
+      "topic": "banana bread recipe",
+      "sources": 5,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 6,
+        "kept": 6,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1862,
+        "outputTokens": 663
+      },
+      "ok": true,
+      "seconds": 6.248,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-football",
+      "topic": "Premier League transfer news",
+      "sources": 7,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 4,
+        "kept": 4,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2049,
+        "outputTokens": 1248
+      },
+      "ok": true,
+      "seconds": 15.052,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-phone",
+      "topic": "best phone camera review",
+      "sources": 3,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1706,
+        "outputTokens": 550
+      },
+      "ok": true,
+      "seconds": 5.48,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-python",
+      "topic": "how to learn Python programming",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": []
+      },
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 1468,
+        "outputTokens": 496
+      },
+      "ok": true,
+      "seconds": 7.212,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    }
+  ]
+}

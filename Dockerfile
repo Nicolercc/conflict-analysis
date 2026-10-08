@@ -1,6 +1,6 @@
 # API server — build from repository root.
-# Build: docker build -t knowledge-nexus-api .
-# Run:  docker run --rm -p 3001:3001 --env-file .env knowledge-nexus-api
+# Build: docker build -t vantage-api .
+# Run:  docker run --rm -p 3001:3001 --env-file .env vantage-api
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
 ENV CI=true

@@ -78,6 +78,74 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /briefs/{id}:
+    get:
+      operationId: getBrief
+      tags: [intelligence]
+      summary: Read a stored brief by its id
+      description: Returns the brief exactly as it was first generated. Nothing is regenerated and no model call is made.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Za-z0-9_-]{10,32}$"
+      responses:
+        "200":
+          description: The stored brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntelligenceBrief"
+        "404":
+          description: No brief with this id is stored (it never existed, or it has been removed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /intelligence/stream:
+    post:
+      operationId: streamBrief
+      tags: [intelligence]
+      summary: Generate a brief and report progress as it is built
+      description: |
+        Takes a topic, an article URL or article text and answers with a
+        `text/event-stream`. Events, in order:
+
+        - `stage` — `{ "stage": "retrieving" | "writing" | "locating" }`
+        - `sources` — `{ "sources": Source[], "retrieval": RetrievalStatus[] }`, sent once retrieval finishes
+        - `brief` — the finished IntelligenceBrief (the last event on success)
+        - `error` — an ErrorResponse (the last event on failure after the stream has started)
+
+        Invalid input, rate limiting and unreadable article links are refused
+        before the stream starts, with the usual JSON ErrorResponse and status.
+        A brief already cached is sent as a single `brief` event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StreamBriefBody"
+      responses:
+        "200":
+          description: Progress events followed by the brief
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many requests from this client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /intelligence/explore:
     post:
       operationId: exploreConflict
@@ -174,7 +242,7 @@ components:
           description: Broader geopolitical region (e.g. "Eastern Europe", "Middle East")
         lat:
           type: [number, "null"]
-          description: Null when the location is unknown. Lat and lng are null together.
+          description: Set by geocoding the city and country, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
         lng:
           type: [number, "null"]
       required: [city, country, region, lat, lng]
@@ -206,15 +274,18 @@ components:
         type:
           type: string
           enum: [strike, escalation, negotiation, humanitarian, political]
+        place:
+          type: [string, "null"]
+          description: Where the event happened, as a place name (e.g. "Jeddah, Saudi Arabia"). Null when it has no single location.
         lat:
           type: [number, "null"]
-          description: Null when the event has no known location. Lat and lng are null together.
+          description: Set by geocoding the place, never by the model. Null when the place could not be confirmed. Lat and lng are null together.
         lng:
           type: [number, "null"]
         searchQuery:
           type: string
           description: Google News search query to verify this event
-      required: [date, title, description, type, lat, lng, searchQuery]
+      required: [date, title, description, type, place, lat, lng, searchQuery]
     CasualtyData:
       type: object
       properties:
@@ -238,7 +309,7 @@ components:
           description: news is retrieved reporting, reference is background (Wikipedia), article is the text or link the reader supplied.
         provider:
           type: string
-          description: Where the record came from, e.g. GDELT, BBC News RSS, Wikipedia, Reader.
+          description: Where the record came from, e.g. Bing News search, BBC News RSS, Wikipedia, Reader.
         publisher:
           type: string
         title:
@@ -299,6 +370,9 @@ components:
     IntelligenceBrief:
       type: object
       properties:
+        id:
+          type: string
+          description: Unguessable identifier assigned by the server. GET /briefs/{id} returns this same brief for as long as it is stored.
         generatedAt:
           type: string
           description: ISO 8601 time the server generated this brief. Set once; unchanged when served from cache.
@@ -352,6 +426,7 @@ components:
           items:
             $ref: "#/components/schemas/RetrievalStatus"
       required:
+        - id
         - generatedAt
         - inScope
         - headline
@@ -370,12 +445,27 @@ components:
         - keyFacts
         - coverage
         - retrieval
+    StreamBriefBody:
+      type: object
+      description: Exactly one of topic, url or article.
+      properties:
+        topic:
+          type: string
+          minLength: 3
+          maxLength: 240
+        url:
+          type: string
+          maxLength: 2048
+        article:
+          type: string
+          minLength: 50
+          maxLength: 20000
     ErrorResponse:
       type: object
       properties:
         error:
           type: string
-          description: Stable machine-readable code, e.g. INVALID_INPUT, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL.
+          description: Stable machine-readable code, e.g. INVALID_INPUT, NOT_FOUND, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL.
         message:
           type: string
           description: Safe to show to the person using the site.

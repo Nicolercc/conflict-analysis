@@ -1,0 +1,184 @@
+{
+  "id": "haiti-gangs",
+  "topic": "Haiti gangs",
+  "recordedAt": "2026-10-08T02:52:24.191Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "BBC",
+      "title": "More than 5,000 people killed or injured as Haiti gangs keep expanding - UN",
+      "url": "https://msn.com/en-us/news/other/more-than-5-000-people-killed-or-injured-as-haiti-gangs-keep-expanding-un/ar-AA2dpWj0",
+      "publishedAt": "2026-10-02T03:17:41.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The United Nations said violent gangs continue to \"adapt and expand\" across the country, further threatening its stability.",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:24.190Z",
+      "text": "More than 5,000 people killed or injured as Haiti gangs keep expanding - UN. The United Nations said violent gangs continue to \"adapt and expand\" across the country, further threatening its stability."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Miami Herald",
+      "title": "U.N. panel: Gangs, corrupt politicians, cops fuel Haiti's violent crisis",
+      "url": "https://msn.com/en-us/news/other/un-panel-gangs-corrupt-politicians-cops-fuel-haitis-violent-crisis/ar-AA2dJxhi",
+      "publishedAt": "2026-10-06T18:47:50.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The U.N. Panel of Experts report was published as Haiti's Provisional Electoral Council considers loosening some of the requirements for individuals to run for office in the first general elections in ...",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:24.190Z",
+      "text": "U.N. panel: Gangs, corrupt politicians, cops fuel Haiti's violent crisis. The U.N. Panel of Experts report was published as Haiti's Provisional Electoral Council considers loosening some of the requirements for individuals to run for office in the first general elections in ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Editorials on Voice of America",
+      "title": "UN Extends Mission to Take Down Gangs in Haiti",
+      "url": "https://editorials.voa.gov/a/un-extends-mission-to-take-down-gangs-in-haiti/8208710.html",
+      "publishedAt": "2026-10-07T07:28:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The reauthorized UN resolution supports an international police and military mission in Haiti to combat armed gangs and restore public safety, working alongside the Haitian National Police and Armed ...",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:24.190Z",
+      "text": "UN Extends Mission to Take Down Gangs in Haiti. The reauthorized UN resolution supports an international police and military mission in Haiti to combat armed gangs and restore public safety, working alongside the Haitian National Police and Armed ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Rio Times",
+      "title": "Haiti Gang Crisis Explained 2026 Gangs and the UN Force",
+      "url": "https://riotimesonline.com/haiti-gang-crisis-explained-2026",
+      "publishedAt": "2026-10-01T05:20:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Haiti's gang crisis explained: who the gangs are, how they took Port-au-Prince, the UN-backed Gang Suppression Force, and what it means for foreigners.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:24.190Z",
+      "text": "Haiti Gang Crisis Explained 2026 Gangs and the UN Force. Haiti's gang crisis explained: who the gangs are, how they took Port-au-Prince, the UN-backed Gang Suppression Force, and what it means for foreigners."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Haitian conflict",
+      "url": "https://en.wikipedia.org/wiki/Haitian_conflict",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "Since 2020, Haiti's capital Port-au-Prince has been the site of an ongoing armed conflict. The government of Haiti and Haitian security forces have struggled to maintain their control of Port-au-Prince amid this conflict, with gangs speculated to control up to 90% of the city by 2023. In response to the escalating…",
+      "text": "Haitian conflict. Since 2020, Haiti's capital Port-au-Prince has been the site of an ongoing armed conflict. The government of Haiti and Haitian security forces have struggled to maintain their control of Port-au-Prince amid this conflict, with gangs speculated to control up to 90% of the city by 2023. In response to the escalating fighting, an armed vigilante movement, known as bwa kale, also emerged, with the purpose of fighting the gangs. On 2 October 2023, United Nations Security Council Resolution 2699 was approved, authorizing a Kenya-led \"multinational security support mission\" to Haiti. Until 2024, the war was between two major groups and their allies: the Revolutionary Forces of the G9 Family and Allies and the G-Pèp. However, in February 2024 the two rival groups united in a coalition known as Viv Ansanm, formed to oppose the government and the UN mission.",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:24.190Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 4
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

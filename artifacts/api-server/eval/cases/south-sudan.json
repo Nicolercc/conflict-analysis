@@ -1,0 +1,296 @@
+{
+  "id": "south-sudan",
+  "topic": "South Sudan",
+  "recordedAt": "2026-10-08T02:52:34.735Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "AllAfrica RSS",
+      "publisher": "AllAfrica",
+      "title": "South Sudan: South Sudan Rejects Claims of Foreigners' Expulsion Order",
+      "url": "https://allafrica.com/stories/202610070268.html",
+      "publishedAt": "2026-10-07T10:01:02.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "[Capital FM] Nairobi -- South Sudan has moved to dispel reports that foreigners have been given seven days to leave the country, with Juba County Caretaker Commissioner Kalisto Lado Faustino Nyigilo saying the government remains open to legally resident foreigners but wants them to stay out of small-scale retail…",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan: South Sudan Rejects Claims of Foreigners' Expulsion Order. [Capital FM] Nairobi -- South Sudan has moved to dispel reports that foreigners have been given seven days to leave the country, with Juba County Caretaker Commissioner Kalisto Lado Faustino Nyigilo saying the government remains open to legally resident foreigners but wants them to stay out of small-scale retail…"
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Al Jazeera",
+      "title": "South Sudan’s aid crisis deepens as food stocks run low",
+      "url": "https://aljazeera.com/news/2026/10/7/south-sudans-aid-crisis-deepens-as-food-stocks-run-low",
+      "publishedAt": "2026-10-06T17:13:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "More than one million people could lose life-saving aid by October as funding shrinks and arrivals from Sudan continue.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan’s aid crisis deepens as food stocks run low. More than one million people could lose life-saving aid by October as funding shrinks and arrivals from Sudan continue."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Charisma Magazine Online",
+      "title": "Christian Workers Abducted in South Sudan Are Released",
+      "url": "https://mycharisma.com/news/christian-workers-abducted-in-south-sudan-are-released",
+      "publishedAt": "2026-10-07T09:52:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Six Christian workers in South Sudan were released after five days of captivity marked by beatings and harsh conditions.",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "Christian Workers Abducted in South Sudan Are Released. Six Christian workers in South Sudan were released after five days of captivity marked by beatings and harsh conditions."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "DW",
+      "title": "South Sudan's road to elections remains uncertain",
+      "url": "https://msn.com/en-au/news/other/south-sudans-road-to-elections-remains-uncertain/ar-AA2dKhH8",
+      "publishedAt": "2026-10-07T06:45:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan's first general election is set for December 22. Insecurity, political tensions and failure to begin voter registration have raised doubts over whether the poll can be held credibly.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan's road to elections remains uncertain. South Sudan's first general election is set for December 22. Insecurity, political tensions and failure to begin voter registration have raised doubts over whether the poll can be held credibly."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "AllAfrica",
+      "title": "South Sudan rejects claims of foreigners' expulsion order",
+      "url": "https://msn.com/en-xl/news/other/south-sudan-rejects-claims-of-foreigners-expulsion-order/ar-AA2dKdxI",
+      "publishedAt": "2026-10-07T03:01:03.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan has moved to dispel reports that foreigners have been given seven days to leave the country, with Juba County Caretaker Commissioner Kalisto Lado Faustino Nyigilo saying the government ...",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan rejects claims of foreigners' expulsion order. South Sudan has moved to dispel reports that foreigners have been given seven days to leave the country, with Juba County Caretaker Commissioner Kalisto Lado Faustino Nyigilo saying the government ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "ZAWYA",
+      "title": "South Africa: President Ramaphosa meets President Salva Kiir of South Sudan",
+      "url": "https://zawya.com/en/press-release/africa-press-releases/south-africa-president-ramaphosa-meets-president-salva-kiir-of-south-sudan-1554174",
+      "publishedAt": "2026-10-07T11:51:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "President Cyril Ramaphosa has this afternoon met with His Excellency Salva Kiir Mayardit, President of the Republic of South Sudan, in Pretoria, South Africa. President Salva Kiir Mayardit is in South ...",
+      "id": "S6",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Africa: President Ramaphosa meets President Salva Kiir of South Sudan. President Cyril Ramaphosa has this afternoon met with His Excellency Salva Kiir Mayardit, President of the Republic of South Sudan, in Pretoria, South Africa. President Salva Kiir Mayardit is in South ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "ZAWYA",
+      "title": "Bianchi Gold Deal Signals Broadening Investor Base in South Sudan’s Oil Sector Ahead of South Sudan Oil & Power (SSOP) 2026",
+      "url": "https://zawya.com/en/press-release/africa-press-releases/bianchi-gold-deal-signals-broadening-investor-base-in-south-sudans-oil-sector-ahead-of-south-sudan-oil-power-ssop-2026-1533360",
+      "publishedAt": "2026-10-06T17:41:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "A strategic investment memorandum signed between South Sudan’s Ministry of Petroleum and UAE-based Bianchi Gold Trading Investment Company is highlighting the country’s efforts to attract new ...",
+      "id": "S7",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "Bianchi Gold Deal Signals Broadening Investor Base in South Sudan’s Oil Sector Ahead of South Sudan Oil & Power (SSOP) 2026. A strategic investment memorandum signed between South Sudan’s Ministry of Petroleum and UAE-based Bianchi Gold Trading Investment Company is highlighting the country’s efforts to attract new ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Globe and Mail",
+      "title": "Canada helping to fund South Sudan vote despite growing repression",
+      "url": "https://theglobeandmail.com/world/article-canada-south-sudan-election-financial-support",
+      "publishedAt": "2026-10-04T10:51:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The much-delayed election would be the first since South Sudan achieved independence in 2011. Canada has spent more than $1.1-billion in foreign aid supporting the country since then, but its ...",
+      "id": "S8",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "Canada helping to fund South Sudan vote despite growing repression. The much-delayed election would be the first since South Sudan achieved independence in 2011. Canada has spent more than $1.1-billion in foreign aid supporting the country since then, but its ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Xinhua",
+      "title": "South Sudan steps up Ebola alert after Kenya case",
+      "url": "https://english.news.cn/20261008/4536bb27fba0436c93993bf996feddc0/c.html",
+      "publishedAt": "2026-10-07T18:09:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan has stepped up nationwide preparedness and surveillance against Ebola disease caused by the Bundibugyo virus after neighboring Kenya confirmed an imported case, the Ministry of Health said ...",
+      "id": "S9",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan steps up Ebola alert after Kenya case. South Sudan has stepped up nationwide preparedness and surveillance against Ebola disease caused by the Bundibugyo virus after neighboring Kenya confirmed an imported case, the Ministry of Health said ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Rio Times",
+      "title": "South Sudan Explained 2026, the World’s Youngest Country",
+      "url": "https://riotimesonline.com/south-sudan-explained-2026",
+      "publishedAt": "2026-10-03T08:52:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan explained: an oil-producing, landlocked state of over 10 million people faces a 22 December 2026 election under a caretaker government.",
+      "id": "S10",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan Explained 2026, the World’s Youngest Country. South Sudan explained: an oil-producing, landlocked state of over 10 million people faces a 22 December 2026 election under a caretaker government."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Tuko News",
+      "title": "South Sudan Bans Foreigners From Retail Trade, Kenyan Traders at Risk of Closure",
+      "url": "https://msn.com/en-xl/africa/kenya/south-sudan-bans-foreigners-from-retail-trade-kenyan-traders-at-risk-of-closure/ar-AA2dFHSr",
+      "publishedAt": "2026-10-06T09:47:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan has ordered foreigners out of small-scale retail, putting Kenyan traders at risk of closure as Juba officials reserve market stalls for citizens.",
+      "id": "S11",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan Bans Foreigners From Retail Trade, Kenyan Traders at Risk of Closure. South Sudan has ordered foreigners out of small-scale retail, putting Kenyan traders at risk of closure as Juba officials reserve market stalls for citizens."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Radio Tamazuj",
+      "title": "South Sudan oil is being used as a political weapon, expert says",
+      "url": "https://radiotamazuj.org/en/news/article/south-sudan-oil-is-being-used-as-a-political-weapon-expert-says",
+      "publishedAt": "2026-10-03T01:28:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan’s oil has become a strategic tool in the war in neighbouring Sudan, with competing sides using access to the country’s crude as leverage, according to Professor Taj Elkhazin, a Sudan and ...",
+      "id": "S12",
+      "retrievedAt": "2026-10-08T02:52:34.735Z",
+      "text": "South Sudan oil is being used as a political weapon, expert says. South Sudan’s oil has become a strategic tool in the war in neighbouring Sudan, with competing sides using access to the country’s crude as leverage, according to Professor Taj Elkhazin, a Sudan and ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "South Sudan",
+      "url": "https://en.wikipedia.org/wiki/South_Sudan",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "South Sudan, officially the Republic of South Sudan, is a landlocked country in East Africa. It is bordered by Sudan to the north, Ethiopia to the east, Kenya to the southeast, Uganda to the south, the Democratic Republic of the Congo to the southwest, and the Central African Republic to the west. South Sudan's…",
+      "text": "South Sudan. South Sudan, officially the Republic of South Sudan, is a landlocked country in East Africa. It is bordered by Sudan to the north, Ethiopia to the east, Kenya to the southeast, Uganda to the south, the Democratic Republic of the Congo to the southwest, and the Central African Republic to the west. South Sudan's diverse landscape includes vast plains and plateaus, dry and tropical savannahs, inland floodplains, and forested mountains. The Nile River system is the defining physical feature of the country, running south to north across its center, which is dominated by a large swamp known as the Sudd. South Sudan has an estimated population of just over 12.7 million in 2024. Juba is the capital and largest city.",
+      "id": "S13",
+      "retrievedAt": "2026-10-08T02:52:34.735Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 11
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

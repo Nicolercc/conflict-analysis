@@ -39,19 +39,13 @@ catalog:
   '@types/react': ^19.2.0
   '@types/react-dom': ^19.2.0
   '@vitejs/plugin-react': ^5.0.4
-  class-variance-authority: ^0.7.1
-  clsx: ^2.1.1
-  drizzle-orm: ^0.45.1
   framer-motion: ^12.23.24
   lucide-react: ^0.545.0
-  # Must be this exact version because expo requires it
   react: 19.1.0
-  # Must be this exact version because expo requires it
   react-dom: 19.1.0
-  tailwind-merge: ^3.3.1
   tailwindcss: ^4.1.14
   tsx: ^4.21.0
-  vite: ^7.3.0
+  vite: ^7.3.5
   zod: ^3.25.76
 
 autoInstallPeers: false
@@ -62,7 +56,11 @@ onlyBuiltDependencies:
   - msw
   - unrs-resolver
 
+# The same overrides are in package.json ("pnpm.overrides"), which is where
+# pnpm 9 reads them; pnpm 10 and later read them here.
 overrides:
-  # drizzle-kit uses esbuild internally on an older version that's vulnerable, this overrides it
-  "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0"
-  esbuild: "0.27.3"
+  # Patched versions of development tooling that vitest and orval pin lower.
+  vite: ^7.3.5
+  js-yaml@^4: ^4.3.0
+  # rollup 4.64.2 hangs while transforming the web client; hold the last version that builds.
+  rollup: 4.59.0

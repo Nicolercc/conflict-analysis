@@ -84,6 +84,9 @@ export function adaptBrief(brief: IntelligenceBrief): ConflictAnalysis {
     })),
     mapEvents,
     historicalContext: brief.historicalContext,
-    credit: 'Generated with Claude (Anthropic) from retrieved news feeds, GDELT and Wikipedia',
+    credit:
+      brief.sources.length > 0
+        ? 'Generated with Claude (Anthropic) from the sources listed below'
+        : 'Generated with Claude (Anthropic) from background knowledge; no sources were retrieved',
   };
 }

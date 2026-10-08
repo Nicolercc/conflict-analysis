@@ -12,6 +12,20 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # The brief store's tests run against a real database.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vantage_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -32,6 +46,9 @@ jobs:
       - name: Generated code is up to date
         run: pnpm run codegen && git diff --exit-code -- lib
 
+      - name: Lint
+        run: pnpm run lint
+
       - name: Typecheck and build
         run: pnpm run build
         env:
@@ -39,3 +56,5 @@ jobs:
 
       - name: Test
         run: pnpm run test
+        env:
+          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/vantage_test

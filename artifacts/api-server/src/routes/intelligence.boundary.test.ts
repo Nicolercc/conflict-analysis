@@ -122,6 +122,46 @@ describe("failures", () => {
   });
 });
 
+describe("response headers", () => {
+  it("sends protective headers and no server fingerprint", async () => {
+    const res = await request(app).get("/api/healthz");
+    expect(res.headers["x-content-type-options"]).toBe("nosniff");
+    expect(res.headers["content-security-policy"]).toMatch(/default-src 'none'/);
+    expect(res.headers["content-security-policy"]).toMatch(/frame-ancestors 'none'/);
+    expect(res.headers["strict-transport-security"]).toMatch(/max-age=/);
+    expect(res.headers["x-powered-by"]).toBeUndefined();
+  });
+
+  it("still lets the allowed site read a response", async () => {
+    const res = await request(app).get("/api/healthz").set("Origin", "http://localhost:5173");
+    expect(res.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
+    expect(res.headers["cross-origin-resource-policy"]).toBe("cross-origin");
+  });
+});
+
+describe("provider blips", () => {
+  it("tries once more when the provider fails straight away, then succeeds", async () => {
+    let calls = 0;
+    create.mockImplementation(async () => {
+      calls += 1;
+      if (calls === 1) throw new Error("529 overloaded");
+      return modelText(JSON.stringify(modelBrief()));
+    });
+    const res = await explore({ topic: "Sudan humanitarian access" });
+    expect(res.status).toBe(200);
+    expect(calls).toBe(2);
+  });
+
+  it("gives up after the second quick failure", async () => {
+    create.mockImplementation(async () => {
+      throw new Error("529 overloaded");
+    });
+    const res = await explore({ topic: "Sudan humanitarian access" });
+    expect(res.status).toBe(502);
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe("resource controls", () => {
   it("shares one generation between identical concurrent requests", async () => {
     let release!: () => void;

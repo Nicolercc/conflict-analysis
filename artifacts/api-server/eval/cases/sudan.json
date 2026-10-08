@@ -1,0 +1,254 @@
+{
+  "id": "sudan",
+  "topic": "Sudan",
+  "recordedAt": "2026-10-08T02:52:21.400Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "UN News RSS",
+      "publisher": "UN News",
+      "title": "Sudan: Driver killed in aerial attack on aid trucks in South Kordofan",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168519",
+      "publishedAt": "2026-10-05T12:00:00.000Z",
+      "language": "English",
+      "country": "United Nations",
+      "excerpt": "The World Food Programme (WFP) has strongly condemned a deadly airstrike on two clearly marked aid trucks in South Kordofan, Sudan, this past weekend.",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Sudan: Driver killed in aerial attack on aid trucks in South Kordofan. The World Food Programme (WFP) has strongly condemned a deadly airstrike on two clearly marked aid trucks in South Kordofan, Sudan, this past weekend."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Associated Press News",
+      "title": "Drone strike kills 4 women in Sudan’s Blue Nile state",
+      "url": "https://apnews.com/article/sudan-drone-war-homes-mosque-damazin-56473b19a098470344e54d75d0362092",
+      "publishedAt": "2026-10-07T08:20:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "A drone strike blamed on Sudan’s paramilitary Rapid Support Forces hit homes and a mosque in Blue Nile province, killing at least four women and wounding dozens of civilians, a rights group said.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Drone strike kills 4 women in Sudan’s Blue Nile state. A drone strike blamed on Sudan’s paramilitary Rapid Support Forces hit homes and a mosque in Blue Nile province, killing at least four women and wounding dozens of civilians, a rights group said."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Associated Press News",
+      "title": "US envoy holds rare meeting with Sudan’s top general in push to seek end to fighting",
+      "url": "https://apnews.com/article/sudan-war-boulos-burhan-egypt-rsf-0817269ca08cb15f1296860f0936d607",
+      "publishedAt": "2026-10-05T13:17:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "A U.S. envoy met over the weekend with Sudan’s top general as the Trump administration pushes for diplomatic efforts to end a war that has created what many describe as the world’s largest ...",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "US envoy holds rare meeting with Sudan’s top general in push to seek end to fighting. A U.S. envoy met over the weekend with Sudan’s top general as the Trump administration pushes for diplomatic efforts to end a war that has created what many describe as the world’s largest ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Hill",
+      "title": "US shelves Sudan arms embargo proposal amid UN Security Council divisions",
+      "url": "https://msn.com/en-us/news/politics/us-shelves-sudan-arms-embargo-proposal-amid-un-security-council-divisions/ar-AA2dLmCM",
+      "publishedAt": "2026-10-07T11:07:31.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The Trump administration is shelving its proposal for an arms embargo on Sudan amid divisions on the United Nations Security Council (UNSC), which will instead vote Thursday on a short-term extension ...",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "US shelves Sudan arms embargo proposal amid UN Security Council divisions. The Trump administration is shelving its proposal for an arms embargo on Sudan amid divisions on the United Nations Security Council (UNSC), which will instead vote Thursday on a short-term extension ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Outlook India",
+      "title": "Sudan’s Al-Burhan Vows To Retake All Territory From RSF",
+      "url": "https://outlookindia.com/international/sudans-al-burhan-vows-to-retake-all-territory-from-rsf",
+      "publishedAt": "2026-10-07T11:04:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Sudan’s military chief, Abdel Fattah al-Burhan, has vowed to take “every inch” of territory that is currently under the control of the paramilitary Rapid Support Forces (RSF), while rejecting ...",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Sudan’s Al-Burhan Vows To Retake All Territory From RSF. Sudan’s military chief, Abdel Fattah al-Burhan, has vowed to take “every inch” of territory that is currently under the control of the paramilitary Rapid Support Forces (RSF), while rejecting ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Daily Mail",
+      "title": "Global risk map reveals countries deemed 'extremely' dangerous including Iran, Yemen and Sudan with Switzerland and Norway among the safest",
+      "url": "https://dailymail.com/news/article-16189611/Global-risk-map-extreme-danger-countries.html",
+      "publishedAt": "2026-10-07T06:54:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Much of north and central Africa, including Sudan, are also considered extreme-risk areas. Global Guardians said Nigeria was suffering from 'banditry, jihadism, organised crime, and intercommunal ...",
+      "id": "S6",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Global risk map reveals countries deemed 'extremely' dangerous including Iran, Yemen and Sudan with Switzerland and Norway among the safest. Much of north and central Africa, including Sudan, are also considered extreme-risk areas. Global Guardians said Nigeria was suffering from 'banditry, jihadism, organised crime, and intercommunal ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Al Jazeera",
+      "title": "Sudan’s al-Burhan rejects talks, vows to retake all territory from RSF",
+      "url": "https://aljazeera.com/news/2026/10/7/sudans-al-burhan-rejects-talks-vows-to-retake-all-territory-from-rsf",
+      "publishedAt": "2026-10-06T17:26:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "At least 10 civilians were killed in West Kordofan and 5,500 displaced in Blue Nile as clashes widened on Tuesday.",
+      "id": "S7",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Sudan’s al-Burhan rejects talks, vows to retake all territory from RSF. At least 10 civilians were killed in West Kordofan and 5,500 displaced in Blue Nile as clashes widened on Tuesday."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Rio Times",
+      "title": "Sudan Gold Exports Top US$2.29 Billion in 9 Months",
+      "url": "https://riotimesonline.com/sudan-gold-exports-record-2026",
+      "publishedAt": "2026-10-06T22:57:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Sudan gold exports earned US$2.29 billion from January to September, the state mining company says, while US sanctions target gold linked to the war.",
+      "id": "S8",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Sudan Gold Exports Top US$2.29 Billion in 9 Months. Sudan gold exports earned US$2.29 billion from January to September, the state mining company says, while US sanctions target gold linked to the war."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "La Civiltà Cattolica",
+      "title": "Sudan Still At War",
+      "url": "https://laciviltacattolica.com/sudan-still-at-war",
+      "publishedAt": "2026-10-07T04:18:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "William McCormick examines Sudan’s civil war, humanitarian crisis and Pope Leo XIV’s call for ceasefire, humanitarian corridors and lasting peace.",
+      "id": "S9",
+      "retrievedAt": "2026-10-08T02:52:21.400Z",
+      "text": "Sudan Still At War. William McCormick examines Sudan’s civil war, humanitarian crisis and Pope Leo XIV’s call for ceasefire, humanitarian corridors and lasting peace."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Sudan",
+      "url": "https://en.wikipedia.org/wiki/Sudan",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "Sudan, officially the Republic of the Sudan, is a country in Northeast Africa. It borders the Central African Republic to the southwest, Chad to the west, Libya to the northwest, Egypt to the north, the Red Sea to the east, Eritrea and Ethiopia to the southeast, and South Sudan to the south. Sudan has a population of…",
+      "text": "Sudan. Sudan, officially the Republic of the Sudan, is a country in Northeast Africa. It borders the Central African Republic to the southwest, Chad to the west, Libya to the northwest, Egypt to the north, the Red Sea to the east, Eritrea and Ethiopia to the southeast, and South Sudan to the south. Sudan has a population of 51.8 million people as of 2025 and occupies 1,886,068 square kilometres, making it Africa's third-largest country by area. Sudan's capital and most populous city is Khartoum.",
+      "id": "S10",
+      "retrievedAt": "2026-10-08T02:52:21.400Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 8
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

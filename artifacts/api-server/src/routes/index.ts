@@ -1,10 +1,11 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
-import intelligenceRouter from "./intelligence";
+import intelligenceRouter, { briefsRouter } from "./intelligence";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use("/intelligence", intelligenceRouter);
+router.use("/briefs", briefsRouter);
 
 export default router;
