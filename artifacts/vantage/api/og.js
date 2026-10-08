@@ -1,17 +1,18 @@
 import { ImageResponse } from "@vercel/og";
-import { clip, coverageLine, SITE_NAME, type PreviewBrief } from "../src/lib/brief-preview";
-import { loadBrief } from "./_brief";
+import { clip, coverageLine, SITE_NAME } from "./_preview.js";
+import { loadBrief } from "./_brief.js";
 
 export const config = { runtime: "edge" };
 
-type Node = { type: string; props: Record<string, unknown> };
-const el = (type: string, style: Record<string, unknown>, children?: unknown): Node => ({
+/** @param {string} type @param {Record<string, unknown>} style @param {unknown} [children] */
+const el = (type, style, children) => ({
 	type,
 	props: { style: { display: "flex", ...style }, children },
 });
 
 /** The card shown when a brief's link is shared: its headline, where and when, and what it rests on. */
-function card(brief: PreviewBrief | null): Node {
+/** @param {import("./_preview.js").PreviewBrief | null} brief */
+function card(brief) {
 	const usable = brief && brief.inScope !== false && brief.headline?.trim();
 	const place = usable ? [brief.location?.city, brief.location?.country].filter(Boolean).join(", ") : "";
 	const date = usable ? new Date(brief.generatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : "";
@@ -39,11 +40,18 @@ function card(brief: PreviewBrief | null): Node {
 	);
 }
 
-export default async function handler(request: Request): Promise<Response> {
+/** @param {Request} request */
+export default async function handler(request) {
 	const brief = await loadBrief(new URL(request.url).searchParams.get("id"));
-	return new ImageResponse(card(brief) as never, {
-		width: 1200,
-		height: 630,
-		headers: { "Cache-Control": brief ? "public, max-age=86400, s-maxage=604800, immutable" : "public, max-age=300" },
+	const image = new ImageResponse(card(brief), { width: 1200, height: 630 });
+	// The library marks every image as cacheable for a year. A brief's card may
+	// be kept that long; the fallback must not be, because a brief can be
+	// "missing" only for as long as the API takes to wake up.
+	return new Response(image.body, {
+		status: 200,
+		headers: {
+			"Content-Type": "image/png",
+			"Cache-Control": brief ? "public, max-age=86400, s-maxage=604800, immutable" : "public, max-age=300",
+		},
 	});
 }

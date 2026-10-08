@@ -1,5 +1,5 @@
-import { previewHtml } from "../src/lib/brief-preview";
-import { loadBrief } from "./_brief";
+import { previewHtml } from "./_preview.js";
+import { loadBrief } from "./_brief.js";
 
 export const config = { runtime: "edge" };
 
@@ -7,8 +7,9 @@ export const config = { runtime: "edge" };
  * /brief/<id> as link-preview crawlers see it (vercel.json sends only them
  * here). People get the app itself; this page has the same address, the
  * brief's headline and summary as preview tags, and no script.
+ * @param {Request} request
  */
-export default async function handler(request: Request): Promise<Response> {
+export default async function handler(request) {
 	const url = new URL(request.url);
 	const id = url.searchParams.get("id");
 	const brief = await loadBrief(id);

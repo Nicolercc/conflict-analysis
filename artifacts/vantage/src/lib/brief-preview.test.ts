@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { clip, coverageLine, escapeHtml, isBriefId, previewHtml, previewMeta, type PreviewBrief } from "./brief-preview";
+import { clip, coverageLine, escapeHtml, isBriefId, previewHtml, previewMeta } from "../../api/_preview.js";
+
+type PreviewBrief = Parameters<typeof coverageLine>[0];
 
 const ORIGIN = "https://vantage.example";
 const brief = (over: Partial<PreviewBrief> = {}): PreviewBrief => ({

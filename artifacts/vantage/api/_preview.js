@@ -2,27 +2,31 @@
  * The page a link-preview crawler is given for /brief/<id>. Crawlers do not
  * run the app's JavaScript, so without this every shared brief would preview
  * as a bare address. Nothing here touches the browser: it runs in a server
- * function and is covered by tests.
+ * function and is covered by tests. It is plain JavaScript on purpose: the
+ * host builds these functions without the project's TypeScript settings.
  */
-export type PreviewBrief = {
-	id: string;
-	headline: string;
-	summary: string;
-	generatedAt: string;
-	inScope?: boolean;
-	location?: { city?: string; country?: string; region?: string };
-	sources?: Array<{ kind?: string; publisher?: string }>;
-};
+/**
+ * @typedef {object} PreviewBrief
+ * @property {string} id
+ * @property {string} headline
+ * @property {string} summary
+ * @property {string} generatedAt
+ * @property {boolean} [inScope]
+ * @property {{ city?: string, country?: string, region?: string }} [location]
+ * @property {Array<{ kind?: string, publisher?: string }>} [sources]
+ */
 
 export const SITE_NAME = "Vantage";
 export const DEFAULT_TITLE = "Vantage — conflict, in context";
 export const DEFAULT_DESCRIPTION =
 	"Search a conflict or paste an article. Vantage retrieves current reporting and writes a brief whose key facts link back to their sources.";
 
-export const isBriefId = (value: string) => /^[A-Za-z0-9_-]{10,32}$/.test(value);
+/** @param {string} value */
+export const isBriefId = (value) => /^[A-Za-z0-9_-]{10,32}$/.test(value);
 
 /** Everything a brief says came from a model or the open web: escape all of it. */
-export function escapeHtml(value: string): string {
+/** @param {string} value */
+export function escapeHtml(value) {
 	return value
 		.replace(/&/g, "&amp;")
 		.replace(/</g, "&lt;")
@@ -31,7 +35,8 @@ export function escapeHtml(value: string): string {
 		.replace(/'/g, "&#39;");
 }
 
-export function clip(text: string, max: number): string {
+/** @param {string} text @param {number} max */
+export function clip(text, max) {
 	const clean = text.replace(/\s+/g, " ").trim();
 	if (clean.length <= max) return clean;
 	const cut = clean.slice(0, max - 1);
@@ -39,14 +44,16 @@ export function clip(text: string, max: number): string {
 }
 
 /** "9 articles from 7 outlets", or an honest line when nothing was retrieved. */
-export function coverageLine(brief: PreviewBrief): string {
+/** @param {PreviewBrief} brief */
+export function coverageLine(brief) {
 	const news = (brief.sources ?? []).filter((s) => s.kind === "news");
 	if (news.length === 0) return "No recent coverage retrieved";
 	const outlets = new Set(news.map((s) => s.publisher)).size;
 	return `${news.length} ${news.length === 1 ? "article" : "articles"} from ${outlets} ${outlets === 1 ? "outlet" : "outlets"}`;
 }
 
-export function previewMeta(brief: PreviewBrief | null, origin: string, path: string) {
+/** @param {PreviewBrief | null} brief @param {string} origin @param {string} path */
+export function previewMeta(brief, origin, path) {
 	const usable = brief && brief.inScope !== false && brief.headline?.trim();
 	const title = usable ? `${clip(brief.headline, 90)} · ${SITE_NAME}` : DEFAULT_TITLE;
 	const description = usable
@@ -57,7 +64,8 @@ export function previewMeta(brief: PreviewBrief | null, origin: string, path: st
 }
 
 /** A complete, script-free HTML page carrying the preview tags and a readable fallback. */
-export function previewHtml(brief: PreviewBrief | null, origin: string, path: string): string {
+/** @param {PreviewBrief | null} brief @param {string} origin @param {string} path */
+export function previewHtml(brief, origin, path) {
 	const m = previewMeta(brief, origin, path);
 	const e = escapeHtml;
 	return `<!doctype html>
