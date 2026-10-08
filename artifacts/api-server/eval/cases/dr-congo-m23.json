@@ -1,0 +1,170 @@
+{
+  "id": "dr-congo-m23",
+  "topic": "DR Congo M23",
+  "recordedAt": "2026-10-08T02:52:53.052Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "teleSUR RSS",
+      "publisher": "teleSUR",
+      "title": "Mediators Meet with Kagame and M23 Rebels on DR Congo Peace Process",
+      "url": "https://telesurenglish.net/mediators-meet-with-kagame-and-m23-rebels-on-congo-peace-process",
+      "publishedAt": "2026-10-07T18:33:20.000Z",
+      "language": "English",
+      "country": "Venezuela",
+      "excerpt": "African Union Delegation Holds Talks in Rwanda and Goma as Conflict Escalates in Eastern DRC. On Wednesday, a delegation of African Union (AU) mediators met with Rwandan President Paul Kagame and with representatives of the Congolese rebel group March 23 Movement (M23) to address the peace process in eastern…",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:53.051Z",
+      "text": "Mediators Meet with Kagame and M23 Rebels on DR Congo Peace Process. African Union Delegation Holds Talks in Rwanda and Goma as Conflict Escalates in Eastern DRC. On Wednesday, a delegation of African Union (AU) mediators met with Rwandan President Paul Kagame and with representatives of the Congolese rebel group March 23 Movement (M23) to address the peace process in eastern…"
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Independent Journal Review",
+      "title": "Six Ebola Cases Reported in M23-Held Congo",
+      "url": "https://ijr.com/discover/six-ebola-cases-reported-in-m23-held-congo-8e57a786",
+      "publishedAt": "2026-10-01T23:59:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Six new Ebola cases, including four people who died before testing, were reported in AFC/M23-controlled eastern Congo, with all linked to a transmission chain originating in government-held Butembo.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:53.051Z",
+      "text": "Six Ebola Cases Reported in M23-Held Congo. Six new Ebola cases, including four people who died before testing, were reported in AFC/M23-controlled eastern Congo, with all linked to a transmission chain originating in government-held Butembo."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Impact Newswire",
+      "title": "M23’s Grip on Congo’s Mines is Turning Minerals into a War Economy",
+      "url": "https://impactnews-wire.com/m23s-grip-on-congos-mines-is-turning-minerals-into-a-war-economy",
+      "publishedAt": "2026-10-05T07:36:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Rwanda-backed M23 fighters have killed, tortured and forcibly recruited artisanal miners in eastern Democratic Republic of Congo and helped traffic gold and coltan into Rwanda, Amnesty International ...",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:53.051Z",
+      "text": "M23’s Grip on Congo’s Mines is Turning Minerals into a War Economy. Rwanda-backed M23 fighters have killed, tortured and forcibly recruited artisanal miners in eastern Democratic Republic of Congo and helped traffic gold and coltan into Rwanda, Amnesty International ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "M23 rebellion (2012–2013)",
+      "url": "https://en.wikipedia.org/wiki/M23_rebellion_(2012%E2%80%932013)",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "The First M23 rebellion was an armed conflict in North Kivu, Democratic Republic of the Congo, that occurred between the March 23 Movement (M23) rebel group and Congolese government forces between 4 April 2012 and 7 November 2013. It ended when a peace agreement was made among eleven African nations, and the M23…",
+      "text": "M23 rebellion (2012–2013). The First M23 rebellion was an armed conflict in North Kivu, Democratic Republic of the Congo, that occurred between the March 23 Movement (M23) rebel group and Congolese government forces between 4 April 2012 and 7 November 2013. It ended when a peace agreement was made among eleven African nations, and the M23 troops surrendered in Uganda. The rebellion was part of continued fighting in the region after the formal end of the Second Congo War in 2003. The conflict reignited in late 2021 after M23 rebel leader Sultani Makenga and 100 rebel fighters attacked the border town of Bunagana but failed. A few months later, M23 rebels officially restarted offensive operations, rapidly expanding their control over vast regions of North Kivu.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:53.051Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 2
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

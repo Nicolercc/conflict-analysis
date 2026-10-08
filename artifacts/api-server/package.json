@@ -13,7 +13,9 @@
     "start": "NODE_ENV=production node --enable-source-maps ./dist/index.mjs",
     "start:prod": "NODE_ENV=production node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "eval:record": "tsx eval/record.ts",
+    "eval": "tsx eval/run.ts"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",

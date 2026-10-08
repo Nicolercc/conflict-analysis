@@ -1,0 +1,254 @@
+{
+  "id": "myanmar",
+  "topic": "Myanmar civil war",
+  "recordedAt": "2026-10-08T02:52:22.526Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Agence France-Presse",
+      "title": "Myanmar migrants returned to war-torn nation from Malaysia",
+      "url": "https://msn.com/en-us/news/world/myanmar-migrants-returned-to-war-torn-nation-from-malaysia/ar-AA2dvRle",
+      "publishedAt": "2026-10-03T22:44:25.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Nearly 1,500 Myanmar migrants from Malaysia returned to their war-ravaged home country on Sunday under an opaque repatriation scheme that rights monitors say cannot assure their safety. Malaysia ...",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Myanmar migrants returned to war-torn nation from Malaysia. Nearly 1,500 Myanmar migrants from Malaysia returned to their war-ravaged home country on Sunday under an opaque repatriation scheme that rights monitors say cannot assure their safety. Malaysia ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Reuters",
+      "title": "Once shunned, Myanmar's military-backed leader gets red carpet welcome in Malaysia",
+      "url": "https://msn.com/en-us/news/other/once-shunned-myanmars-military-backed-leader-gets-red-carpet-welcome-in-malaysia/ar-AA2dJJF3",
+      "publishedAt": "2026-10-07T03:20:59.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "KUALA LUMPUR, Oct 7 (Reuters) - Myanmar's junta chief-turned-president Min Aung Hlaing arrived in Malaysia on Wednesday for talks with Prime Minister Anwar Ibrahim, as the military-backed leader once ...",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Once shunned, Myanmar's military-backed leader gets red carpet welcome in Malaysia. KUALA LUMPUR, Oct 7 (Reuters) - Myanmar's junta chief-turned-president Min Aung Hlaing arrived in Malaysia on Wednesday for talks with Prime Minister Anwar Ibrahim, as the military-backed leader once ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "WWLP",
+      "title": "Myanmar military leader arrives in Malaysia as repatriations draw criticism",
+      "url": "https://wwlp.com/business/ap-business/ap-myanmar-military-leader-arrives-in-malaysia-as-repatriations-draw-criticism",
+      "publishedAt": "2026-10-07T08:54:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The leader of Myanmar’s military-backed government arrived in Malaysia on Wednesday for talks as the two Southeast Asian nations work to repatriate thousands of ...",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Myanmar military leader arrives in Malaysia as repatriations draw criticism. The leader of Myanmar’s military-backed government arrived in Malaysia on Wednesday for talks as the two Southeast Asian nations work to repatriate thousands of ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "zamon",
+      "title": "Malaysia returned nearly 1,500 Myanmar nationals: UN warned of war and persecution risks",
+      "url": "https://zamon.uz/en/2026/10/05/malaysia-returned-nearly-1500-myanmar-nationals-un-warned-of-war-and-persecution-risks",
+      "publishedAt": "2026-10-05T15:32:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "UNHCR expresses concern that refugees may face persecution or be forced into military service following their return to a country where the war is ongoing.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Malaysia returned nearly 1,500 Myanmar nationals: UN warned of war and persecution risks. UNHCR expresses concern that refugees may face persecution or be forced into military service following their return to a country where the war is ongoing."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Diplomat",
+      "title": "Can Myanmar’s New Administration Revive the Stalled Dawei SEZ Project?",
+      "url": "https://thediplomat.com/2026/10/can-myanmars-new-government-revive-the-stalled-dawei-sez-project",
+      "publishedAt": "2026-10-01T03:30:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The flagship project struggled even during Myanmar’s decade of opening. Attempting to revive it amid conflict and sanctions will test its economic and strategic rationale.",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Can Myanmar’s New Administration Revive the Stalled Dawei SEZ Project?. The flagship project struggled even during Myanmar’s decade of opening. Attempting to revive it amid conflict and sanctions will test its economic and strategic rationale."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "UCA News",
+      "title": "Deported to a war zone: Myanmar migrants sent back home",
+      "url": "https://ucanews.com/video/deported-to-a-war-zone-myanmar-migrants-sent-back-home/115629",
+      "publishedAt": "2026-10-04T17:00:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "As UCA News approaches 50 years of unwavering service to the Church in Asia, we reaffirm our promise to remain: But to continue — and to grow stronger — we need your support. Your contribution helps ...",
+      "id": "S6",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Deported to a war zone: Myanmar migrants sent back home. As UCA News approaches 50 years of unwavering service to the Church in Asia, we reaffirm our promise to remain: But to continue — and to grow stronger — we need your support. Your contribution helps ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Irrawaddy",
+      "title": "Myanmar Regime Has Killed 383 Civilians in 21 Rakhine Massacres: Irrawaddy Tally",
+      "url": "https://irrawaddy.com/news/conflicts-in-numbers/myanmar-regime-has-killed-383-civilians-in-21-rakhine-massacres-irrawaddy-tally.html",
+      "publishedAt": "2026-10-01T03:29:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Airstrikes and ground raids have killed hundreds and wounded 393 civilians since major fighting resumed in Rakhine nearly three years ago.",
+      "id": "S7",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Myanmar Regime Has Killed 383 Civilians in 21 Rakhine Massacres: Irrawaddy Tally. Airstrikes and ground raids have killed hundreds and wounded 393 civilians since major fighting resumed in Rakhine nearly three years ago."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Irrawaddy",
+      "title": "Myanmar Military Shifts Regional Command to Embattled Karenni’s Loikaw",
+      "url": "https://irrawaddy.com/news/burma/myanmar-military-shifts-regional-command-to-embattled-karennis-loikaw.html",
+      "publishedAt": "2026-10-01T02:17:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Regional HQ has moved from relatively becalmed southern Shan State to Loikaw amid a growing regime offensive against the Karenni resistance.",
+      "id": "S8",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Myanmar Military Shifts Regional Command to Embattled Karenni’s Loikaw. Regional HQ has moved from relatively becalmed southern Shan State to Loikaw amid a growing regime offensive against the Karenni resistance."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Radio Free Asia",
+      "title": "Myanmar junta airstrikes target civilians to coerce Arakan Army into peace talks",
+      "url": "https://rfa.org/english/myanmar/2026/10/02/myanmar-rakhine-air-strike-civilians",
+      "publishedAt": "2026-10-02T14:11:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Myanmar’s military junta is increasingly resorting to attacks on civilians as a means to bring the rebel Arakan Army in the western coastal state of Rakhine to the negotiating table, Rakhine ...",
+      "id": "S9",
+      "retrievedAt": "2026-10-08T02:52:22.525Z",
+      "text": "Myanmar junta airstrikes target civilians to coerce Arakan Army into peace talks. Myanmar’s military junta is increasingly resorting to attacks on civilians as a means to bring the rebel Arakan Army in the western coastal state of Rakhine to the negotiating table, Rakhine ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Myanmar civil war (2021–present)",
+      "url": "https://en.wikipedia.org/wiki/Myanmar_civil_war_(2021%E2%80%93present)",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "The Myanmar civil war began following the military coup on 1 February 2021. The seizure of power triggered mass anti-coup demonstrations and a violent crackdown by the Tatmadaw, which significantly escalated the country's longstanding insurgencies.",
+      "text": "Myanmar civil war (2021–present). The Myanmar civil war began following the military coup on 1 February 2021. The seizure of power triggered mass anti-coup demonstrations and a violent crackdown by the Tatmadaw, which significantly escalated the country's longstanding insurgencies.",
+      "id": "S10",
+      "retrievedAt": "2026-10-08T02:52:22.525Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 9
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

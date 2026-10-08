@@ -1,0 +1,128 @@
+{
+  "id": "mali-sahel",
+  "topic": "Mali jihadists",
+  "recordedAt": "2026-10-08T02:52:24.726Z",
+  "sources": [
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Mali War",
+      "url": "https://en.wikipedia.org/wiki/Mali_War",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "The Mali War is an ongoing conflict that began on 16 January 2012 with a Tuareg rebellion in northern Mali. The rebels included the secular-oriented National Movement for the Liberation of Azawad (MNLA), a group fighting for independence or greater autonomy of a region they called Azawad. The MNLA was initially allied…",
+      "text": "Mali War. The Mali War is an ongoing conflict that began on 16 January 2012 with a Tuareg rebellion in northern Mali. The rebels included the secular-oriented National Movement for the Liberation of Azawad (MNLA), a group fighting for independence or greater autonomy of a region they called Azawad. The MNLA was initially allied with the jihadist Ansar Dine, which, in turn, was allied to other Salafi jihadist organizations such as al-Qaeda in the Islamic Maghreb (AQIM) and its splinter, Movement for Oneness and Jihad in West Africa (MOJWA).",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:24.726Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

@@ -122,6 +122,29 @@ describe("failures", () => {
   });
 });
 
+describe("provider blips", () => {
+  it("tries once more when the provider fails straight away, then succeeds", async () => {
+    let calls = 0;
+    create.mockImplementation(async () => {
+      calls += 1;
+      if (calls === 1) throw new Error("529 overloaded");
+      return modelText(JSON.stringify(modelBrief()));
+    });
+    const res = await explore({ topic: "Sudan humanitarian access" });
+    expect(res.status).toBe(200);
+    expect(calls).toBe(2);
+  });
+
+  it("gives up after the second quick failure", async () => {
+    create.mockImplementation(async () => {
+      throw new Error("529 overloaded");
+    });
+    const res = await explore({ topic: "Sudan humanitarian access" });
+    expect(res.status).toBe(502);
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe("resource controls", () => {
   it("shares one generation between identical concurrent requests", async () => {
     let release!: () => void;

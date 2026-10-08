@@ -1,0 +1,156 @@
+{
+  "id": "oos-phone",
+  "topic": "best phone camera review",
+  "recordedAt": "2026-10-08T02:52:35.829Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "TalkAndroid",
+      "title": "The Best Camera Phones of 2026, From Pixel 11 Pro to Vivo X300 Ultra",
+      "url": "https://talkandroid.com/454881-best-camera-phones",
+      "publishedAt": "2026-10-07T03:11:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The best camera phone of 2026 is one most Americans can't buy, and that's the awkward truth running through this guide. I've spent months shooting with Oppo's Find X9 Ultra and Vivo's X300 Ultra, and ...",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:35.828Z",
+      "text": "The Best Camera Phones of 2026, From Pixel 11 Pro to Vivo X300 Ultra. The best camera phone of 2026 is one most Americans can't buy, and that's the awkward truth running through this guide. I've spent months shooting with Oppo's Find X9 Ultra and Vivo's X300 Ultra, and ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Android Headlines",
+      "title": "Vivo X Fold 6 review: The best camera on a foldable phone",
+      "url": "https://msn.com/en-us/news/other/vivo-x-fold-6-review-the-best-camera-on-a-foldable-phone/ar-AA2dGHVX",
+      "publishedAt": "2026-10-06T09:47:03.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The post Vivo X Fold 6 Review: The Best Camera on a Foldable Phone appeared first on Android Headlines.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:35.828Z",
+      "text": "Vivo X Fold 6 review: The best camera on a foldable phone. The post Vivo X Fold 6 Review: The Best Camera on a Foldable Phone appeared first on Android Headlines."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Camera phone",
+      "url": "https://en.wikipedia.org/wiki/Camera_phone",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "A camera phone is a mobile phone that is able to capture photographs and often record video using one or more built-in digital cameras. It can also send the resulting image wirelessly and conveniently. The first commercial phone with a color camera was the Kyocera Visual Phone VP-210, released in Japan in May 1999…",
+      "text": "Camera phone. A camera phone is a mobile phone that is able to capture photographs and often record video using one or more built-in digital cameras. It can also send the resulting image wirelessly and conveniently. The first commercial phone with a color camera was the Kyocera Visual Phone VP-210, released in Japan in May 1999. While cameras in mobile phones used to be supplementary, they have been a major selling point of mobile phones since the 2010s.",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:35.828Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 2
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

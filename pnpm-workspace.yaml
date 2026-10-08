@@ -55,3 +55,12 @@ onlyBuiltDependencies:
   - esbuild
   - msw
   - unrs-resolver
+
+# The same overrides are in package.json ("pnpm.overrides"), which is where
+# pnpm 9 reads them; pnpm 10 and later read them here.
+overrides:
+  # Patched versions of development tooling that vitest and orval pin lower.
+  vite: ^7.3.5
+  js-yaml@^4: ^4.3.0
+  # rollup 4.64.2 hangs while transforming the web client; hold the last version that builds.
+  rollup: 4.59.0

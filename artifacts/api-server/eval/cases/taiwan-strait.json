@@ -1,0 +1,142 @@
+{
+  "id": "taiwan-strait",
+  "topic": "Taiwan Strait tensions",
+  "recordedAt": "2026-10-08T02:52:53.311Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "KBC",
+      "title": "China opposes US fighter jet sales and warns that Taiwan's proposed military spending increase could heighten tensions across the Taiwan Strait.",
+      "url": "https://kbc.co.ke/beijing-raises-concerns-over-taiwan-arms-build-up",
+      "publishedAt": "2026-10-07T14:47:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "China has renewed its opposition to United States arms sales to Taiwan, urging Washington to exercise restraint over the Taiwan question. This follows reports that the island has received two US-made ...",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:53.311Z",
+      "text": "China opposes US fighter jet sales and warns that Taiwan's proposed military spending increase could heighten tensions across the Taiwan Strait.. China has renewed its opposition to United States arms sales to Taiwan, urging Washington to exercise restraint over the Taiwan question. This follows reports that the island has received two US-made ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Cross-strait relations",
+      "url": "https://en.wikipedia.org/wiki/Cross-strait_relations",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "Cross-strait relations are the political and economic relations between China and Taiwan across the Taiwan Strait. Due to the existing controversy over the status of Taiwan and the Chinese legitimacy question, they are also not defined as diplomatic relations by either side.",
+      "text": "Cross-strait relations. Cross-strait relations are the political and economic relations between China and Taiwan across the Taiwan Strait. Due to the existing controversy over the status of Taiwan and the Chinese legitimacy question, they are also not defined as diplomatic relations by either side.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:53.311Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

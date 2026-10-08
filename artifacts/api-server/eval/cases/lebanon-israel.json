@@ -1,0 +1,170 @@
+{
+  "id": "lebanon-israel",
+  "topic": "Lebanon Israel border",
+  "recordedAt": "2026-10-08T02:52:24.525Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Asharq Al-Awsat",
+      "title": "UN Peacekeeping Force Says Shots Fired at Post on Lebanon-Israel Border",
+      "url": "https://english.aawsat.com/arab-world/5327179-un-peacekeeping-force-says-shots-fired-post-lebanon-israel-border",
+      "publishedAt": "2026-10-07T14:27:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. \"This morning, several rounds ...",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:24.525Z",
+      "text": "UN Peacekeeping Force Says Shots Fired at Post on Lebanon-Israel Border. The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. \"This morning, several rounds ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "RTÉ Ireland",
+      "title": "Shots fired at UNIFIL post on Israel-Lebanon border 'unacceptable'",
+      "url": "https://rte.ie/news/world/2026/1007/1594480-unifil-shots-lebanon",
+      "publishedAt": "2026-10-07T13:54:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The United Nations Interim Force in Lebanon said one of its posts was targeted near the border with Israel by small-arms fire, but there were no casualties.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:24.525Z",
+      "text": "Shots fired at UNIFIL post on Israel-Lebanon border 'unacceptable'. The United Nations Interim Force in Lebanon said one of its posts was targeted near the border with Israel by small-arms fire, but there were no casualties."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Arab News",
+      "title": "UN peacekeeping force says shots fired at post on Israel-Lebanon border",
+      "url": "https://arabnews.com/middle-east/un-peacekeeping-force-says-shots-fired-at-post-on-israel-lebanon-border-3005166",
+      "publishedAt": "2026-10-07T05:09:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "BEIRUT: The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. T ...",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:24.525Z",
+      "text": "UN peacekeeping force says shots fired at post on Israel-Lebanon border. BEIRUT: The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. T ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Israeli–Lebanese conflict",
+      "url": "https://en.wikipedia.org/wiki/Israeli%E2%80%93Lebanese_conflict",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "The Israeli–Lebanese conflict, or the South Lebanon conflict, is a long-running conflict involving Israel, Lebanon-based paramilitary groups, and sometimes Syria. The conflict peaked during the Lebanese Civil War. In response to Palestinian attacks from Lebanon, Israel invaded the country in 1978 and again in 1982…",
+      "text": "Israeli–Lebanese conflict. The Israeli–Lebanese conflict, or the South Lebanon conflict, is a long-running conflict involving Israel, Lebanon-based paramilitary groups, and sometimes Syria. The conflict peaked during the Lebanese Civil War. In response to Palestinian attacks from Lebanon, Israel invaded the country in 1978 and again in 1982. After this it occupied southern Lebanon until 2000, while fighting a guerrilla conflict against Shia paramilitaries. After Israel's withdrawal, Hezbollah attacks sparked the 2006 Lebanon War. A new period of conflict began in 2023, leading to the 2024 Israeli invasion of Lebanon.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:24.525Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 3
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

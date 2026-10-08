@@ -191,9 +191,14 @@ export function topicMatcher(topic: string): (text: string) => boolean {
   const required = anchors.length > 0 ? anchors.slice(0, 3) : terms;
   const topicText = normalise(topic);
   const otherPlaces = COMPOUND_PLACES.filter((p) => !topicText.includes(` ${p} `));
+  // A compound name the reader did ask for has to appear as that phrase:
+  // "Sudan … South Kordofan" is not about South Sudan.
+  // (Headlines shorten the Congo's long names to "Congo", so those are exempt.)
+  const askedPlaces = COMPOUND_PLACES.filter((p) => !p.includes("congo") && topicText.includes(` ${p} `));
   return (text) => {
     if (ROUNDUP.test(text)) return false;
     let haystack = normalise(text);
+    if (!askedPlaces.every((p) => haystack.includes(` ${p} `))) return false;
     for (const place of otherPlaces) haystack = haystack.replace(new RegExp(`(?<= )${place}(?= )`, "g"), "|");
     const words = new Set(haystack.split(" "));
     return required.every((t) => words.has(t) || words.has(`${t}s`));

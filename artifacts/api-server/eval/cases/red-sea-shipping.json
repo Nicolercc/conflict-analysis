@@ -1,0 +1,282 @@
+{
+  "id": "red-sea-shipping",
+  "topic": "Red Sea shipping tensions",
+  "recordedAt": "2026-10-08T02:52:22.235Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "BBC News RSS (Middle East)",
+      "publisher": "BBC News",
+      "title": "Yemeni military says it has 'secured' Red Sea waterway",
+      "url": "https://bbc.co.uk/news/articles/cw8rzd6lp0xpo",
+      "publishedAt": "2026-10-06T07:43:07.000Z",
+      "language": "English",
+      "country": "United Kingdom",
+      "excerpt": "Saudi-backed forces gave conflicting reports of whether they had also seized the port city of Mokha, near the Bab al-Mandab Strait.",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "Yemeni military says it has 'secured' Red Sea waterway. Saudi-backed forces gave conflicting reports of whether they had also seized the port city of Mokha, near the Bab al-Mandab Strait."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Print",
+      "title": "Mokha siege & Bab al-Mandeb battle—how Houthis trounced Saudi-backed Yemeni forces, took Red Sea coast",
+      "url": "https://msn.com/en-in/news/other/mokha-siege-bab-al-mandeb-battle-how-houthis-trounced-saudi-backed-yemeni-forces-took-red-sea-coast/ar-AA2dKkev",
+      "publishedAt": "2026-10-07T12:07:43.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "NYT reconstructs Houthi takeover of Red Sea Coast. Saudis have launched aerial bombing to help Aden retake territory. But whether Yemeni forces’ advance can be sustained remains uncertain.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "Mokha siege & Bab al-Mandeb battle—how Houthis trounced Saudi-backed Yemeni forces, took Red Sea coast. NYT reconstructs Houthi takeover of Red Sea Coast. Saudis have launched aerial bombing to help Aden retake territory. But whether Yemeni forces’ advance can be sustained remains uncertain."
+    },
+    {
+      "kind": "news",
+      "provider": "BBC News RSS (Middle East)",
+      "publisher": "BBC News",
+      "title": "Yemenis flee across Red Sea as Houthis and Saudi-backed forces escalate war",
+      "url": "https://bbc.co.uk/news/articles/cw4gm7l742dmo",
+      "publishedAt": "2026-09-21T14:14:16.000Z",
+      "language": "English",
+      "country": "United Kingdom",
+      "excerpt": "The BBC's Frank Gardner speaks to some of those who have fled the war by crossing the Red Sea to Djibouti.",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "Yemenis flee across Red Sea as Houthis and Saudi-backed forces escalate war. The BBC's Frank Gardner speaks to some of those who have fled the war by crossing the Red Sea to Djibouti."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "ainvest",
+      "title": "Shipping's Red Sea windfall rests on one insurance premium",
+      "url": "https://ainvest.com/news/shipping-red-sea-windfall-rests-insurance-premium-2610",
+      "publishedAt": "2026-10-05T16:48:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "UKMTO reported a tanker explosion near Yemen, highlighting ongoing Red Sea shipping risks amid Houthi tensions. - Global shipping avoids Suez route due to war-risk insurance premiums, favoring Cape of ...",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "Shipping's Red Sea windfall rests on one insurance premium. UKMTO reported a tanker explosion near Yemen, highlighting ongoing Red Sea shipping risks amid Houthi tensions. - Global shipping avoids Suez route due to war-risk insurance premiums, favoring Cape of ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Moneycontrol",
+      "title": "How the Houthis seized Yemen’s Red Sea coast and triggered a new war",
+      "url": "https://moneycontrol.com/world/how-the-houthis-seized-yemen-s-red-sea-coast-and-triggered-a-new-war-article-14046671.html",
+      "publishedAt": "2026-10-07T01:59:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The Iran-allied militia captured a strategically important stretch of Yemen in a rapid offensive, exposing divisions among Saudi-backed government forces and setting off a new round of fighting.",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "How the Houthis seized Yemen’s Red Sea coast and triggered a new war. The Iran-allied militia captured a strategically important stretch of Yemen in a rapid offensive, exposing divisions among Saudi-backed government forces and setting off a new round of fighting."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Asianet Newsable",
+      "title": "US CENTCOM rejects Iranian claims of helicopter crash in Red Sea",
+      "url": "https://msn.com/en-in/news/other/us-centcom-rejects-iranian-claims-of-helicopter-crash-in-red-sea/ar-AA2dI2hT",
+      "publishedAt": "2026-10-06T17:30:31.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "US Central Command denied Iranian reports of a downed US Navy helicopter in the Red Sea, affirming all personnel are safe. Separately, an oil tanker was hit in the Strait of Hormuz as Iran threatens ...",
+      "id": "S6",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "US CENTCOM rejects Iranian claims of helicopter crash in Red Sea. US Central Command denied Iranian reports of a downed US Navy helicopter in the Red Sea, affirming all personnel are safe. Separately, an oil tanker was hit in the Strait of Hormuz as Iran threatens ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "American Journal of Transportation",
+      "title": "[Freightos Weekly Update] Premier Alliance joins Red Sea return",
+      "url": "https://ajot.com/news/freightos-weekly-update-premier-alliance-joins-red-sea-return",
+      "publishedAt": "2026-10-07T03:18:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Middle East crude exports are approaching pre-war levels via the Strait of Hormuz and alternatives according to some estimates, with prices easing moderately; bunker costs remain roughly flat for now ...",
+      "id": "S7",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "[Freightos Weekly Update] Premier Alliance joins Red Sea return. Middle East crude exports are approaching pre-war levels via the Strait of Hormuz and alternatives according to some estimates, with prices easing moderately; bunker costs remain roughly flat for now ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Foreign Affairs",
+      "title": "The New Red Sea Wars",
+      "url": "https://foreignaffairs.com/middle-east/new-red-sea-wars",
+      "publishedAt": "2026-10-06T01:00:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "For much of the past century, policymakers have treated the Horn of Africa and the Arabian Peninsula as separate strategic regions divided by the Red Sea. That distinction is now evaporating. Wars on ...",
+      "id": "S8",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "The New Red Sea Wars. For much of the past century, policymakers have treated the Horn of Africa and the Arabian Peninsula as separate strategic regions divided by the Red Sea. That distinction is now evaporating. Wars on ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "tradersunion",
+      "title": "Red Sea conflict intensifies risks for trade and energy flows",
+      "url": "https://tradersunion.com/news/financial-news/show/3691662-red-sea-conflict-trade-energy-risks",
+      "publishedAt": "2026-10-06T17:00:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Red Sea tensions escalate, threatening global trade and vital energy routes through the Suez Canal. Explore the economic impact of prolonged disruption.",
+      "id": "S9",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "Red Sea conflict intensifies risks for trade and energy flows. Red Sea tensions escalate, threatening global trade and vital energy routes through the Suez Canal. Explore the economic impact of prolonged disruption."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "sudanhorizon",
+      "title": "If the Red Sea Landscape Changes… Is Sudan Ready?",
+      "url": "https://sudanhorizon.com/if-the-red-sea-landscape-changes-is-sudan-ready",
+      "publishedAt": "2026-10-01T01:32:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Rifai Abulhasan Tensions ease and intensify, but the Red Sea does not wait for anyone… So, has Sudan prepared its ports, coastline, ...",
+      "id": "S10",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "If the Red Sea Landscape Changes… Is Sudan Ready?. Rifai Abulhasan Tensions ease and intensify, but the Red Sea does not wait for anyone… So, has Sudan prepared its ports, coastline, ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Seatrade Maritime",
+      "title": "Product tanker attacked in Red Sea as hostilities escalate",
+      "url": "https://seatrade-maritime.com/security/product-tanker-attacked-in-red-sea-as-hostilities-escalate",
+      "publishedAt": "2026-10-05T00:10:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The products tanker Chrystal Sky reported a series of explosions around the vessel late on Sunday afternoon. The 73,976 dwt Chrystal Sky reported the incidents from a position 60 nautical miles south ...",
+      "id": "S11",
+      "retrievedAt": "2026-10-08T02:52:22.235Z",
+      "text": "Product tanker attacked in Red Sea as hostilities escalate. The products tanker Chrystal Sky reported a series of explosions around the vessel late on Sunday afternoon. The 73,976 dwt Chrystal Sky reported the incidents from a position 60 nautical miles south ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Red Sea crisis",
+      "url": "https://en.wikipedia.org/wiki/Red_Sea_crisis",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "The Red Sea crisis is an ongoing armed conflict and maritime crisis instigated by the Houthis, an armed group in Yemen. The Houthis began launching missiles and armed drones at Israel in response to the Gaza war, and have seized or attacked dozens of merchant and naval vessels travelling through the Red Sea which they…",
+      "text": "Red Sea crisis. The Red Sea crisis is an ongoing armed conflict and maritime crisis instigated by the Houthis, an armed group in Yemen. The Houthis began launching missiles and armed drones at Israel in response to the Gaza war, and have seized or attacked dozens of merchant and naval vessels travelling through the Red Sea which they claimed are linked to Israel. These actions provoked a military response from Israel, as well as the United States and the United Kingdom. The crisis is linked to the Middle Eastern crisis, the Iran–Israel proxy conflict, and the Yemeni crisis.",
+      "id": "S12",
+      "retrievedAt": "2026-10-08T02:52:22.235Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 9
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "ok",
+      "count": 2
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

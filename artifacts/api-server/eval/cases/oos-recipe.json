@@ -1,0 +1,184 @@
+{
+  "id": "oos-recipe",
+  "topic": "banana bread recipe",
+  "recordedAt": "2026-10-08T02:52:34.965Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Fox News",
+      "title": "High-protein banana bread recipe offers a simple twist on the classic loaf",
+      "url": "https://foxnews.com/video/6405049364112",
+      "publishedAt": "2026-10-03T06:48:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "The \"Protein Dad\" shows how overripe fruit can become a soft, moist homemade loaf with a few simple ingredients and a protein-focused twist.",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "text": "High-protein banana bread recipe offers a simple twist on the classic loaf. The \"Protein Dad\" shows how overripe fruit can become a soft, moist homemade loaf with a few simple ingredients and a protein-focused twist."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Atlanta Journal-Constitution",
+      "title": "From the AJC archives: An easy, delicious banana bread recipe",
+      "url": "https://ajc.com/food-and-dining/2026/10/recipe-archives-banana-bread-october-2026",
+      "publishedAt": "2026-10-02T07:57:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Don's throw out those overripe bananas. This easy, delicious banana bread recipe from the AJC archives is updated with photos, baking tips and ingredient substitutions.",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "text": "From the AJC archives: An easy, delicious banana bread recipe. Don's throw out those overripe bananas. This easy, delicious banana bread recipe from the AJC archives is updated with photos, baking tips and ingredient substitutions."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Hindustan Times",
+      "title": "Cheat day done right: Try this nutritionist-approved recipe for brown butter chocolate banana bread to satisfy your sweet cravings",
+      "url": "https://msn.com/en-in/food-and-drink/recipes/cheat-day-done-right-try-this-nutritionist-approved-recipe-for-brown-butter-chocolate-banana-bread-to-satisfy-your-sweet-cravings/ar-AA2dBZ4y",
+      "publishedAt": "2026-10-05T05:42:39.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Satisfy your sweet tooth with this recipe for warm, gooey, and chocolatey banana bread made with aromatic brown butter!",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "text": "Cheat day done right: Try this nutritionist-approved recipe for brown butter chocolate banana bread to satisfy your sweet cravings. Satisfy your sweet tooth with this recipe for warm, gooey, and chocolatey banana bread made with aromatic brown butter!"
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "WalesOnline",
+      "title": "Mary Berry’s banana bread recipe is full of flavour with 1 added ingredient",
+      "url": "https://msn.com/en-gb/news/other/mary-berry-s-banana-bread-recipe-is-full-of-flavour-with-1-added-ingredient/ar-AA2dnz2Z",
+      "publishedAt": "2026-10-01T16:31:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Mary Berry's delicious banana bread recipe includes a simple ingredient for extra flavour ...",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "text": "Mary Berry’s banana bread recipe is full of flavour with 1 added ingredient. Mary Berry's delicious banana bread recipe includes a simple ingredient for extra flavour ..."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Banana bread",
+      "url": "https://en.wikipedia.org/wiki/Banana_bread",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "Banana bread is a type of sweet bread or cake made from mashed bananas. Banana bread is typically classified as a quick bread, relying on chemical leavening agents such as baking soda or baking powder rather than yeast, which allows it to be prepared without fermentation. It is often a moist and sweet quick bread, but…",
+      "text": "Banana bread. Banana bread is a type of sweet bread or cake made from mashed bananas. Banana bread is typically classified as a quick bread, relying on chemical leavening agents such as baking soda or baking powder rather than yeast, which allows it to be prepared without fermentation. It is often a moist and sweet quick bread, but some recipes are yeast raised. Its sweet taste and slightly crumbly texture make it more akin to a tea cake or muffin than bread.",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:34.965Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 4
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}

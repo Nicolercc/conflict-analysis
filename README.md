@@ -166,6 +166,10 @@ pnpm codegen     # regenerate client and schemas from the OpenAPI spec
 
 Route tests run the real Express app against a fake model and fake retrieval, so they need no network and no API key. Each defect found in the project's audit was first captured as a failing test.
 
+## Evaluation
+
+`artifacts/api-server/eval` measures brief quality in two ways: a hand-labelled claim set that runs in CI, and 16 recorded topics replayed through the real pipeline and graded by a second model. The latest results are in [`eval/REPORT.md`](artifacts/api-server/eval/REPORT.md); how to run it is in [`eval/README.md`](artifacts/api-server/eval/README.md).
+
 ---
 
 # Repository Structure
@@ -265,7 +269,7 @@ Publisher feeds hold only recent items, so a quieter conflict relies on the news
 
 ### Claim checks are necessary, not sufficient
 
-The deterministic checks stop invented citations and figures. A reviewed evaluation set — fixed evidence with human-checked expected claims — is needed to measure whether summaries are fair, and to compare models.
+The deterministic checks stop invented citations and figures, and catch 6 of the 10 unsupported claims in the labelled set. They cannot tell when a claim's words match its source but its meaning does not. In the recorded evaluation a second model judges about half of kept claims fully supported and most of the rest as adding a detail the cited text lacks; the expected-fact lists it uses still need review by a person.
 
 ### In-memory state
 

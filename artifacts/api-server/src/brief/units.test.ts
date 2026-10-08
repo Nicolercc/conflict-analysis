@@ -63,6 +63,10 @@ describe("source helpers", () => {
     expect(sudan("Sudan and South Sudan reopen border crossing")).toBe(true);
     // asking for the longer name still works
     expect(topicMatcher("South Sudan floods")("South Sudan floods displace thousands")).toBe(true);
+    // …and it must appear as that name, not as its two words apart
+    expect(topicMatcher("South Sudan")("Sudan: Driver killed in aerial attack on aid trucks in South Kordofan")).toBe(false);
+    expect(topicMatcher("Red Sea shipping")("Sea of red flags as shipping stalls")).toBe(false);
+    expect(topicMatcher("DR Congo M23")("M23's grip on Congo's mines is turning minerals into a war economy")).toBe(true);
     expect(topicMatcher("Korea")("North Korea tests missile")).toBe(false);
     expect(topicMatcher("Guinea coup")("Papua New Guinea votes")).toBe(false);
   });

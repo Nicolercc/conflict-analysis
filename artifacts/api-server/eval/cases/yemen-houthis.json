@@ -1,0 +1,282 @@
+{
+  "id": "yemen-houthis",
+  "topic": "Yemen Houthis",
+  "recordedAt": "2026-10-08T02:52:23.476Z",
+  "sources": [
+    {
+      "kind": "news",
+      "provider": "BBC News RSS (Middle East)",
+      "publisher": "BBC News",
+      "title": "Yemen's government announces all-out war to reclaim land from Houthis",
+      "url": "https://bbc.co.uk/news/articles/cx8dzj9vpp01o",
+      "publishedAt": "2026-10-04T16:51:30.000Z",
+      "language": "English",
+      "country": "United Kingdom",
+      "excerpt": "The Yemeni president's announcement comes amid an exchange of strikes between the Houthis and the Saudi-led coalition.",
+      "id": "S1",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Yemen's government announces all-out war to reclaim land from Houthis. The Yemeni president's announcement comes amid an exchange of strikes between the Houthis and the Saudi-led coalition."
+    },
+    {
+      "kind": "news",
+      "provider": "The Hindu RSS",
+      "publisher": "The Hindu",
+      "title": "Yemen’s Houthis claim new attacks on Saudi airports as conflict deepens",
+      "url": "https://thehindu.com/news/international/yemens-houthis-claim-new-attacks-on-saudi-airports-as-conflict-deepens/article71557047.ece",
+      "publishedAt": "2026-10-07T17:04:00.000Z",
+      "language": "English",
+      "country": "India",
+      "excerpt": "In a separate post the Houthis also said they targeted a military supply convoy near the airport in the Yemeni city of Aden, the interim capital for the government",
+      "id": "S2",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Yemen’s Houthis claim new attacks on Saudi airports as conflict deepens. In a separate post the Houthis also said they targeted a military supply convoy near the airport in the Yemeni city of Aden, the interim capital for the government"
+    },
+    {
+      "kind": "news",
+      "provider": "South China Morning Post RSS",
+      "publisher": "South China Morning Post",
+      "title": "Yemen’s Houthis attack Aden airport as fighting intensifies",
+      "url": "https://scmp.com/news/world/middle-east/article/3370080/yemens-houthis-attack-aden-airport-fighting-intensifies",
+      "publishedAt": "2026-10-07T12:20:05.000Z",
+      "language": "English",
+      "country": "Hong Kong",
+      "excerpt": "⁠Yemen’s Houthis attacked Aden’s international airport with ballistic missiles and explosive-laden drones on Wednesday, the country’s transport ministry said, as fighting between the Iran-aligned group and Saudi-backed government forces intensified. Fighting has been focused in recent days on areas around the Bab…",
+      "id": "S3",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Yemen’s Houthis attack Aden airport as fighting intensifies. ⁠Yemen’s Houthis attacked Aden’s international airport with ballistic missiles and explosive-laden drones on Wednesday, the country’s transport ministry said, as fighting between the Iran-aligned group and Saudi-backed government forces intensified. Fighting has been focused in recent days on areas around the Bab…"
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "CBS News",
+      "title": "Iran-backed Houthis deny losing ground in Yemen as oil prices ease despite fierce fighting",
+      "url": "https://cbsnews.com/live-updates/iran-war-trump-us-oil-prices-yemen-red-sea-houthis-bab-el-mandeb",
+      "publishedAt": "2026-10-05T13:57:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Brent Crude hovers around $100 a barrel despite news of increased Mideast oil flows, as Iran's Houthi allies battle over control of Red Sea shipping lanes.",
+      "id": "S4",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Iran-backed Houthis deny losing ground in Yemen as oil prices ease despite fierce fighting. Brent Crude hovers around $100 a barrel despite news of increased Mideast oil flows, as Iran's Houthi allies battle over control of Red Sea shipping lanes."
+    },
+    {
+      "kind": "news",
+      "provider": "BBC News RSS (Middle East)",
+      "publisher": "BBC News",
+      "title": "Inside Yemen's front-line city as Houthis battle for control",
+      "url": "https://bbc.co.uk/news/articles/cw98005ndz7no",
+      "publishedAt": "2026-09-27T21:16:31.000Z",
+      "language": "English",
+      "country": "United Kingdom",
+      "excerpt": "In rare access to Yemen's conflict zone the BBC travels to the front line with pro-government soldiers.",
+      "id": "S5",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Inside Yemen's front-line city as Houthis battle for control. In rare access to Yemen's conflict zone the BBC travels to the front line with pro-government soldiers."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Axios",
+      "title": "Syria considering sending troops to Yemen to fight Houthis",
+      "url": "https://msn.com/en-us/news/other/syria-considering-sending-troops-to-yemen-to-fight-houthis/ar-AA2dMglo",
+      "publishedAt": "2026-10-07T12:37:35.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Saudi Arabia and Syria are discussing sending Syrian troops to Yemen to join the counteroffensive against the Houthi rebels, three U.S. officials told Axios. Syrian President Ahmed al-Sharaa is ...",
+      "id": "S6",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Syria considering sending troops to Yemen to fight Houthis. Saudi Arabia and Syria are discussing sending Syrian troops to Yemen to join the counteroffensive against the Houthi rebels, three U.S. officials told Axios. Syrian President Ahmed al-Sharaa is ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Associated Press News",
+      "title": "Yemen’s government declares a major operation against the Houthis, and other Mideast news",
+      "url": "https://apnews.com/article/israel-yemen-houthis-iran-gaza-hormuz-a37b24d446b3066d3b17441ac5bb0264",
+      "publishedAt": "2026-10-04T01:46:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "An Israeli strike on Sunday morning targeted a civilian vehicle in central Gaza, killing one Palestinian and wounding at least 11 others, according to local health officials.",
+      "id": "S7",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Yemen’s government declares a major operation against the Houthis, and other Mideast news. An Israeli strike on Sunday morning targeted a civilian vehicle in central Gaza, killing one Palestinian and wounding at least 11 others, according to local health officials."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "CNN",
+      "title": "Deadly attacks by Iran-backed Houthis on Saudi airports highlight widening fallout from Yemen conflict",
+      "url": "https://msn.com/en-us/news/other/deadly-attacks-by-iran-backed-houthis-on-saudi-airports-highlight-widening-fallout-from-yemen-conflict/ar-AA2dMGsU",
+      "publishedAt": "2026-10-07T15:11:35.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Saudi aviation authority says both Abha International Airport, near the Yemen border, and King Khalid International Airport in Riyadh have come under attack.",
+      "id": "S8",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Deadly attacks by Iran-backed Houthis on Saudi airports highlight widening fallout from Yemen conflict. Saudi aviation authority says both Abha International Airport, near the Yemen border, and King Khalid International Airport in Riyadh have come under attack."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "NBC News",
+      "title": "Iran-backed Houthis claim new attacks on Saudi Arabia and Yemen’s Aden airport",
+      "url": "https://nbcnews.com/world/middle-east/iran-backed-houthis-claim-new-attacks-saudi-arabia-yemens-aden-airport-rcna602020",
+      "publishedAt": "2026-10-07T02:21:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Saudi Arabia and allied Yemeni forces have launched a major offensive to retake territory that the rebels seized along Yemen’s western Red Sea coast and on the Bab el-Mandeb Strait.",
+      "id": "S9",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Iran-backed Houthis claim new attacks on Saudi Arabia and Yemen’s Aden airport. Saudi Arabia and allied Yemeni forces have launched a major offensive to retake territory that the rebels seized along Yemen’s western Red Sea coast and on the Bab el-Mandeb Strait."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "The Yeshiva World",
+      "title": "YEMEN EXODUS: More Than 200,000 Displaced As War With Houthis Explodes Again",
+      "url": "https://theyeshivaworld.com/news/general/2606870/yemen-exodus-more-than-200000-displaced-as-war-with-houthis-explodes-again.html",
+      "publishedAt": "2026-10-07T15:00:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "More than 200,000 Yemenis have been forced from their homes by the latest round of fighting between the Iran-backed Houthis and forces aligned with Yemen’s internationally recognized government, the ...",
+      "id": "S10",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "YEMEN EXODUS: More Than 200,000 Displaced As War With Houthis Explodes Again. More than 200,000 Yemenis have been forced from their homes by the latest round of fighting between the Iran-backed Houthis and forces aligned with Yemen’s internationally recognized government, the ..."
+    },
+    {
+      "kind": "news",
+      "provider": "Bing News search",
+      "publisher": "Crypto Briefing",
+      "title": "Saudi-led forces claim advances against Houthis near Mokha in Yemen",
+      "url": "https://cryptobriefing.com/saudi-led-forces-claim-advances-against-houthis-near-mokha-in-yemen",
+      "publishedAt": "2026-10-07T14:44:00.000Z",
+      "language": "English",
+      "country": null,
+      "excerpt": "Saudi-led forces report gains against Houthis near Mokha. Houthis entering Aden by October 31, 2026, at 10.5% YES.",
+      "id": "S11",
+      "retrievedAt": "2026-10-08T02:52:23.476Z",
+      "text": "Saudi-led forces claim advances against Houthis near Mokha in Yemen. Saudi-led forces report gains against Houthis near Mokha. Houthis entering Aden by October 31, 2026, at 10.5% YES."
+    },
+    {
+      "kind": "reference",
+      "provider": "Wikipedia",
+      "publisher": "Wikipedia",
+      "title": "Houthis",
+      "url": "https://en.wikipedia.org/wiki/Houthis",
+      "publishedAt": null,
+      "language": "English",
+      "country": null,
+      "excerpt": "The Houthis, officially known as Ansar Allah or Ansarullah, are a Zaydi revivalist and Shia Islamist political and paramilitary organization that emerged from Yemen in the 1990s. It is predominantly made up of Zaydis, whose namesake leadership is drawn largely from the al-Houthi family. The Houthis are backed by Iran…",
+      "text": "Houthis. The Houthis, officially known as Ansar Allah or Ansarullah, are a Zaydi revivalist and Shia Islamist political and paramilitary organization that emerged from Yemen in the 1990s. It is predominantly made up of Zaydis, whose namesake leadership is drawn largely from the al-Houthi family. The Houthis are backed by Iran, and they are widely considered part of the Iranian-led Axis of Resistance.",
+      "id": "S12",
+      "retrievedAt": "2026-10-08T02:52:23.476Z"
+    }
+  ],
+  "retrieval": [
+    {
+      "provider": "Bing News search",
+      "status": "ok",
+      "count": 7
+    },
+    {
+      "provider": "Al Jazeera RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (World)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Africa)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Middle East)",
+      "status": "ok",
+      "count": 2
+    },
+    {
+      "provider": "BBC News RSS (Europe)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "BBC News RSS (Asia)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Guardian RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "France 24 RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "NPR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "The Hindu RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "Times of India RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Dawn RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "South China Morning Post RSS",
+      "status": "ok",
+      "count": 1
+    },
+    {
+      "provider": "Premium Times RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Africanews RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "AllAfrica RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "teleSUR RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "UN News RSS (Peace and security)",
+      "status": "empty",
+      "count": 0
+    },
+    {
+      "provider": "Wikipedia",
+      "status": "ok",
+      "count": 1
+    }
+  ]
+}
