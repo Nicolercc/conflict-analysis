@@ -48,6 +48,41 @@ describe("GET /api/readyz", () => {
     expect(noKey.body.checks.model).toEqual({ ok: false, detail: "ANTHROPIC_API_KEY is not set" });
   });
 
+  it("stops being ready when the provider refuses requests, and recovers on the next success", async () => {
+    const refusal = Object.assign(new Error('400 {"error":{"message":"Your credit balance is too low to access the Anthropic API."}}'), { status: 400 });
+    create.mockImplementation(async () => {
+      throw refusal;
+    });
+    const failed = await request(app).post("/api/intelligence/explore").send({ topic: "Sudan humanitarian access" });
+    expect(failed.status).toBe(502);
+    // a refusal is not retried: the second attempt would be refused too
+    expect(create).toHaveBeenCalledTimes(1);
+
+    const down = await request(app).get("/api/readyz");
+    expect(down.status).toBe(503);
+    expect(down.body.checks.model.ok).toBe(false);
+    expect(down.body.checks.model.detail).toMatch(/refused the last 1 request.*HTTP 400.*credit/s);
+    // the provider's own wording stays in the log
+    expect(JSON.stringify(down.body)).not.toMatch(/balance is too low/);
+
+    create.mockImplementation(async () => modelText(JSON.stringify(modelBrief())));
+    await request(app).post("/api/intelligence/explore").send({ topic: "Sudan humanitarian access" });
+    expect((await request(app).get("/api/readyz")).status).toBe(200);
+  });
+
+  it("stays ready through overloads and timeouts, which pass on their own", async () => {
+    create.mockImplementation(async () => {
+      throw Object.assign(new Error("529 overloaded"), { status: 529 });
+    });
+    await request(app).post("/api/intelligence/explore").send({ topic: "Sudan humanitarian access" });
+    expect((await request(app).get("/api/readyz")).status).toBe(200);
+    create.mockImplementation(async () => {
+      throw new Error("Request timed out.");
+    });
+    await request(app).post("/api/intelligence/explore").send({ topic: "Sudan El Fasher aid" });
+    expect((await request(app).get("/api/readyz")).status).toBe(200);
+  });
+
   it("never reveals a secret or a connection string", async () => {
     const res = await request(app).get("/api/readyz");
     expect(JSON.stringify(res.body)).not.toMatch(/test-key|postgres:\/\/|sk-/);

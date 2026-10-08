@@ -22,13 +22,18 @@ jobs:
           curl --fail --silent --show-error --max-time 100 \
             --retry 2 --retry-delay 10 --retry-all-errors \
             https://conflict-analysis.onrender.com/api/healthz
-      - name: API is ready, and what it saves will last
+      - name: API is ready to write briefs, and what it saves will last
         run: |
-          body=$(curl --fail --silent --show-error --max-time 30 --retry 2 \
+          code=$(curl --silent --show-error --max-time 30 --retry 2 --retry-all-errors \
+            --output ready.json --write-out '%{http_code}' \
             https://conflict-analysis.onrender.com/api/readyz)
-          echo "$body"
-          if echo "$body" | grep -q '"durable":false'; then
+          cat ready.json; echo
+          if grep -q '"durable":false' ready.json; then
             echo "::warning::The API has no database: saved briefs, rate limits and the cost ledger are lost on every restart. Set DATABASE_URL on the host."
+          fi
+          if [ "$code" != "200" ]; then
+            echo "::error::The API is up but not ready (HTTP $code). The response above says which part is failing; if it is the model provider, check the key and the account's credit."
+            exit 1
           fi
       - name: Site serves the app
         run: |

@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { Router, type IRouter, type Request } from "express";
 import type { BriefState } from "../lib/brief-state";
 import { AppError, sendError } from "../lib/errors";
+import { modelProblem } from "../lib/model-health";
 
 const router: IRouter = Router();
 const state = (req: Request) => req.app.locals["briefs"] as BriefState;
@@ -13,10 +14,17 @@ const state = (req: Request) => req.app.locals["briefs"] as BriefState;
  */
 router.get("/readyz", async (req, res) => {
   const { config, pool } = state(req);
+  const refused = modelProblem();
   const checks: Record<string, { ok: boolean; detail: string }> = {
-    model: config.modelKeyPresent
-      ? { ok: true, detail: "API key present" }
-      : { ok: false, detail: "ANTHROPIC_API_KEY is not set" },
+    model: !config.modelKeyPresent
+      ? { ok: false, detail: "ANTHROPIC_API_KEY is not set" }
+      : refused
+        ? {
+            ok: false,
+            // The provider's own message is in the server log; it is not repeated here.
+            detail: `the model provider has refused the last ${refused.refusals} request(s) since ${refused.since}${refused.status ? ` (HTTP ${refused.status})` : ""}: check the API key, the account and its credit. No brief can be written until this is fixed`,
+          }
+        : { ok: true, detail: "API key present" },
   };
   if (!pool) {
     checks["storage"] = {

@@ -1,5 +1,6 @@
 import { vi } from "vitest";
 import { resetGeocoder } from "../brief/geocode";
+import { resetModelHealth } from "../lib/model-health";
 import { FEEDS, resetFeedCache } from "../brief/retrieval/rss";
 
 /**
@@ -193,5 +194,6 @@ export function modelText(text: string) {
 /** Clear cached briefs, in-flight work and rate-limit counters between tests. */
 export function resetBriefState(app: { locals: Record<string, unknown> }) {
   (app.locals["briefs"] as { reset: () => void }).reset();
+  resetModelHealth();
   resetGeocoder();
 }
