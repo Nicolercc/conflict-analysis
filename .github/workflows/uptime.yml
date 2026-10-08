@@ -39,13 +39,17 @@ jobs:
           fi
           if [ "$code" != "200" ]; then
             echo "::error::The API is up but not ready (HTTP $code). The response above says which part is failing; if it is the model provider, check the key and the account's credit."
-            # Fail (which emails the owner) when the problem is new, then only
-            # every six hours while it lasts — not on every ten-minute run.
-            previous=$(gh run list --workflow uptime.yml --status completed --limit 1 --json conclusion --jq '.[0].conclusion' || echo unknown)
-            hour=$((10#$(date -u +%H))); minute=$((10#$(date -u +%M)))
-            if [ "$previous" = "failure" ] && ! { [ $((hour % 6)) -eq 0 ] && [ "$minute" -lt 10 ]; }; then
-              echo "::warning::Still not ready. Already reported; the next reminder is at the next six-hour mark (UTC)."
-              exit 0
+            # A failed run emails the owner. Fail at most once every six hours,
+            # so a long outage is reported and then reminded of, not repeated
+            # on every ten-minute run. (A quiet run in between passes, so the
+            # test is "has a run failed recently", not "did the last run fail".)
+            last=$(gh run list --workflow uptime.yml --status failure --limit 1 --json createdAt --jq '.[0].createdAt // empty' || true)
+            if [ -n "$last" ]; then
+              age=$(( $(date -u +%s) - $(date -u -d "$last" +%s) ))
+              if [ "$age" -lt 21600 ]; then
+                echo "::warning::Still not ready. Reported $((age / 60)) minutes ago; the next alert is six hours after that one."
+                exit 0
+              fi
             fi
             exit 1
           fi
