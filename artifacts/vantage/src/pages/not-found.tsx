@@ -1,21 +1,23 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { useEffect } from "react";
+import { Link } from "wouter";
+import { Notice, Shell } from "@/components/Notice";
 
 export default function NotFound() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
-          </div>
+	useEffect(() => {
+		document.title = "Page not found · Vantage";
+	}, []);
 
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+	return (
+		<Shell status="Page not found.">
+			<Notice eyebrow="Page not found" title="There is nothing at this address">
+				<p className="ci-notice__text">
+					The link may be mistyped, or the page may have moved. You can start a
+					new brief from the search page.
+				</p>
+				<Link href="/" className="ci-notice__primary">
+					Back to search
+				</Link>
+			</Notice>
+		</Shell>
+	);
 }

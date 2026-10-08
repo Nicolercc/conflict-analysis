@@ -145,10 +145,6 @@ export function Home() {
 								a background timeline, perspectives, and geography.
 							</motion.p>
 
-							<motion.div
-								{...fadeUp}
-								transition={{ ...transition, delay: reduceMotion ? 0 : 0.28 }}
-							>
 							<form
 								className="home-search"
 								onSubmit={handleSubmit}
@@ -245,15 +241,9 @@ export function Home() {
 									)}
 								</div>
 							</form>
-							</motion.div>
 						</div>
 
-						<motion.div
-							className="home-chips"
-							aria-label="Example searches"
-							{...fadeUp}
-							transition={{ ...transition, delay: reduceMotion ? 0 : 0.36 }}
-						>
+						<div className="home-chips" aria-label="Example searches">
 							<p
 								style={{
 									flexBasis: "100%",
@@ -278,7 +268,7 @@ export function Home() {
 									{q}
 								</button>
 							))}
-						</motion.div>
+						</div>
 					</div>
 				</section>
 
@@ -289,7 +279,7 @@ export function Home() {
 				>
 					<div className="home-band__inner">
 						<header className="home-band__head">
-							<p className="home-band__label">Why teams open this first</p>
+							<p className="home-band__label">What you get</p>
 							<p
 								style={{
 									fontSize: "clamp(15px, 1.8vw, 17px)",
@@ -325,10 +315,10 @@ export function Home() {
 								>
 									<Clock3 size={22} strokeWidth={2} />
 								</div>
-								<h3 className="home-feature__title">Timelines that hold up</h3>
+								<h3 className="home-feature__title">Background in order</h3>
 								<p className="home-feature__text">
-									Sequence events with dates and context so your narrative matches
-									the record—not the algorithm.
+									A short timeline of earlier events for context, labelled as the
+									model&apos;s background and not as sourced reporting.
 								</p>
 							</article>
 							<article className="home-feature">
@@ -340,8 +330,8 @@ export function Home() {
 								</div>
 								<h3 className="home-feature__title">Geography you can point to</h3>
 								<p className="home-feature__text">
-									Place the story on the map: focal points, related flashpoints, and
-									how they connect.
+									The main location and related events on a map. Places the model
+									cannot locate are left off, never guessed.
 								</p>
 							</article>
 						</div>

@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import {
 	useAnalyzeArticle,
@@ -7,7 +6,7 @@ import {
 	type IntelligenceBrief,
 } from "@workspace/api-client-react";
 import { briefPath, parseBriefRequest } from "@/lib/brief-request";
-import { SiteHeader } from "./LiveTicker";
+import { Notice, Shell } from "./Notice";
 import { AnalysisLoader } from "./AnalysisLoader";
 import { EscalationMeter } from "./EscalationMeter";
 import { PerspectivesPanel } from "./PerspectivesPanel";
@@ -55,44 +54,6 @@ const SUGGESTED_TOPICS = [
 	"Ukraine front-line updates",
 ];
 
-/** Shared frame: header, a live status line for assistive tech, and the main landmark. */
-function Shell({ status, children }: { status: string; children: ReactNode }) {
-	return (
-		<div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
-			<SiteHeader />
-			<div role="status" className="sr-only">
-				{status}
-			</div>
-			<main>{children}</main>
-		</div>
-	);
-}
-
-function Notice({
-	eyebrow,
-	title,
-	children,
-}: {
-	eyebrow: string;
-	title: string;
-	children: ReactNode;
-}) {
-	const headingRef = useRef<HTMLHeadingElement | null>(null);
-	useEffect(() => {
-		headingRef.current?.focus();
-	}, [title]);
-
-	return (
-		<div className="ci-notice">
-			<p className="ci-notice__eyebrow">{eyebrow}</p>
-			<h1 ref={headingRef} tabIndex={-1} className="ci-notice__title">
-				{title}
-			</h1>
-			{children}
-		</div>
-	);
-}
-
 export function ConflictAnalysisPageRoute() {
 	const search = useSearch();
 	const [, navigate] = useLocation();
@@ -127,6 +88,18 @@ export function ConflictAnalysisPageRoute() {
 			: active.error || !briefData
 				? "error"
 				: "loaded";
+
+	const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
+	const copyLink = useCallback(async () => {
+		try {
+			await navigator.clipboard.writeText(window.location.href);
+			setCopyState("copied");
+		} catch {
+			// Clipboard blocked by the browser: say so, the address bar still holds the link.
+			setCopyState("failed");
+		}
+		window.setTimeout(() => setCopyState("idle"), 3000);
+	}, []);
 
 	const titleRef = useRef<HTMLHeadingElement | null>(null);
 	useEffect(() => {
@@ -293,6 +266,27 @@ export function ConflictAnalysisPageRoute() {
 						</span>
 						<span style={{ color: "var(--border-medium)" }}>·</span>
 						<span>{analysis.credit}</span>
+					</div>
+
+					<div className="ci-actions">
+						<Link href="/" className="ci-actions__btn">
+							New search
+						</Link>
+						{/* Pasted text lives only in this tab, so its address is not shareable. */}
+						{request?.kind !== "article" && (
+							<button
+								type="button"
+								className="ci-actions__btn"
+								onClick={copyLink}
+								aria-live="polite"
+							>
+								{copyState === "copied"
+									? "Link copied"
+									: copyState === "failed"
+										? "Copy from the address bar"
+										: "Copy link"}
+							</button>
+						)}
 					</div>
 				</div>
 

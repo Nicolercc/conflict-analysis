@@ -299,54 +299,67 @@
 	border-right: none;
 }
 
-/* On-map chrome: opaque panels + readable type (scoped to interactive map only) */
-.ci-interactive-map .ci-map-chip {
+/* Map key, under the map */
+.ci-map-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 18px;
+	list-style: none;
+	margin: 0;
+	padding: 10px 2px 12px;
 	font-family: "IBM Plex Mono", monospace;
-	font-size: 11px;
-	line-height: 1.35;
-	letter-spacing: 0.06em;
-	color: var(--text-primary);
-	background: var(--bg-surface);
-	padding: 6px 11px;
-	border-radius: 6px;
-	border: 1px solid var(--border-medium);
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--text-secondary);
 }
 
-.ci-interactive-map .ci-map-legend-inline__item {
-	font-family: "IBM Plex Mono", monospace;
-	font-size: 11px;
-	line-height: 1.35;
+.ci-map-legend__item {
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
-	color: var(--text-primary);
-	background: var(--bg-surface);
-	padding: 5px 10px;
-	border-radius: 6px;
-	border: 1px solid var(--border-medium);
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+	gap: 7px;
 }
 
-.ci-map-legend-inline__dot {
+.ci-map-legend__swatch {
 	display: inline-block;
-	width: 7px;
-	height: 7px;
+	width: 9px;
+	height: 9px;
+	flex-shrink: 0;
+}
+
+.ci-map-legend__swatch--dot {
 	border-radius: 50%;
-	flex-shrink: 0;
 }
 
-.ci-map-legend-inline__dot--hub {
-	background: var(--accent-navy, #1a3a52);
-	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
-}
-
-.ci-map-legend-inline__diamond {
-	display: inline-block;
-	width: 7px;
-	height: 7px;
+.ci-map-legend__swatch--diamond {
 	transform: rotate(45deg);
-	flex-shrink: 0;
+}
+
+/* Actions under the brief title */
+.ci-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 12px 0 2px;
+}
+
+.ci-actions__btn {
+	display: inline-flex;
+	align-items: center;
+	min-height: 36px;
+	padding: 0 14px;
+	border-radius: 8px;
+	border: 1px solid var(--border-medium);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.ci-actions__btn:hover {
+	border-color: var(--text-muted);
 }
 
 .ci-map-marker-wrap {
@@ -564,84 +577,9 @@
 	border-top: 1px solid var(--border-light);
 }
 
-/* Empty, error and out-of-scope states */
-.ci-notice {
-	max-width: 560px;
-	margin: 0 auto;
-	padding: 136px 24px 80px;
-	text-align: center;
-}
-
-.ci-notice__eyebrow {
-	font-family: "IBM Plex Mono", monospace;
-	font-size: 12px;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--text-muted);
-	margin: 0 0 16px;
-}
-
-.ci-notice__title {
-	font-family: "Newsreader", Georgia, serif;
-	font-size: 28px;
-	font-weight: 600;
-	line-height: 1.25;
-	color: var(--text-primary);
-	margin: 0 0 12px;
-	outline: none;
-}
-
-.ci-notice__text {
-	font-size: 16px;
-	line-height: 1.7;
-	color: var(--text-secondary);
-	margin: 0 0 28px;
-}
-
-.ci-notice__actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-	justify-content: center;
-	margin-bottom: 24px;
-}
-
-.ci-notice__primary,
-.ci-notice__secondary,
-.ci-notice__chip {
-	display: inline-flex;
-	align-items: center;
-	min-height: 44px;
-	padding: 0 20px;
-	border-radius: 8px;
-	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-	font-size: 15px;
-	font-weight: 600;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-.ci-notice__primary {
-	background: var(--accent-navy);
-	color: #fff;
-	border: 1px solid var(--accent-navy);
-}
-
-.ci-notice__secondary,
-.ci-notice__chip {
-	background: transparent;
-	color: var(--text-primary);
-	border: 1px solid var(--border-medium);
-}
-
-.ci-notice__chip {
-	font-weight: 500;
-	font-size: 14px;
-}
-
-.ci-notice a:focus-visible,
-.ci-notice button:focus-visible,
-.ci-columns a:focus-visible {
+.ci-columns a:focus-visible,
+.ci-actions a:focus-visible,
+.ci-actions button:focus-visible {
 	outline: 2px solid var(--border-focus);
 	outline-offset: 3px;
 }

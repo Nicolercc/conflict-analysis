@@ -186,7 +186,7 @@ body {
 
 .site-header__brand-tag {
 	font-family: "IBM Plex Mono", monospace;
-	font-size: 0.5625rem;
+	font-size: 0.6875rem;
 	font-weight: 500;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
@@ -210,7 +210,7 @@ body {
 
 .site-header__pill {
 	font-family: "IBM Plex Mono", monospace;
-	font-size: 0.5625rem;
+	font-size: 0.6875rem;
 	font-weight: 500;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;

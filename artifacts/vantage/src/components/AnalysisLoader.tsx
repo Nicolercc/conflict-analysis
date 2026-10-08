@@ -5,7 +5,7 @@ import "./AnalysisLoader.css";
 const STEPS = [
 	"Retrieve recent coverage and background",
 	"Generate the brief",
-	"Check it against the response contract, locations and dates",
+	"Check every citation against the sources it names",
 ];
 
 const READING_NOTES = [

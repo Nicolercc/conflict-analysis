@@ -14,8 +14,6 @@ export function CasualtyPanel({ data, active }: { data: CasualtyData; active: bo
         transition: "opacity 0.5s ease, transform 0.5s ease",
       }}
     >
-      <span className="section-label" style={{ color: "var(--risk-high)" }}>Affected Population</span>
-
       <p style={{ fontFamily: "'Newsreader', Georgia, serif", fontSize: "15px", fontWeight: 400, color: "var(--text-primary)", lineHeight: "1.6", marginBottom: "12px" }}>
         {data.description}
       </p>

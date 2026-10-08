@@ -410,13 +410,16 @@
 		border-radius: 14px;
 	}
 
+	/* Stacked: the field and the button each get a full row. */
 	.home-search__icon {
-		padding: 0.75rem 0 0 1rem;
-		justify-content: flex-start;
+		display: none;
 	}
 
 	.home-search__input {
-		height: 48px;
+		flex: none;
+		width: 100%;
+		box-sizing: border-box;
+		height: 52px;
 		padding: 0 1rem;
 	}
 

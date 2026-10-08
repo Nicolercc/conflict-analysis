@@ -306,112 +306,75 @@ export function InteractiveConflictMap({
 		(hasHub ? 0 : 1) + (data.relatedEvents.length - locatedEvents.length);
 	const presentKinds = [...new Set(locatedEvents.map((e) => markerKind(e)))];
 
+	const legend: { key: string; label: string; swatch?: { shape: "dot" | "diamond"; color: string } }[] = [];
+	if (hasHub) {
+		legend.push({ key: "hub", label: "Primary focus", swatch: { shape: "dot", color: "var(--accent-navy, #1a3a52)" } });
+	}
+	if (presentKinds.includes("strike")) {
+		legend.push({ key: "strike", label: "Strike", swatch: { shape: "diamond", color: "#C2536A" } });
+	}
+	if (presentKinds.includes("affected")) {
+		legend.push({ key: "affected", label: "Affected", swatch: { shape: "dot", color: "#E07B39" } });
+	}
+	if (presentKinds.includes("talks")) {
+		legend.push({ key: "talks", label: "Diplomacy", swatch: { shape: "dot", color: "#4A9B8B" } });
+	}
+	if (unplotted > 0) {
+		legend.push({
+			key: "unplotted",
+			label: `${unplotted} ${unplotted === 1 ? "place" : "places"} not shown: location unknown`,
+		});
+	}
+
 	return (
-		<div
-			className="ci-interactive-map"
-			style={{
-				position: "relative",
-				width: "100%",
-				aspectRatio: `${W} / ${H}`,
-				minHeight: 260,
-				maxHeight: 420,
-			}}
-		>
+		<div className="ci-map">
 			<div
-				className="ci-map-overlay ci-map-overlay--interactive"
+				className="ci-interactive-map"
 				style={{
-					position: "absolute",
-					top: 10,
-					left: 12,
-					right: 12,
-					display: "flex",
-					justifyContent: "space-between",
-					alignItems: "flex-start",
-					zIndex: 500,
-					pointerEvents: "none",
-					gap: 8,
+					position: "relative",
+					width: "100%",
+					aspectRatio: `${W} / ${H}`,
+					minHeight: 300,
+					maxHeight: 420,
 				}}
 			>
-				<span className="ci-map-chip">Conflict map · geographic context</span>
+				<p className="sr-only">
+					Map of the primary briefing location and related events. Every mapped
+					event is also listed in the background timeline below.
+				</p>
+
 				<div
-					className="ci-map-legend-inline"
+					ref={containerRef}
+					className="ci-interactive-map__leaflet leaflet-container"
 					style={{
-						display: "flex",
-						flexWrap: "wrap",
-						justifyContent: "flex-end",
-						gap: "8px 14px",
-						maxWidth: "min(100%, 420px)",
+						height: "100%",
+						width: "100%",
+						borderRadius: 0,
+						zIndex: 1,
 					}}
-				>
-					{hasHub ? (
-						<span className="ci-map-legend-inline__item">
-							<span className="ci-map-legend-inline__dot ci-map-legend-inline__dot--hub" />
-							Primary focus
-						</span>
-					) : null}
-					{unplotted > 0 ? (
-						<span className="ci-map-legend-inline__item">
-							{unplotted} {unplotted === 1 ? "place" : "places"} not shown:
-							location unknown
-						</span>
-					) : null}
-					{presentKinds.includes("strike") ? (
-						<span className="ci-map-legend-inline__item">
-							<span
-								className="ci-map-legend-inline__diamond"
-								style={{ background: "#C2536A" }}
-							/>
-							Strike
-						</span>
-					) : null}
-					{presentKinds.includes("affected") ? (
-						<span className="ci-map-legend-inline__item">
-							<span
-								className="ci-map-legend-inline__dot"
-								style={{ background: "#E07B39" }}
-							/>
-							Affected
-						</span>
-					) : null}
-					{presentKinds.includes("talks") ? (
-						<span className="ci-map-legend-inline__item">
-							<span
-								className="ci-map-legend-inline__dot"
-								style={{ background: "#4A9B8B" }}
-							/>
-							Diplomacy
-						</span>
-					) : null}
-				</div>
+					role="application"
+					aria-label="Interactive conflict map"
+					tabIndex={0}
+				/>
 			</div>
 
-			<p
-				className="ci-map-a11y-hint"
-				style={{
-					position: "absolute",
-					width: 1,
-					height: 1,
-					overflow: "hidden",
-					clip: "rect(0 0 0 0)",
-				}}
-			>
-				Map of the primary briefing location and related events. Every mapped
-				event is also listed in the background timeline below.
-			</p>
-
-			<div
-				ref={containerRef}
-				className="ci-interactive-map__leaflet leaflet-container"
-				style={{
-					height: "100%",
-					width: "100%",
-					borderRadius: 0,
-					zIndex: 1,
-				}}
-				role="application"
-				aria-label="Interactive conflict map"
-				tabIndex={0}
-			/>
+			{/* The key sits under the map so it never covers it on a narrow screen. */}
+			{legend.length > 0 && (
+				<ul className="ci-map-legend" aria-label="Map key">
+					{legend.map((item) => (
+						<li key={item.key} className="ci-map-legend__item">
+							{item.swatch ? (
+								<span
+									aria-hidden
+									className={`ci-map-legend__swatch ci-map-legend__swatch--${item.swatch.shape}`}
+									style={{ background: item.swatch.color }}
+								/>
+							) : null}
+							{item.label}
+						</li>
+					))}
+				</ul>
+			)}
 		</div>
 	);
 }

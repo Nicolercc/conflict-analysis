@@ -80,7 +80,7 @@ export function validateBriefInput(
 	}
 	if (mode === "url") {
 		if (!looksLikeUrl(value))
-			return "Enter a full link starting with http:// or https://.";
+			return "Enter a full public link, such as https://example.com/article.";
 		if (value.length > 2048) return "That link is too long.";
 		return null;
 	}
