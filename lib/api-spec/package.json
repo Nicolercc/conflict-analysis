@@ -6,6 +6,6 @@
     "codegen": "orval --config ./orval.config.ts && node ./restore-index.mjs"
   },
   "devDependencies": {
-    "orval": "^8.5.2"
+    "orval": "^8.22.0"
   }
 }
