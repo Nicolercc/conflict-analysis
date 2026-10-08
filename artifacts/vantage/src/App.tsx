@@ -9,6 +9,11 @@ const ConflictAnalysisPageRoute = lazy(() =>
     default: m.ConflictAnalysisPageRoute,
   })),
 );
+const StoredBriefRoute = lazy(() =>
+  import("@/components/ConflictAnalysisPage").then((m) => ({
+    default: m.StoredBriefRoute,
+  })),
+);
 
 const queryClient = new QueryClient();
 
@@ -17,6 +22,7 @@ function Router() {
     <Suspense fallback={<p role="status" style={{ padding: "96px 24px", textAlign: "center" }}>Loading…</p>}>
       <Switch>
         <Route path="/analysis" component={ConflictAnalysisPageRoute} />
+        <Route path="/brief/:id" component={StoredBriefRoute} />
         <Route path="/" component={Home} />
         <Route component={NotFound} />
       </Switch>

@@ -1,5 +1,6 @@
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { ExploreConflictResponse } from "@workspace/api-zod";
+import { newBriefId } from "../lib/brief-store";
 import { AppError } from "../lib/errors";
 import { logger } from "../lib/logger";
 import { locateBrief } from "./geocode";
@@ -77,6 +78,7 @@ async function generateOnce(coverage: Coverage, userMessage: string) {
   // strips anything outside the contract and rejects missing or mistyped fields.
   const candidate = {
     ...parsed,
+    id: newBriefId(),
     generatedAt: new Date().toISOString(),
     inScope: parsed["inScope"] !== false,
     location: {
@@ -117,6 +119,12 @@ async function generateOnce(coverage: Coverage, userMessage: string) {
   };
 }
 
+/** What a brief is doing right now, for readers watching it being built. */
+export type BriefProgress =
+  | { type: "stage"; stage: "retrieving" | "writing" | "locating" }
+  | { type: "sources"; sources: ReturnType<typeof toPublicSource>[]; retrieval: Coverage["retrieval"] };
+export type OnProgress = (event: BriefProgress) => void;
+
 export type BriefInput = {
   /** Search terms for retrieval. */
   topic: string;
@@ -124,7 +132,7 @@ export type BriefInput = {
   article?: { text: string; url: string | null };
 };
 
-export async function buildBrief(input: BriefInput): Promise<object> {
+export async function buildBrief(input: BriefInput, onProgress: OnProgress = () => {}) {
   const supplied: Candidate | undefined = input.article && {
     kind: "article",
     provider: "Reader",
@@ -139,8 +147,10 @@ export async function buildBrief(input: BriefInput): Promise<object> {
     text: input.article.text,
   };
 
+  onProgress({ type: "stage", stage: "retrieving" });
   const coverage = await searchCoverage(input.topic, supplied);
-  const { brief } = await generateFromCoverage(coverage, { topic: input.topic, hasArticle: Boolean(supplied) });
+  onProgress({ type: "sources", sources: coverage.sources.map(toPublicSource), retrieval: coverage.retrieval });
+  const { brief } = await generateFromCoverage(coverage, { topic: input.topic, hasArticle: Boolean(supplied) }, onProgress);
   return brief;
 }
 
@@ -148,14 +158,20 @@ export async function buildBrief(input: BriefInput): Promise<object> {
  * Brief a fixed set of sources. Retrieval is the caller's business, so the
  * evaluation can replay stored sources through exactly the production path.
  */
-export async function generateFromCoverage(coverage: Coverage, request: { topic: string; hasArticle: boolean }) {
+export async function generateFromCoverage(
+  coverage: Coverage,
+  request: { topic: string; hasArticle: boolean },
+  onProgress: OnProgress = () => {},
+) {
   const userMessage = buildUserMessage(coverage.sources, request);
 
   let lastError: unknown;
   for (let attempt = 1; attempt <= MAX_GENERATION_ATTEMPTS; attempt++) {
     const attemptStarted = Date.now();
     try {
+      onProgress({ type: "stage", stage: "writing" });
       const { brief, stats } = await generateOnce(coverage, userMessage);
+      onProgress({ type: "stage", stage: "locating" });
       logger.info({ sources: coverage.sources.length, attempt, ...stats.usage, claimsKept: stats.claimsKept }, "brief generated");
       // The model's coordinates are a guess; the map shows only looked-up places.
       return { brief: await locateBrief(brief), stats: { ...stats, attempts: attempt } satisfies GenerationStats };

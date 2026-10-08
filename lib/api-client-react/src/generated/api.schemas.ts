@@ -198,6 +198,8 @@ export const IntelligenceBriefEscalationRisk = {
 } as const;
 
 export interface IntelligenceBrief {
+  /** Unguessable identifier assigned by the server. GET /briefs/{id} returns this same brief for as long as it is stored. */
+  id: string;
   /** ISO 8601 time the server generated this brief. Set once; unchanged when served from cache. */
   generatedAt: string;
   /** False when the input is not a conflict, crisis or geopolitical tension. */
@@ -221,8 +223,26 @@ export interface IntelligenceBrief {
   retrieval: RetrievalStatus[];
 }
 
+/**
+ * Exactly one of topic, url or article.
+ */
+export interface StreamBriefBody {
+  /**
+     * @minLength 3
+     * @maxLength 240
+     */
+  topic?: string;
+  /** @maxLength 2048 */
+  url?: string;
+  /**
+     * @minLength 50
+     * @maxLength 20000
+     */
+  article?: string;
+}
+
 export interface ErrorResponse {
-  /** Stable machine-readable code, e.g. INVALID_INPUT, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL. */
+  /** Stable machine-readable code, e.g. INVALID_INPUT, NOT_FOUND, RATE_LIMITED, FETCH_BLOCKED, FETCH_FAILED, PROVIDER_UNAVAILABLE, MODEL_OUTPUT_INVALID, OVERLOADED, INTERNAL. */
   error: string;
   /** Safe to show to the person using the site. */
   message?: string;

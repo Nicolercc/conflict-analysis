@@ -148,8 +148,11 @@ Nothing is hidden behind hover. Pages have titles, a status region, ordered head
 # API
 
 ```http
+POST /api/intelligence/stream      { "topic": "…" } | { "url": "https://…" } | { "article": "…" }
+                                   → text/event-stream: stage, sources, then brief (or error)
 POST /api/intelligence/explore     { "topic": "Sudan civil war" }
 POST /api/intelligence/analyze     { "article": "Article text…" }  or  { "url": "https://…" }
+GET  /api/briefs/{id}              a saved brief, exactly as first generated
 GET  /api/healthz
 ```
 
@@ -278,13 +281,17 @@ Publisher feeds hold only recent items, so a quieter conflict relies on the news
 
 The deterministic checks stop invented citations and figures, and catch 6 of the 10 unsupported claims in the labelled set. They cannot tell when a claim's words match its source but its meaning does not. In the recorded evaluation a second model judges about half of kept claims fully supported and most of the rest as adding a detail the cited text lacks; the expected-fact lists it uses still need review by a person.
 
-### In-memory state
+### Rate limits live in memory
 
-The cache, rate limits and daily budget live in the API process and reset on restart. Persistent briefs with stable, shareable links need a database.
+Briefs are saved (in Postgres when `DATABASE_URL` is set) and each has a permanent `/brief/<id>` link, so a restart no longer loses them or regenerates them. The rate limits and the daily budget still live in the API process: they reset on restart and would not be shared between two instances.
 
-### No streaming yet
+### Progress is streamed; the text is not
 
-The brief arrives in one response. Streaming validated sections as they complete would shorten the wait.
+While a brief is built the reader sees each step and the sources that were found. The brief itself still arrives whole, because its claims are checked against the sources before anything is shown; streaming checked sections one at a time is the next step.
+
+### Saved briefs are kept indefinitely
+
+There is no retention period or deletion route yet. A saved brief never contains the reader's pasted text, only the brief written from it.
 
 ---
 

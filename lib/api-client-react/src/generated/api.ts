@@ -24,7 +24,8 @@ import type {
   ErrorResponse,
   ExploreConflictBody,
   HealthStatus,
-  IntelligenceBrief
+  IntelligenceBrief,
+  StreamBriefBody
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -200,6 +201,166 @@ export const useAnalyzeArticle = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getAnalyzeArticleMutationOptions(options));
+    }
+
+export const getGetBriefUrl = (id: string,) => {
+
+
+
+
+  return `/api/briefs/${id}`
+}
+
+/**
+ * Returns the brief exactly as it was first generated. Nothing is regenerated and no model call is made.
+ * @summary Read a stored brief by its id
+ */
+export const getBrief = async (id: string, options?: RequestInit): Promise<IntelligenceBrief> => {
+
+  return customFetch<IntelligenceBrief>(getGetBriefUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetBriefQueryKey = (id: string,) => {
+    return [
+    `/api/briefs/${id}`
+    ] as const;
+    }
+
+
+export const getGetBriefQueryOptions = <TData = Awaited<ReturnType<typeof getBrief>>, TError = ErrorType<ErrorResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBrief>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBriefQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBrief>>> = ({ signal }) => getBrief(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBrief>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBriefQueryResult = NonNullable<Awaited<ReturnType<typeof getBrief>>>
+export type GetBriefQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Read a stored brief by its id
+ */
+
+export function useGetBrief<TData = Awaited<ReturnType<typeof getBrief>>, TError = ErrorType<ErrorResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBrief>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetBriefQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getStreamBriefUrl = () => {
+
+
+
+
+  return `/api/intelligence/stream`
+}
+
+/**
+ * Takes a topic, an article URL or article text and answers with a
+ * `text/event-stream`. Events, in order:
+ *
+ * - `stage` — `{ "stage": "retrieving" | "writing" | "locating" }`
+ * - `sources` — `{ "sources": Source[], "retrieval": RetrievalStatus[] }`, sent once retrieval finishes
+ * - `brief` — the finished IntelligenceBrief (the last event on success)
+ * - `error` — an ErrorResponse (the last event on failure after the stream has started)
+ *
+ * Invalid input, rate limiting and unreadable article links are refused
+ * before the stream starts, with the usual JSON ErrorResponse and status.
+ * A brief already cached is sent as a single `brief` event.
+ * @summary Generate a brief and report progress as it is built
+ */
+export const streamBrief = async (streamBriefBody: StreamBriefBody, options?: RequestInit): Promise<string> => {
+
+  return customFetch<string>(getStreamBriefUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(streamBriefBody)
+  }
+);}
+
+
+
+
+
+export const getStreamBriefMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof streamBrief>>, TError,{data: BodyType<StreamBriefBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof streamBrief>>, TError,{data: BodyType<StreamBriefBody>}, TContext> => {
+
+const mutationKey = ['streamBrief'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof streamBrief>>, {data: BodyType<StreamBriefBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  streamBrief(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StreamBriefMutationResult = NonNullable<Awaited<ReturnType<typeof streamBrief>>>
+    export type StreamBriefMutationBody = BodyType<StreamBriefBody>
+    export type StreamBriefMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Generate a brief and report progress as it is built
+ */
+export const useStreamBrief = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof streamBrief>>, TError,{data: BodyType<StreamBriefBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof streamBrief>>,
+        TError,
+        {data: BodyType<StreamBriefBody>},
+        TContext
+      > => {
+      return useMutation(getStreamBriefMutationOptions(options));
     }
 
 export const getExploreConflictUrl = () => {

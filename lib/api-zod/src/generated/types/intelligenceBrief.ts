@@ -16,6 +16,8 @@ import type { RetrievalStatus } from './retrievalStatus';
 import type { Source } from './source';
 
 export interface IntelligenceBrief {
+  /** Unguessable identifier assigned by the server. GET /briefs/{id} returns this same brief for as long as it is stored. */
+  id: string;
   /** ISO 8601 time the server generated this brief. Set once; unchanged when served from cache. */
   generatedAt: string;
   /** False when the input is not a conflict, crisis or geopolitical tension. */

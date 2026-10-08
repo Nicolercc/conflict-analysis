@@ -24,3 +24,4 @@ export * from './retrievalStatus';
 export * from './retrievalStatusStatus';
 export * from './source';
 export * from './sourceKind';
+export * from './streamBriefBody';

@@ -760,3 +760,9 @@ span.ci-source__title {
 	color: var(--text-secondary);
 	margin: 4px 0 0;
 }
+
+.ci-opening {
+	padding: 136px 24px;
+	text-align: center;
+	color: var(--text-secondary);
+}

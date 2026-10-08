@@ -15,6 +15,9 @@ services:
         value: https://api.anthropic.com
       - key: AI_INTEGRATIONS_ANTHROPIC_API_KEY
         sync: false
+      # Postgres connection string; set it in the dashboard so brief links survive restarts.
+      - key: DATABASE_URL
+        sync: false
       - key: CORS_ORIGINS
         value: https://conflict-analysis-vantage.vercel.app,http://localhost:5173
       - key: RATE_LIMIT_MAX

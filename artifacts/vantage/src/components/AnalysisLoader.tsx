@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import type { RetrievalStatus, Source } from "@workspace/api-client-react";
 import "./AnalysisLoader.css";
 
-/** What the server does for every brief, in order. Shown as a list, not as fake progress. */
-const STEPS = [
-	"Retrieve recent coverage and background",
-	"Generate the brief",
-	"Check every citation against the sources it names",
+type Stage = "retrieving" | "writing" | "locating";
+
+/** What the server does for every brief, in order. The current one is reported by the server. */
+const STEPS: { stage: Stage; label: string }[] = [
+	{ stage: "retrieving", label: "Retrieve recent coverage and background" },
+	{ stage: "writing", label: "Write the brief and check every citation against its source" },
+	{ stage: "locating", label: "Look up each place on the map" },
 ];
 
 const READING_NOTES = [
@@ -22,7 +25,20 @@ function formatElapsed(totalSec: number) {
 	return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function AnalysisLoader() {
+export function AnalysisLoader({
+	stage,
+	sources,
+	retrieval,
+}: {
+	/** The step the server says it is on; null until it reports one. */
+	stage: Stage | null;
+	/** The sources retrieval found; null until retrieval finishes. */
+	sources: Source[] | null;
+	retrieval: RetrievalStatus[];
+}) {
+	const stageIndex = STEPS.findIndex((s) => s.stage === stage);
+	const outlets = sources ? new Set(sources.map((s) => s.publisher)).size : 0;
+	const unreachable = retrieval.filter((r) => r.status === "failed").length;
 	const [elapsedSec, setElapsedSec] = useState(0);
 	const [noteIdx, setNoteIdx] = useState(0);
 
@@ -77,13 +93,56 @@ export function AnalysisLoader() {
 					<div>
 						<p className="analysis-loader__steps-head">What happens now</p>
 						<ol className="analysis-loader__steps">
-							{STEPS.map((label) => (
-								<li key={label} className="analysis-loader__step">
-									<span>{label}</span>
-								</li>
-							))}
+							{STEPS.map(({ label }, i) => {
+								const state = i < stageIndex ? "done" : i === stageIndex ? "current" : "todo";
+								return (
+									<li
+										key={label}
+										className={`analysis-loader__step analysis-loader__step--${state}`}
+										aria-current={state === "current" ? "step" : undefined}
+									>
+										<span>
+											{label}
+											{state === "done" ? <span className="sr-only"> (done)</span> : null}
+											{state === "current" ? <span className="sr-only"> (in progress)</span> : null}
+										</span>
+									</li>
+								);
+							})}
 						</ol>
 					</div>
+
+					{sources !== null && (
+						<div className="analysis-loader__found">
+							<p className="analysis-loader__steps-head">
+								{sources.length === 0
+									? "No recent coverage found"
+									: `Reading ${sources.length} ${sources.length === 1 ? "source" : "sources"} from ${outlets} ${outlets === 1 ? "outlet" : "outlets"}`}
+							</p>
+							{sources.length === 0 ? (
+								<p className="analysis-loader__found-note">
+									The brief will rest on the model&apos;s background knowledge and
+									will say so.
+								</p>
+							) : (
+								<ul className="analysis-loader__found-list">
+									{sources.slice(0, 8).map((s) => (
+										<li key={s.id}>
+											<strong>{s.publisher}</strong> {s.title}
+										</li>
+									))}
+								</ul>
+							)}
+							{sources.length > 8 ? (
+								<p className="analysis-loader__found-note">and {sources.length - 8} more</p>
+							) : null}
+							{unreachable > 0 ? (
+								<p className="analysis-loader__found-note">
+									{unreachable} {unreachable === 1 ? "service" : "services"} could not be reached.
+								</p>
+							) : null}
+						</div>
+					)}
 
 					<div className="analysis-loader__tips">
 						<p className="analysis-loader__tips-label">While you wait</p>
