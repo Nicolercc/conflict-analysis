@@ -14,6 +14,7 @@ import type { Perspective } from './perspective';
 import type { RelatedEvent } from './relatedEvent';
 import type { RetrievalStatus } from './retrievalStatus';
 import type { Source } from './source';
+import type { Verification } from './verification';
 
 export interface IntelligenceBrief {
   /** Unguessable identifier assigned by the server. GET /briefs/{id} returns this same brief for as long as it is stored. */
@@ -38,5 +39,6 @@ export interface IntelligenceBrief {
   /** Statements supported by the cited sources. Empty when nothing retrieved supports a claim. */
   keyFacts: Claim[];
   coverage: CoverageComparison;
+  verification: Verification;
   retrieval: RetrievalStatus[];
 }

@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import type { RetrievalStatus, Source } from "@workspace/api-client-react";
 import "./AnalysisLoader.css";
 
-type Stage = "retrieving" | "writing" | "locating";
+type Stage = "retrieving" | "writing" | "checking" | "locating";
 
 /** What the server does for every brief, in order. The current one is reported by the server. */
 const STEPS: { stage: Stage; label: string }[] = [
 	{ stage: "retrieving", label: "Retrieve recent coverage and background" },
-	{ stage: "writing", label: "Write the brief and check every citation against its source" },
+	{ stage: "writing", label: "Write the brief, quoting the source for every claim" },
+	{ stage: "checking", label: "Match each quote to its source, then have a second model check each claim" },
 	{ stage: "locating", label: "Look up each place on the map" },
 ];
 

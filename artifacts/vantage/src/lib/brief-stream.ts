@@ -6,7 +6,7 @@ import type {
 } from "@workspace/api-client-react";
 import type { BriefRequest } from "./brief-request";
 
-export type BriefStage = "retrieving" | "writing" | "locating";
+export type BriefStage = "retrieving" | "writing" | "checking" | "locating";
 
 export type BriefStreamEvent =
 	| { type: "stage"; stage: BriefStage }

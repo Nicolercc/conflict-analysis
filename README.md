@@ -100,15 +100,16 @@ const [search, wiki, ...feeds] = await Promise.all([
 ]);
 ```
 
-## 2. Claims are checked before they are shown
+## 2. Claims are quoted, checked and verified before they are shown
 
-The model returns key facts and a coverage comparison, each citing source ids. The server drops a claim when:
+For every key fact and comparison the model must copy the words in each source that the claim rests on. Then two checks run:
 
-* a cited id was never retrieved
-* a figure in the claim does not appear in the cited text
-* the claim shares no vocabulary with an English-language source it cites
+1. **Quote checks, no model.** A claim is dropped when a quote is not found in the source it names, when a figure in the claim is not inside its quotes, or when the claim shares no vocabulary with them. A comparison between outlets needs a quote from two sources.
+2. **Verifier.** A second model reads each surviving claim next to its quotes. A claim that says more than its quotes is cut back to what they do say — and the new wording goes through the quote checks again — or removed.
 
-These checks are deterministic and cheap. They catch invented citations and invented numbers; they do not prove a claim is a fair summary. That needs a reviewed evaluation set, which is the next step below.
+The reader sees the quote by pressing a citation number, and the brief states how many claims were checked, corrected and removed. If the verifier cannot be reached the brief is still served, with its claims marked unverified.
+
+On a hand-labelled set, the quote checks stop 8 of 11 unsupported claims and the verifier deals with the other 3 without removing a supported one.
 
 ## 3. Unknown stays unknown
 
@@ -179,7 +180,7 @@ Route tests run the real Express app against a fake model and fake retrieval, so
 
 ## Evaluation
 
-`artifacts/api-server/eval` measures brief quality in two ways: a hand-labelled claim set that runs in CI, and 16 recorded topics replayed through the real pipeline and graded by a second model. The latest results are in [`eval/REPORT.md`](artifacts/api-server/eval/REPORT.md); how to run it is in [`eval/README.md`](artifacts/api-server/eval/README.md).
+`artifacts/api-server/eval` measures brief quality in two ways: a hand-labelled claim set that runs in CI, and 16 recorded topics replayed through the real pipeline and graded by a stronger model. A full run must stay within written limits (`eval/thresholds.ts`); the `Evaluation` workflow enforces them weekly and on pull requests that touch the brief pipeline. The latest results are in [`eval/REPORT.md`](artifacts/api-server/eval/REPORT.md); how to run it is in [`eval/README.md`](artifacts/api-server/eval/README.md).
 
 ---
 
@@ -278,9 +279,9 @@ RSS feeds and the news search supply a headline and a short summary. Claims are 
 
 Publisher feeds hold only recent items, so a quieter conflict relies on the news search for coverage. The search uses a public results feed with no service agreement behind it, and it does not report an outlet's country; a licensed news API would be the dependable replacement. The brief says how many providers were checked and how many had something.
 
-### Claim checks are necessary, not sufficient
+### Verified is a strong word for a model's opinion
 
-The deterministic checks stop invented citations and figures, and catch 6 of the 10 unsupported claims in the labelled set. They cannot tell when a claim's words match its source but its meaning does not. In the recorded evaluation a second model judges 82–86% of kept claims fully supported (54–66% before the prompt was tightened against it) and 1–2% unsupported; most of the rest add a detail the cited text lacks. The expected-fact lists it uses still need review by a person.
+"Verified" means a second model found the claim fully supported by words that are provably in the source. In the recorded evaluation a stronger third model still judges 11–13% of kept claims as adding a small detail (and none as unsupported). The expected-fact lists the evaluation uses need approving by a person; `eval:review` records that.
 
 ### Rate limits live in memory
 

@@ -5,12 +5,20 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ClaimSupport } from './claimSupport';
+import type { Evidence } from './evidence';
 
 /**
- * A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.
+ * A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.
  */
 export interface Claim {
   text: string;
-  /** @minItems 1 */
+  /**
+     * The sources quoted in evidence, in the same order.
+     * @minItems 1
+     */
   sourceIds: string[];
+  evidence: Evidence[];
+  /** verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief. */
+  support: ClaimSupport;
 }

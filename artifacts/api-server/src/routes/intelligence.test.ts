@@ -82,8 +82,37 @@ describe("POST /api/intelligence/explore — trust contract", () => {
       ),
     );
     const res = await explore("Sudan humanitarian access");
-    expect(res.body).not.toHaveProperty("verification");
-    expect(JSON.stringify(res.body)).not.toMatch(/made-up/);
+    // "verification" is the server's own record of its checks, never the model's text.
+    expect(res.body.verification).toEqual({ status: "skipped", checked: 0, removed: 0, corrected: 0 });
+    expect(JSON.stringify(res.body)).not.toMatch(/made-up|consensus|divergence/);
+  });
+
+  it("returns an out-of-scope answer even when the model leaves the brief's fields out or writes N/A", async () => {
+    create.mockImplementation(async () =>
+      modelText(
+        JSON.stringify({
+          inScope: false,
+          headline: "Banana bread is a quick bread",
+          location: { city: "", country: "", region: "" },
+          summary: "Not a conflict.",
+          escalationRisk: "N/A",
+          relatedEvents: "none",
+        }),
+      ),
+    );
+    const res = await explore("banana bread recipe");
+    expect(res.status).toBe(200);
+    expect(res.body.inScope).toBe(false);
+    expect(res.body.escalationRisk).toBe("Low");
+    expect(res.body.relatedEvents).toEqual([]);
+    expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  it("still rejects an incomplete brief for a topic that is in scope", async () => {
+    create.mockImplementation(async () => modelText(JSON.stringify({ ...modelBrief(), escalationRisk: "N/A" })));
+    const res = await explore("Sudan humanitarian access");
+    expect(res.status).toBe(502);
+    expect(res.body.error).toBe("MODEL_OUTPUT_INVALID");
   });
 
   it("drops a model-invented credibility score", async () => {

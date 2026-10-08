@@ -15,7 +15,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "eval:record": "tsx eval/record.ts",
-    "eval": "tsx eval/run.ts"
+    "eval": "tsx eval/run.ts",
+    "eval:review": "tsx eval/review.ts"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",

@@ -50,7 +50,7 @@ const KIND_LABEL: Record<Kind, string> = {
 };
 
 const KIND_HELP: Record<Kind, string> = {
-	sourced: "Each statement cites the numbered sources that say it.",
+	sourced: "Each statement quotes the numbered sources that say it; the quotes are checked against the sources.",
 	background: "Written by the model from general knowledge; not individually sourced.",
 	retrieved: "Fetched from news feeds, a news search and Wikipedia.",
 };
@@ -113,6 +113,20 @@ function goToSection(id: string) {
 	const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 	section.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
 	section.focus({ preventScroll: true });
+}
+
+/** What stood between the model's draft and the claims on this page, in plain words. */
+function checkNote(brief: IntelligenceBrief): string {
+	const base =
+		"Press a number to see the words each claim rests on. Every quote was matched against its source.";
+	const v = brief.verification;
+	if (v.status !== "verified") return `${base} A second-model check did not run for this brief.`;
+	if (v.checked === 0) return base;
+	const outcome = [
+		v.corrected > 0 ? `${v.corrected} ${v.corrected === 1 ? "was" : "were"} cut back to what the quote says` : "",
+		v.removed > 0 ? `${v.removed} ${v.removed === 1 ? "was" : "were"} removed` : "",
+	].filter(Boolean);
+	return `${base} A second model then read ${v.checked} ${v.checked === 1 ? "claim" : "claims"} against ${v.checked === 1 ? "its quote" : "their quotes"}; ${outcome.length ? outcome.join(" and ") : "all passed"}.`;
 }
 
 const RISK_CLASS = { Low: "low", Medium: "medium", High: "high" } as const;
@@ -243,6 +257,7 @@ export function BriefView({ brief: briefData }: { brief: IntelligenceBrief }) {
 							</Section>
 
 							<Section id="key-facts" title="Key facts" kind="sourced" startOpen>
+								<p className="ci-section__note">{checkNote(briefData)}</p>
 								<ClaimList
 									claims={briefData.keyFacts}
 									sources={briefData.sources}

@@ -1,8 +1,10 @@
 # Brief evaluation
 
-Run 2026-10-08 10:44 UTC · brief model `claude-haiku-4-5-20251001` · grader `claude-sonnet-5-5`
+Run 2026-10-08 21:51 UTC · writer `claude-haiku-4-5-20251001` · verifier `claude-haiku-4-5-20251001` · grader `claude-sonnet-5-5`
 
 Each case replays sources recorded on one day through the production pipeline, so scores move only when the prompt, the model or the checks change. Claim support and expected facts are graded by a second model, not by a person.
+
+**Result: every measure is within its limit.**
 
 ## Headline numbers
 
@@ -10,16 +12,18 @@ Each case replays sources recorded on one day through the production pipeline, s
 |---|---|
 | Briefs produced | 100% (16/16) |
 | In-scope / out-of-scope judged correctly | 100% (16/16) |
-| Kept claims the grader found fully supported | 82% (64/78) |
-| Kept claims partly supported | 17% (13/78) |
-| Kept claims unsupported | 1% (1/78) |
-| Claims the server's checks discarded | 4% (3/81) |
-| Expected facts conveyed | 84% (16/19) |
-| Main pin in the right region | 100% (12/12) |
+| Kept claims the grader found fully supported | 87% (61/70) |
+| Kept claims partly supported | 13% (9/70) |
+| Kept claims unsupported | 0% (0/70) |
+| Claims discarded by the quote checks | 10% (8/82) |
+| Claims then removed by the verifier | 5% (4/82) |
+| Briefs where the verifier ran | 100% (12/12) |
+| Expected facts conveyed | 74% (14/19) |
+| Main pin in the right region | 92% (11/12) |
 | Main pin in the wrong region | 0% (0/12) |
-| No main pin drawn | 0% (0/12) |
-| Median seconds per brief | 22 |
-| Tokens per brief (in / out, mean) | 2401 / 1613 |
+| No main pin drawn | 8% (1/12) |
+| Median seconds per brief | 27 |
+| Tokens per brief (in / out, mean) | 3428 / 2324 |
 
 Expected-fact lists reviewed by a person: 0 of 10 cases.
 
@@ -27,61 +31,70 @@ Expected-fact lists reviewed by a person: 0 of 10 cases.
 
 | Case | Sources | Scope | Claims kept / proposed | Supported / partly / unsupported | Expected facts | Main pin | Event pins | Seconds |
 |---|---|---|---|---|---|---|---|---|
-| sudan | 10 | correct | 7 / 7 | 7 / 0 / 0 | 3 / 3 | correct | 1 | 23 |
-| gaza-ceasefire | 13 | correct | 10 / 10 | 7 / 3 / 0 | 2 / 3 | correct | 2 | 29 |
-| ukraine-front-line | 13 | correct | 6 / 7 | 5 / 1 / 0 | 1 / 2 | correct | 2 | 21 |
-| red-sea-shipping | 12 | correct | 8 / 8 | 4 / 3 / 1 | 2 / 2 | correct | 2 | 26 |
-| myanmar | 10 | correct | 9 / 9 | 9 / 0 / 0 | 1 / 2 | correct | 3 | 29 |
-| dr-congo-m23 | 4 | correct | 5 / 5 | 5 / 0 / 0 | 1 / 1 | correct | 3 | 22 |
-| yemen-houthis | 12 | correct | 9 / 9 | 7 / 2 / 0 | 2 / 2 | correct | 1 | 21 |
-| haiti-gangs | 5 | correct | 7 / 7 | 6 / 1 / 0 | 2 / 2 | correct | 3 | 25 |
-| lebanon-israel | 4 | correct | 2 / 4 | 2 / 0 / 0 | 1 / 1 | correct | 1 | 23 |
-| mali-sahel | 1 | correct | 4 / 4 | 4 / 0 / 0 | — | correct | 1 | 18 |
-| taiwan-strait | 2 | correct | 4 / 4 | 3 / 1 / 0 | — | correct | 3 | 19 |
-| south-sudan | 13 | correct | 7 / 7 | 5 / 2 / 0 | 1 / 1 | correct | 2 | 24 |
-| oos-recipe | 5 | correct | 6 / 6 | 0 / 0 / 0 | — | n/a | 0 | 5 |
-| oos-football | 7 | correct | 4 / 4 | 0 / 0 / 0 | — | n/a | 0 | 5 |
-| oos-phone | 3 | correct | 5 / 5 | 0 / 0 / 0 | — | n/a | 0 | 5 |
-| oos-python | 1 | correct | 3 / 3 | 0 / 0 / 0 | — | n/a | 0 | 4 |
+| sudan | 10 | correct | 7 / 7 | 5 / 2 / 0 | 3 / 3 | correct | 1 | 26 |
+| gaza-ceasefire | 13 | correct | 6 / 8 | 5 / 1 / 0 | 1 / 3 | correct | 2 | 32 |
+| ukraine-front-line | 13 | correct | 7 / 8 | 6 / 1 / 0 | 1 / 2 | correct | 2 | 31 |
+| red-sea-shipping | 12 | correct | 7 / 9 | 6 / 1 / 0 | 2 / 2 | correct | 1 | 43 |
+| myanmar | 10 | correct | 8 / 10 | 7 / 1 / 0 | 1 / 2 | correct | 1 | 37 |
+| dr-congo-m23 | 4 | correct | 4 / 4 | 3 / 1 / 0 | 1 / 1 | correct | 2 | 26 |
+| yemen-houthis | 12 | correct | 9 / 9 | 8 / 1 / 0 | 2 / 2 | correct | 1 | 33 |
+| haiti-gangs | 5 | correct | 6 / 6 | 6 / 0 / 0 | 2 / 2 | correct | 3 | 53 |
+| lebanon-israel | 4 | correct | 4 / 6 | 4 / 0 / 0 | 1 / 1 | correct | 0 | 27 |
+| mali-sahel | 1 | correct | 4 / 4 | 4 / 0 / 0 | — | correct | 0 | 23 |
+| taiwan-strait | 2 | correct | 3 / 3 | 2 / 1 / 0 | — | none | 2 | 18 |
+| south-sudan | 13 | correct | 5 / 8 | 5 / 0 / 0 | 0 / 1 | correct | 2 | 35 |
+| oos-recipe | 5 | correct | 4 / 5 | 0 / 0 / 0 | — | n/a | 0 | 9 |
+| oos-football | 7 | correct | 1 / 4 | 0 / 0 / 0 | — | n/a | 0 | 7 |
+| oos-phone | 3 | correct | 3 / 3 | 0 / 0 / 0 | — | n/a | 0 | 8 |
+| oos-python | 1 | correct | 3 / 3 | 0 / 0 / 0 | — | n/a | 0 | 6 |
 
-## Why the server discarded claims
+## Against hand-labelled claims
 
-- shares no substance with cited sources: 3
+These claims have a right answer written down by a person, so this is a measurement and not a model's opinion.
+
+| Measure | Result |
+|---|---|
+| Unsupported claims stopped by the quote checks | 8 of 11 |
+| Of the rest, removed by the verifier | 3 of 3 |
+| Unsupported claims that passed both checks | 0 of 11 |
+| Supported claims the verifier wrongly removed | 0 of 9 |
+
+## Why the quote checks discarded claims
+
+- figure not in the quoted text: 5
+- shares no substance with its quotes: 2
+- needs quotes from 2 sources, has 1: 1
 
 ## Kept claims the grader did not fully support
 
-- **gaza-ceasefire** (partly, cites S8, S12): Palestinians in Gaza face ongoing humanitarian hardship including food and water shortages, displacement, and lack of aid.
-  - S8 and S12 mention hunger, limited food and water, displacement and aid shortage; S12 snippet doesn't state water shortage or displacement, but S8 covers them; mostly supported though 'lack of aid' is slightly stronger than 'shortage'.
-- **gaza-ceasefire** (partly, cites S3, S4): The October 7 anniversary marked three years since the initial Hamas attack and subsequent Israeli offensive.
-  - Sources give the third anniversary of Oct 7 attack, but neither S3 nor S4 mentions an Israeli offensive following it, nor names Hamas as attacker.
-- **gaza-ceasefire** (partly, cites S8, S12): HuffPost's headline describes Gaza's ceasefire as 'So-Called,' suggesting it is contested or incomplete; CBC.ca reports Palestinians 'continue to endure hunger, collapsing buildings and almost daily airstrikes — despite the year-old' ceasefire, similarly questioning its substance.
-  - Quotes are accurate, but the interpretation that they suggest the ceasefire is contested or questioned in substance is an inference beyond the text.
-- **ukraine-front-line** (partly, cites S2, S3): Russian forces are conducting sustained strikes on Ukrainian targets across multiple regions
-  - Multiple regions are supported by S3, but 'sustained' strikes is a characterization not stated; S2 covers a single strike in Pryluky.
-- **red-sea-shipping** (partly, cites S1): Yemeni military said it has 'secured' the Red Sea waterway, though Saudi-backed forces gave conflicting reports on whether they had seized the port city of Mokha near the Bab al-Mandab Strait.
-  - S1 gives the 'secured' statement and the conflicting reports, but 'Yemeni military' is as stated; the claim is accurate, though it doesn't say which side's military, which is fine; essentially supported with minor ambiguity.
-- **red-sea-shipping** (partly, cites S4): Global shipping avoids the Suez route due to war-risk insurance premiums, favoring the Cape of Good Hope route instead.
-  - S4 snippet says shipping avoids Suez due to war-risk premiums and favors Cape of ..., but 'Good Hope' is truncated in the text.
-- **red-sea-shipping** (unsupported, cites S1, S5): Houthi forces have taken control of strategic Red Sea territory in Yemen including the Mokha area.
-  - Neither S1 nor S5 says the Houthis took Mokha; S1 describes conflicting reports about Saudi-backed forces seizing it.
-- **red-sea-shipping** (partly, cites S1, S5): BBC News reports 'conflicting reports' from Saudi-backed forces on whether Mokha was seized; Moneycontrol describes the Houthi capture as a 'rapid offensive' that 'exposed divisions' within those same forces.
-  - S1 gives the conflicting reports and S5 the rapid offensive and divisions, but the 'exposed divisions' quote is a paraphrase ('exposing divisions') and S1 doesn't say it's from BBC reporting of Mokha as stated here.
-- **yemen-houthis** (partly, cites S1): Yemen's president announced all-out war to reclaim land from Houthis amid an exchange of strikes between the Houthis and the Saudi-led coalition.
-  - Source says the Yemeni president announced all-out war amid an exchange of strikes, but the headline doesn't name the Saudi-led coalition's strikes as anything beyond that; actually it does mention it, so only minor wording differs.
-- **yemen-houthis** (partly, cites S8): Saudi airports including Abha International Airport, near the Yemen border, and King Khalid International Airport in Riyadh have come under attack.
-  - S8 says both airports came under attack per Saudi aviation authority, but 'including' implies others and the claim omits attribution.
-- **haiti-gangs** (partly, cites S1, S4): Gang violence in Haiti has reached a critical level with significant loss of life and territorial control.
-  - Sources describe casualties and expanding gangs, but 'critical level' and territorial control are not stated in S1/S4 excerpts.
-- **taiwan-strait** (partly, cites S1): Taiwan has received US-made fighter jets.
-  - S1 says reports indicate the island received two US-made items, but the text is truncated and does not say they are fighter jets, and it frames this as reports.
-- **south-sudan** (partly, cites S1): South Sudan moved to dispel reports that foreigners have been given seven days to leave the country, with the government saying it remains open to legally resident foreigners but wants them to stay out of small-scale retail.
-  - S1 attributes the statement to Juba County Caretaker Commissioner, not the national government, and 'government remains open' is stated, but 'South Sudan moved to dispel' is fine; the national-level attribution is a slight stretch.
-- **south-sudan** (partly, cites S1, S11): Tuko News's headline says 'South Sudan Bans Foreigners From Retail Trade, Kenyan Traders at Risk of Closure'; AllAfrica's headline says 'South Sudan Rejects Claims of Foreigners' Expulsion Order' and quotes the government saying it 'remains open to legally resident foreigners but wants them to stay out of small-scale retail.'
-  - Headlines are accurate, but the quote is paraphrased in S1 rather than a direct government quotation, and it is from a county commissioner.
+- **sudan** (partly, cites S5): Sudan's military chief rejected talks and vowed to take territory from the Rapid Support Forces.
+  - S5 says al-Burhan vowed to take every inch of RSF territory while 'rejecting ...' (truncated), so rejecting talks is not stated in S5's text.
+- **sudan** (partly, cites S5, S7): Sudan's military leader rejected ceasefire talks and committed to military victory over the Rapid Support Forces.
+  - S7's headline says al-Burhan rejects talks and vows to retake territory, but 'ceasefire' talks specifically and 'military victory' are not stated.
+- **gaza-ceasefire** (partly, cites S4): Almost two million people live in ruins across Gaza.
+  - S4 says almost two million people live in ruins, but not 'across Gaza' specifically; it says 'the territory's' population, which is close, though minor wording difference.
+- **ukraine-front-line** (partly, cites S2): Civilians, including children, have been killed in Russian strikes, with buildings reduced to ruins.
+  - S2's headline says children were among heavy casualties and a building was reduced to rubble, but the text does not explicitly say civilians were killed.
+- **red-sea-shipping** (partly, cites S1, S5): An Iran-allied militia captured strategically important Red Sea territory, though Saudi-backed forces gave conflicting reports on whether they seized Mokha port.
+  - S5 gives the militia capture, S1 the conflicting Mokha reports, but S1 does not say who captured what; the combination is loosely consistent, yet the sources are conflated (S1 says Yemeni military secured waterway, not that Houthis captured it).
+- **myanmar** (partly, cites S1, S4): Humanitarian and rights organizations have raised concerns about the safety of repatriated migrants.
+  - S1 gives rights monitors and S4 gives UNHCR, but 'humanitarian organizations' broadly is slightly generalized; core is supported.
+- **dr-congo-m23** (partly, cites S3): M23 fighters have killed, tortured and forcibly recruited artisanal miners in eastern Democratic Republic of Congo and helped traffic gold and coltan into Rwanda.
+  - S3 gives these allegations, but as Amnesty International's findings about Rwanda-backed M23; the claim states them as established fact without attribution.
+- **yemen-houthis** (partly, cites S1, S9): BBC News's headline frames the escalation as government-initiated action ('announces all-out war'); NBC News's framing emphasizes the Saudi-led coalition's response to Houthi territorial control ('have launched a major offensive to retake territory').
+  - The headline and subheading wording matches, but the claim that BBC frames it as government-initiated and NBC emphasizes the coalition response is interpretive characterization not in the cited text.
+- **taiwan-strait** (partly, cites S1): Taiwan's proposed military spending increase could heighten tensions across the Taiwan Strait.
+  - S1 says China warned the spending increase could heighten tensions; the claim states this as fact rather than as China's warning.
 
 ## Expected facts not conveyed
 
-- **gaza-ceasefire**: A UN agency reported a surge in violence against women in Gaza.
+- **gaza-ceasefire**: Israeli strikes on Gaza on the October 7 anniversary killed three people.
+- **gaza-ceasefire**: The WHO appealed for a large increase in aid to Gaza before winter.
 - **ukraine-front-line**: Zelenskyy said intelligence shows Russia is preparing a massive attack.
 - **myanmar**: The Irrawaddy counted 383 civilians killed in 21 massacres in Rakhine.
+- **south-sudan**: South Sudan rejected claims that it had ordered foreigners to leave.
+
+## Main pins that were wrong or missing
+
+- **taiwan-strait**: none — no city named
 
