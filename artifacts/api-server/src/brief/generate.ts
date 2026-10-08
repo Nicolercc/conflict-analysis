@@ -2,6 +2,7 @@ import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { ExploreConflictResponse } from "@workspace/api-zod";
 import { newBriefId } from "../lib/brief-store";
 import { AppError } from "../lib/errors";
+import { recordModelCall } from "../lib/ledger";
 import { logger } from "../lib/logger";
 import { locateBrief } from "./geocode";
 import { extractJSON, normalizeLatLng, tryExtractJsonFallback } from "./json";
@@ -36,6 +37,9 @@ export type GenerationStats = {
 
 /** One model call, parsed and checked against the evidence and the response contract. */
 async function generateOnce(coverage: Coverage, userMessage: string, onProgress: OnProgress) {
+  // The id exists before any model is called, so every call can be costed against its brief.
+  const briefId = newBriefId();
+  const started = Date.now();
   let message;
   try {
     message = await anthropic.messages.create(
@@ -50,8 +54,18 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
       { timeout: MODEL_TIMEOUT_MS, maxRetries: 0, signal: AbortSignal.timeout(MODEL_TIMEOUT_MS + 2_000) },
     );
   } catch (err) {
+    recordModelCall({ briefId, purpose: "writer", model: BRIEF_MODEL, inputTokens: 0, outputTokens: 0, ms: Date.now() - started, ok: false });
     throw providerUnavailable(err);
   }
+  recordModelCall({
+    briefId,
+    purpose: "writer",
+    model: BRIEF_MODEL,
+    inputTokens: message.usage?.input_tokens ?? 0,
+    outputTokens: message.usage?.output_tokens ?? 0,
+    ms: Date.now() - started,
+    ok: true,
+  });
 
   const block = message.content[0];
   if (!block || block.type !== "text") throw new Error("model returned no text");
@@ -83,7 +97,7 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
 
   // Second check: another model reads each claim against its quotes.
   onProgress({ type: "stage", stage: "checking" });
-  const verified = await verifyClaims([quoted.keyFacts.kept, quoted.agreements.kept, quoted.differences.kept], coverage.sources);
+  const verified = await verifyClaims([quoted.keyFacts.kept, quoted.agreements.kept, quoted.differences.kept], coverage.sources, briefId);
   if (verified.removed.length > 0) logger.info({ removed: verified.removed }, "claims removed by the verifier");
   // Pasted text is checked against but never sent back or stored, so a quote
   // from it is withheld. (An article supplied by link is public and is quoted.)
@@ -122,7 +136,7 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
   // strips anything outside the contract and rejects missing or mistyped fields.
   const candidate = {
     ...parsed,
-    id: newBriefId(),
+    id: briefId,
     generatedAt: new Date().toISOString(),
     inScope: parsed["inScope"] !== false,
     location: {

@@ -136,6 +136,13 @@ The system prompt is a constant. Retrieved headlines and the reader's article tr
 * **Response headers**: the site sends a content-security policy that allows only its own scripts, its fonts, map tiles and the API; the API sends `default-src 'none'`, no-sniff and HSTS.
 * **Hard deadline on the model call**: one attempt, 60 seconds, so a reader gets an answer or a "try again", never a silent wait.
 
+### Configuration, readiness and cost
+
+* **Configuration is validated at start-up.** A malformed value stops the process with a message naming the variable; every problem is listed at once and no secret is echoed.
+* **`GET /api/readyz`** says whether the instance can do its job and whether what it saves will last (`/api/healthz` only says the process is up).
+* **Every model call is recorded** with its purpose (writer or verifier), tokens, duration and cost. `GET /api/ops/costs`, for whoever holds `OPS_TOKEN`, gives totals per day and the cost per brief — about 1.6 US cents with the default model.
+* **Limits are shared.** The rate limit and the daily budget are counted in the database when there is one, so a restart or a second instance does not hand out a fresh allowance. Client addresses are stored only as a keyed hash. If the database is unreachable the limits still hold per process.
+
 ### Watching production
 
 A scheduled workflow (`.github/workflows/uptime.yml`) requests the API's health check and the site every ten minutes; a failure emails the repository owner. Each brief logs its token use, source count and how many claims survived the checks, and every failure logs its code with the request id shown to the reader.
@@ -154,7 +161,9 @@ POST /api/intelligence/stream      { "topic": "…" } | { "url": "https://…" }
 POST /api/intelligence/explore     { "topic": "Sudan civil war" }
 POST /api/intelligence/analyze     { "article": "Article text…" }  or  { "url": "https://…" }
 GET  /api/briefs/{id}              a saved brief, exactly as first generated
-GET  /api/healthz
+GET  /api/healthz                  the process is up
+GET  /api/readyz                   ready to serve, and whether storage is durable
+GET  /api/ops/costs?days=7         model spend per day (needs the operations token)
 ```
 
 Errors share one shape:
@@ -283,9 +292,9 @@ Publisher feeds hold only recent items, so a quieter conflict relies on the news
 
 "Verified" means a second model found the claim fully supported by words that are provably in the source. In the recorded evaluation a stronger third model still judges 11–13% of kept claims as adding a small detail (and none as unsupported). The expected-fact lists the evaluation uses need approving by a person; `eval:review` records that.
 
-### Rate limits live in memory
+### A database is optional to run, but nothing lasts without one
 
-Briefs are saved (in Postgres when `DATABASE_URL` is set) and each has a permanent `/brief/<id>` link, so a restart no longer loses them or regenerates them. The rate limits and the daily budget still live in the API process: they reset on restart and would not be shared between two instances.
+With `DATABASE_URL` set, saved briefs, the rate limit, the daily budget and the cost ledger live in Postgres: every instance shares them and a restart keeps them. Without it they live in the process, `/api/readyz` says so, and the server logs a warning at start-up. `REQUIRE_DATABASE=true` turns that warning into a refusal to start.
 
 ### Progress is streamed; the text is not
 

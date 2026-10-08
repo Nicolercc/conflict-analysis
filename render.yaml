@@ -11,12 +11,19 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: AI_INTEGRATIONS_ANTHROPIC_BASE_URL
-        value: https://api.anthropic.com
-      - key: AI_INTEGRATIONS_ANTHROPIC_API_KEY
+      # ANTHROPIC_API_KEY is the name to use; a service that already has
+      # AI_INTEGRATIONS_ANTHROPIC_API_KEY set keeps working.
+      - key: ANTHROPIC_API_KEY
         sync: false
       # Postgres connection string; set it in the dashboard so brief links survive restarts.
       - key: DATABASE_URL
+        sync: false
+      # Set to "true" once DATABASE_URL is in place: the server then refuses to
+      # start without a database instead of quietly keeping everything in memory.
+      - key: REQUIRE_DATABASE
+        value: "false"
+      # A long random string. Enables GET /api/ops/costs for whoever holds it.
+      - key: OPS_TOKEN
         sync: false
       - key: CORS_ORIGINS
         value: https://conflict-analysis-vantage.vercel.app,http://localhost:5173

@@ -1,4 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import type { Pool } from "pg";
+import { createPool } from "./db";
 import { isBriefId, LayeredBriefStore, MemoryBriefStore, newBriefId, PostgresBriefStore, type BriefStore, type StoredBrief } from "./brief-store";
 
 const brief = (over: Record<string, unknown> = {}) =>
@@ -92,12 +94,14 @@ describe("layered store", () => {
 // Runs against a real database when one is provided (CI starts one).
 const url = process.env["TEST_DATABASE_URL"];
 describe.skipIf(!url)("postgres store", () => {
+  let pool: Pool;
   let store: PostgresBriefStore;
   beforeAll(() => {
-    store = new PostgresBriefStore(url!, `briefs_test_${Date.now()}`);
+    pool = createPool(url!);
+    store = new PostgresBriefStore(pool, `briefs_test_${Date.now()}`);
   });
   afterAll(async () => {
-    await store?.close();
+    await pool?.end();
   });
   contract("postgres", () => store);
 });
