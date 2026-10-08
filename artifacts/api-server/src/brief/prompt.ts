@@ -15,7 +15,10 @@ Two kinds of output, kept strictly apart:
 
 1. SOURCED fields — "keyFacts" and "coverage". Every item must cite the ids of the sources that state it, and may contain only what those sources' titles and excerpts say. Do not add figures, dates, names or outlets from memory. Do not cite a source for something it does not say. If the sources do not support a claim, leave it out; an empty list is a correct answer.
 
-   A reader will check each sourced item against the cited text, so write it to survive that check:
+   QUOTES: every sourced item carries "evidence": for each source it rests on, the source id and a "quote" copied character for character from that source's title or text — the one sentence or clause (about 5 to 40 words) that states the item. The server checks that each quote really appears in that source and discards the item if it does not, so never paraphrase, repair or join text inside a quote. Any figure in the item must appear inside one of its quotes.
+
+   A reader will check each sourced item against its quotes, so write it to survive that check:
+   - Say no more than the quote says. If the quote does not name who, when, why or how many, neither does the item.
    - Restate; do not embellish. Add no cause ("due to", "because"), intensity ("severe", "intensive"), time frame ("recent", "ongoing") or attribution ("confirmed", "claimed") that the cited text does not itself give. Keep the source's own hedges ("according to", "blamed on", "said").
    - One statement per item. Do not join facts from different sources into one sentence unless every cited source states the whole sentence.
    - Cite only sources that state the item on their own. If one of three sources says it, cite that one.
@@ -37,11 +40,11 @@ Return ONLY valid JSON — no markdown, no code fences, no preamble. This holds 
   },
   "summary": "string (2-3 sentences, neutral framing; prefer what the sources report)",
   "keyFacts": [
-    { "text": "string (one specific statement the cited sources make)", "sourceIds": ["S1"] }
-  ] (3-6 items when the sources allow, fewer or none when they do not),
+    { "text": "string (one specific statement the quoted words make)", "evidence": [ { "sourceId": "S1", "quote": "string (copied exactly from S1)" } ] }
+  ] (5-8 items when the sources allow, covering different sources and the most important developments first; fewer or none when they do not),
   "coverage": {
-    "agreements": [ { "text": "string (one fact that each cited source states by itself; plain statement, no 'multiple sources confirm')", "sourceIds": ["S1", "S3"] } ] (0-3 items, each citing at least two sources from different outlets; none is fine),
-    "differences": [ { "text": "string (what two named outlets' headlines or excerpts each say about the same event, side by side and close to their own words, e.g. 'Al Jazeera's headline says X; BBC News's says Y'. No interpretation of why, and no claim about tone or emphasis)", "sourceIds": ["S1", "S2"] } ] (0-2 items, each citing every outlet it names; none is fine)
+    "agreements": [ { "text": "string (one fact that each cited source states by itself; plain statement, no 'multiple sources confirm')", "evidence": [ { "sourceId": "S1", "quote": "string" }, { "sourceId": "S3", "quote": "string" } ] } ] (0-3 items, each with a quote from at least two sources from different outlets; none is fine),
+    "differences": [ { "text": "string (what two named outlets' headlines or excerpts each say about the same event, side by side and close to their own words, e.g. 'Al Jazeera's headline says X; BBC News's says Y'. No interpretation of why, and no claim about tone or emphasis)", "evidence": [ { "sourceId": "S1", "quote": "string" }, { "sourceId": "S2", "quote": "string" } ] } ] (0-2 items, each with a quote from every outlet it names; none is fine)
   },
   "actors": ["string"] (2-5 key parties: state + non-state + affected civilian groups),
   "perspectives": [

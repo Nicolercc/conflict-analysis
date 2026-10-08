@@ -577,6 +577,28 @@
 	color: var(--text-primary);
 }
 
+.ci-cite-pop__quote {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 8px 12px;
+	border-left: 3px solid var(--risk-low);
+	background: var(--risk-low-bg);
+	border-radius: 0 6px 6px 0;
+	font-family: "Newsreader", Georgia, serif;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--text-primary);
+}
+
+.ci-cite-pop__quote-label {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--risk-low);
+}
+
 .ci-cite-pop__title {
 	font-family: "Newsreader", Georgia, serif;
 	font-size: 16px;

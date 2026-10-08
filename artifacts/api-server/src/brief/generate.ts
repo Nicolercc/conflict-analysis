@@ -9,6 +9,7 @@ import { buildUserMessage, SYSTEM_PROMPT } from "./prompt";
 import { searchCoverage, type Coverage } from "./retrieval";
 import { toPublicSource, type Candidate } from "./sources";
 import { checkClaims } from "./support";
+import { verifyClaims } from "./verify";
 
 const BRIEF_MODEL = process.env["BRIEF_MODEL"] ?? "claude-haiku-4-5-20251001";
 const MODEL_TIMEOUT_MS = Number(process.env["BRIEF_MODEL_TIMEOUT_MS"] ?? 60_000);
@@ -24,14 +25,17 @@ const providerUnavailable = (cause: unknown) =>
 export type GenerationStats = {
   claimsProposed: number;
   claimsKept: number;
-  /** Why each discarded claim was discarded. */
+  /** Why the quote checks discarded each claim they discarded. */
   dropped: string[];
+  /** Claims the verifier removed after they had passed the quote checks. */
+  rejected: Array<{ text: string; verdict: string; why: string }>;
   attempts: number;
   usage: { inputTokens: number; outputTokens: number };
+  verifierUsage: { inputTokens: number; outputTokens: number };
 };
 
 /** One model call, parsed and checked against the evidence and the response contract. */
-async function generateOnce(coverage: Coverage, userMessage: string) {
+async function generateOnce(coverage: Coverage, userMessage: string, onProgress: OnProgress) {
   let message;
   try {
     message = await anthropic.messages.create(
@@ -66,13 +70,53 @@ async function generateOnce(coverage: Coverage, userMessage: string) {
   const rawLoc = (parsed["location"] && typeof parsed["location"] === "object" ? parsed["location"] : {}) as Record<string, unknown>;
   const rawCoverage = (parsed["coverage"] && typeof parsed["coverage"] === "object" ? parsed["coverage"] : {}) as Record<string, unknown>;
 
-  // Claims survive only if every cited id was retrieved and the cited text carries them.
-  const keyFacts = checkClaims(parsed["keyFacts"], coverage.sources, 6);
-  const agreements = checkClaims(rawCoverage["agreements"], coverage.sources, 3);
-  const differences = checkClaims(rawCoverage["differences"], coverage.sources, 3);
-  const dropped = [...keyFacts.dropped, ...agreements.dropped, ...differences.dropped];
-  if (dropped.length > 0) logger.info({ dropped }, "unsupported claims removed");
-  const claimsKept = keyFacts.kept.length + agreements.kept.length + differences.kept.length;
+  // First check, no model: every quote is really in its source, and the claim's
+  // figures are in its quotes. A comparison needs quotes from two sources.
+  const quoted = {
+    // More candidates than will be shown: some will not survive the second check.
+    keyFacts: checkClaims(parsed["keyFacts"], coverage.sources, 9),
+    agreements: checkClaims(rawCoverage["agreements"], coverage.sources, 3, 2),
+    differences: checkClaims(rawCoverage["differences"], coverage.sources, 3, 2),
+  };
+  const dropped = [...quoted.keyFacts.dropped, ...quoted.agreements.dropped, ...quoted.differences.dropped];
+  if (dropped.length > 0) logger.info({ dropped }, "claims failed the quote checks");
+
+  // Second check: another model reads each claim against its quotes.
+  onProgress({ type: "stage", stage: "checking" });
+  const verified = await verifyClaims([quoted.keyFacts.kept, quoted.agreements.kept, quoted.differences.kept], coverage.sources);
+  if (verified.removed.length > 0) logger.info({ removed: verified.removed }, "claims removed by the verifier");
+  // Pasted text is checked against but never sent back or stored, so a quote
+  // from it is withheld. (An article supplied by link is public and is quoted.)
+  const privateIds = new Set(coverage.sources.filter((src) => src.kind === "article" && src.url === null).map((src) => src.id));
+  const LIMITS = [6, 3, 2];
+  const [keyFacts = [], agreements = [], differences = []] = verified.groups.map((group, i) =>
+    group.slice(0, LIMITS[i]).map((claim) => ({
+      ...claim,
+      evidence: claim.evidence.map((e) => (privateIds.has(e.sourceId) ? { ...e, quote: "" } : e)),
+    })),
+  );
+  const claimsKept = keyFacts.length + agreements.length + differences.length;
+
+  // An out-of-scope topic has no risk level, parties or timeline. The model
+  // sometimes says so with "N/A" or by leaving fields out, which would fail the
+  // contract and surface as an error. The reader is only ever shown a notice
+  // for such a brief, so the unused fields are given neutral values.
+  const outOfScope = parsed["inScope"] === false;
+  const neutral = outOfScope
+    ? {
+        headline: str(parsed["headline"]) || "Outside scope",
+        summary: str(parsed["summary"]) || "This topic is not a conflict, humanitarian crisis or geopolitical tension.",
+        actors: [],
+        perspectives: [],
+        relatedEvents: [],
+        escalationRisk: "Low",
+        escalationReason: "",
+        historicalContext: "",
+        affectedPopulation: "",
+        keyQuestion: "",
+        casualtyData: { description: "", civilianImpact: "", allSides: "" },
+      }
+    : {};
 
   // Provenance fields are set here and never by the model. The schema parse
   // strips anything outside the contract and rejects missing or mistyped fields.
@@ -95,8 +139,10 @@ async function generateOnce(coverage: Coverage, userMessage: string) {
           searchQuery: str(ev?.["searchQuery"]),
         }))
       : parsed["relatedEvents"],
-    keyFacts: keyFacts.kept,
-    coverage: { agreements: agreements.kept, differences: differences.kept },
+    ...neutral,
+    keyFacts,
+    coverage: { agreements, differences },
+    verification: verified.verification,
     sources: coverage.sources.map(toPublicSource),
     retrieval: coverage.retrieval,
   };
@@ -111,9 +157,11 @@ async function generateOnce(coverage: Coverage, userMessage: string) {
   return {
     brief: checked.data,
     stats: {
-      claimsProposed: claimsKept + dropped.length,
+      claimsProposed: claimsKept + dropped.length + verified.removed.length,
       claimsKept,
       dropped,
+      rejected: verified.removed,
+      verifierUsage: verified.usage,
       usage: { inputTokens: message.usage?.input_tokens ?? 0, outputTokens: message.usage?.output_tokens ?? 0 },
     },
   };
@@ -121,7 +169,7 @@ async function generateOnce(coverage: Coverage, userMessage: string) {
 
 /** What a brief is doing right now, for readers watching it being built. */
 export type BriefProgress =
-  | { type: "stage"; stage: "retrieving" | "writing" | "locating" }
+  | { type: "stage"; stage: "retrieving" | "writing" | "checking" | "locating" }
   | { type: "sources"; sources: ReturnType<typeof toPublicSource>[]; retrieval: Coverage["retrieval"] };
 export type OnProgress = (event: BriefProgress) => void;
 
@@ -170,7 +218,7 @@ export async function generateFromCoverage(
     const attemptStarted = Date.now();
     try {
       onProgress({ type: "stage", stage: "writing" });
-      const { brief, stats } = await generateOnce(coverage, userMessage);
+      const { brief, stats } = await generateOnce(coverage, userMessage, onProgress);
       onProgress({ type: "stage", stage: "locating" });
       logger.info({ sources: coverage.sources.length, attempt, ...stats.usage, claimsKept: stats.claimsKept }, "brief generated");
       // The model's coordinates are a guess; the map shows only looked-up places.

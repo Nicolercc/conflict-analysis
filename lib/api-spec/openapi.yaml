@@ -113,7 +113,7 @@ paths:
         Takes a topic, an article URL or article text and answers with a
         `text/event-stream`. Events, in order:
 
-        - `stage` — `{ "stage": "retrieving" | "writing" | "locating" }`
+        - `stage` — `{ "stage": "retrieving" | "writing" | "checking" | "locating" }`
         - `sources` — `{ "sources": Source[], "retrieval": RetrievalStatus[] }`, sent once retrieval finishes
         - `brief` — the finished IntelligenceBrief (the last event on success)
         - `error` — an ErrorResponse (the last event on failure after the stream has started)
@@ -331,18 +331,53 @@ components:
           type: [string, "null"]
           description: The publisher's own summary or the reference extract, when available.
       required: [id, kind, provider, publisher, title, url, publishedAt, retrievedAt, language, country, excerpt]
+    Evidence:
+      type: object
+      description: Words copied from one source. The server has checked that they appear in that source exactly.
+      properties:
+        sourceId:
+          type: string
+        quote:
+          type: string
+      required: [sourceId, quote]
     Claim:
       type: object
-      description: A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.
+      description: A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.
       properties:
         text:
           type: string
         sourceIds:
           type: array
+          description: The sources quoted in evidence, in the same order.
           items:
             type: string
           minItems: 1
-      required: [text, sourceIds]
+        evidence:
+          type: array
+          items:
+            $ref: "#/components/schemas/Evidence"
+        support:
+          type: string
+          enum: [verified, unverified]
+          description: verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.
+      required: [text, sourceIds, evidence, support]
+    Verification:
+      type: object
+      description: Whether the second-model check ran on this brief's claims.
+      properties:
+        status:
+          type: string
+          enum: [verified, skipped]
+        checked:
+          type: integer
+          description: Claims the verifier read.
+        removed:
+          type: integer
+          description: Claims it removed for not being fully supported.
+        corrected:
+          type: integer
+          description: Claims it cut back to what their quotes say. A corrected claim passes the quote checks again before it is kept.
+      required: [status, checked, removed, corrected]
     CoverageComparison:
       type: object
       properties:
@@ -421,6 +456,8 @@ components:
             $ref: "#/components/schemas/Claim"
         coverage:
           $ref: "#/components/schemas/CoverageComparison"
+        verification:
+          $ref: "#/components/schemas/Verification"
         retrieval:
           type: array
           items:
@@ -444,6 +481,7 @@ components:
         - sources
         - keyFacts
         - coverage
+        - verification
         - retrieval
     StreamBriefBody:
       type: object

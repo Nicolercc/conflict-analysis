@@ -156,12 +156,58 @@ export interface Source {
 }
 
 /**
- * A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.
+ * Words copied from one source. The server has checked that they appear in that source exactly.
+ */
+export interface Evidence {
+  sourceId: string;
+  quote: string;
+}
+
+/**
+ * verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.
+ */
+export type ClaimSupport = typeof ClaimSupport[keyof typeof ClaimSupport];
+
+
+export const ClaimSupport = {
+  verified: 'verified',
+  unverified: 'unverified',
+} as const;
+
+/**
+ * A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.
  */
 export interface Claim {
   text: string;
-  /** @minItems 1 */
+  /**
+     * The sources quoted in evidence, in the same order.
+     * @minItems 1
+     */
   sourceIds: string[];
+  evidence: Evidence[];
+  /** verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief. */
+  support: ClaimSupport;
+}
+
+export type VerificationStatus = typeof VerificationStatus[keyof typeof VerificationStatus];
+
+
+export const VerificationStatus = {
+  verified: 'verified',
+  skipped: 'skipped',
+} as const;
+
+/**
+ * Whether the second-model check ran on this brief's claims.
+ */
+export interface Verification {
+  status: VerificationStatus;
+  /** Claims the verifier read. */
+  checked: number;
+  /** Claims it removed for not being fully supported. */
+  removed: number;
+  /** Claims it cut back to what their quotes say. A corrected claim passes the quote checks again before it is kept. */
+  corrected: number;
 }
 
 export interface CoverageComparison {
@@ -220,6 +266,7 @@ export interface IntelligenceBrief {
   /** Statements supported by the cited sources. Empty when nothing retrieved supports a claim. */
   keyFacts: Claim[];
   coverage: CoverageComparison;
+  verification: Verification;
   retrieval: RetrievalStatus[];
 }
 

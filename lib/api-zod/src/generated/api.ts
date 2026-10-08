@@ -91,18 +91,39 @@ export const AnalyzeArticleResponse = zod.object({
 }).describe('A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.')),
   "keyFacts": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.')).describe('Statements supported by the cited sources. Empty when nothing retrieved supports a claim.'),
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.')).describe('Statements supported by the cited sources. Empty when nothing retrieved supports a claim.'),
   "coverage": zod.object({
   "agreements": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.')),
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.')),
   "differences": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.'))
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.'))
 }),
+  "verification": zod.object({
+  "status": zod.enum(['verified', 'skipped']),
+  "checked": zod.number().describe('Claims the verifier read.'),
+  "removed": zod.number().describe('Claims it removed for not being fully supported.'),
+  "corrected": zod.number().describe('Claims it cut back to what their quotes say. A corrected claim passes the quote checks again before it is kept.')
+}).describe('Whether the second-model check ran on this brief\'s claims.'),
   "retrieval": zod.array(zod.object({
   "provider": zod.string(),
   "status": zod.enum(['ok', 'empty', 'failed']).describe('empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.'),
@@ -182,18 +203,39 @@ export const GetBriefResponse = zod.object({
 }).describe('A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.')),
   "keyFacts": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.')).describe('Statements supported by the cited sources. Empty when nothing retrieved supports a claim.'),
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.')).describe('Statements supported by the cited sources. Empty when nothing retrieved supports a claim.'),
   "coverage": zod.object({
   "agreements": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.')),
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.')),
   "differences": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.'))
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.'))
 }),
+  "verification": zod.object({
+  "status": zod.enum(['verified', 'skipped']),
+  "checked": zod.number().describe('Claims the verifier read.'),
+  "removed": zod.number().describe('Claims it removed for not being fully supported.'),
+  "corrected": zod.number().describe('Claims it cut back to what their quotes say. A corrected claim passes the quote checks again before it is kept.')
+}).describe('Whether the second-model check ran on this brief\'s claims.'),
   "retrieval": zod.array(zod.object({
   "provider": zod.string(),
   "status": zod.enum(['ok', 'empty', 'failed']).describe('empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.'),
@@ -206,7 +248,7 @@ export const GetBriefResponse = zod.object({
  * Takes a topic, an article URL or article text and answers with a
  * `text/event-stream`. Events, in order:
  *
- * - `stage` — `{ "stage": "retrieving" | "writing" | "locating" }`
+ * - `stage` — `{ "stage": "retrieving" | "writing" | "checking" | "locating" }`
  * - `sources` — `{ "sources": Source[], "retrieval": RetrievalStatus[] }`, sent once retrieval finishes
  * - `brief` — the finished IntelligenceBrief (the last event on success)
  * - `error` — an ErrorResponse (the last event on failure after the stream has started)
@@ -307,18 +349,39 @@ export const ExploreConflictResponse = zod.object({
 }).describe('A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.')),
   "keyFacts": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.')).describe('Statements supported by the cited sources. Empty when nothing retrieved supports a claim.'),
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.')).describe('Statements supported by the cited sources. Empty when nothing retrieved supports a claim.'),
   "coverage": zod.object({
   "agreements": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.')),
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.')),
   "differences": zod.array(zod.object({
   "text": zod.string(),
-  "sourceIds": zod.array(zod.string()).min(1)
-}).describe('A statement tied to retrieved sources. The server drops any claim whose source ids do not resolve or whose figures are absent from the cited text.'))
+  "sourceIds": zod.array(zod.string()).min(1).describe('The sources quoted in evidence, in the same order.'),
+  "evidence": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "quote": zod.string()
+}).describe('Words copied from one source. The server has checked that they appear in that source exactly.')),
+  "support": zod.enum(['verified', 'unverified']).describe('verified when a second model found the claim fully supported by its quotes; unverified when that check did not run for this brief.')
+}).describe('A statement tied to quoted source text. The server drops any claim whose quotes are not found in the sources they name, whose figures are absent from its quotes, or which the verifier does not find fully supported.'))
 }),
+  "verification": zod.object({
+  "status": zod.enum(['verified', 'skipped']),
+  "checked": zod.number().describe('Claims the verifier read.'),
+  "removed": zod.number().describe('Claims it removed for not being fully supported.'),
+  "corrected": zod.number().describe('Claims it cut back to what their quotes say. A corrected claim passes the quote checks again before it is kept.')
+}).describe('Whether the second-model check ran on this brief\'s claims.'),
   "retrieval": zod.array(zod.object({
   "provider": zod.string(),
   "status": zod.enum(['ok', 'empty', 'failed']).describe('empty means the provider answered with nothing relevant; failed means it could not be reached or timed out.'),

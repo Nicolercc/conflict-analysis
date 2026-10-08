@@ -90,7 +90,10 @@ export function modelBrief(overrides: Record<string, unknown> = {}) {
     },
     summary: "Fighting continues around El Fasher.",
     keyFacts: [
-      { text: "Aid convoys were blocked outside El Fasher while fighting continued.", sourceIds: ["S2"] },
+      {
+        text: "Aid convoys were blocked outside El Fasher while fighting continued.",
+        evidence: [{ sourceId: "S2", quote: "aid convoys blocked outside El Fasher as fighting continues" }],
+      },
     ],
     coverage: { agreements: [], differences: [] },
     actors: ["Sudanese Armed Forces", "Rapid Support Forces"],

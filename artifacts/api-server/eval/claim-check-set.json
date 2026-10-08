@@ -1,5 +1,5 @@
 {
-  "about": "Hand-labelled claims for the server's claim checks. 'supported' claims must be kept. 'unsupported' claims should be discarded; caughtToday records whether the current checks manage it, so the known gaps are written down and a change in either direction fails the test.",
+  "about": "Hand-labelled claims, each with the quote a model would offer for it. 'supported' claims must be kept. 'unsupported' claims should be discarded. caughtByChecks records whether the server's deterministic quote checks manage it; the ones they cannot catch are what the verifier model is for, and the evaluation measures how many of those it removes.",
   "sources": {
     "UN": {
       "publisher": "UN News",
@@ -51,165 +51,237 @@
     {
       "label": "supported",
       "text": "The World Food Programme condemned a deadly airstrike on two clearly marked aid trucks in South Kordofan.",
-      "cites": [
-        "UN"
-      ],
-      "note": "Restates the source."
+      "note": "Restates the source.",
+      "evidence": [
+        {
+          "sourceId": "UN",
+          "quote": "The World Food Programme (WFP) has strongly condemned a deadly airstrike on two clearly marked aid trucks in South Kordofan"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "A drone strike hit homes and a mosque in Blue Nile province, killing at least four women.",
-      "cites": [
-        "AP"
-      ],
-      "note": "Restates the source; 'four' is spelled out in both."
+      "note": "Restates the source; 'four' is spelled out in both.",
+      "evidence": [
+        {
+          "sourceId": "AP",
+          "quote": "hit homes and a mosque in Blue Nile province, killing at least four women"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "The Trump administration is shelving its proposal for an arms embargo on Sudan.",
-      "cites": [
-        "HILL"
-      ],
-      "note": "Restates the source."
+      "note": "Restates the source.",
+      "evidence": [
+        {
+          "sourceId": "HILL",
+          "quote": "The Trump administration is shelving its proposal for an arms embargo on Sudan"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "On October 6, 2026, at least 10 civilians were reported killed in West Kordofan and 5,500 displaced in Blue Nile.",
-      "cites": [
-        "AJ"
-      ],
-      "note": "The date is the source's publication date, which the text itself never spells out."
+      "note": "The date is the source's publication date, which the text itself never spells out.",
+      "evidence": [
+        {
+          "sourceId": "AJ",
+          "quote": "At least 10 civilians were killed in West Kordofan and 5,500 displaced in Blue Nile"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "Saudi-backed forces gave conflicting reports about whether they had seized the port city of Mokha.",
-      "cites": [
-        "BBC_SEA"
-      ],
-      "note": "Restates the source."
+      "note": "Restates the source.",
+      "evidence": [
+        {
+          "sourceId": "BBC_SEA",
+          "quote": "Saudi-backed forces gave conflicting reports of whether they had also seized the port city of Mokha"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "The products tanker Chrystal Sky reported a series of explosions around the vessel.",
-      "cites": [
-        "SEATRADE"
-      ],
-      "note": "Restates the source."
+      "note": "Restates the source.",
+      "evidence": [
+        {
+          "sourceId": "SEATRADE",
+          "quote": "The products tanker Chrystal Sky reported a series of explosions around the vessel"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "The October 7 attack killed 1,200 people and 251 were taken hostage.",
-      "cites": [
-        "AFRICANEWS"
-      ],
-      "note": "Figures appear in the source."
+      "note": "Figures appear in the source.",
+      "evidence": [
+        {
+          "sourceId": "AFRICANEWS",
+          "quote": "the October 7 attack that killed 1,200 people and saw 251 taken hostage"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "The United Nations said violent gangs continue to adapt and expand across Haiti.",
-      "cites": [
-        "BBC_HAITI"
-      ],
-      "note": "Restates the source."
+      "note": "Restates the source.",
+      "evidence": [
+        {
+          "sourceId": "BBC_HAITI",
+          "quote": "The United Nations said violent gangs continue to \"adapt and expand\" across the country"
+        }
+      ]
     },
     {
       "label": "supported",
       "text": "Strikes in South Kordofan and Blue Nile killed an aid truck driver and at least four women.",
-      "cites": [
-        "UN",
-        "AP"
-      ],
-      "note": "Each half rests on one of the two cited sources."
+      "note": "Each half rests on one of the two cited sources.",
+      "evidence": [
+        {
+          "sourceId": "UN",
+          "quote": "Driver killed in aerial attack on aid trucks in South Kordofan"
+        },
+        {
+          "sourceId": "AP",
+          "quote": "hit homes and a mosque in Blue Nile province, killing at least four women"
+        }
+      ]
     },
     {
       "label": "unsupported",
       "text": "A drone strike killed at least 40 women in Blue Nile province.",
-      "cites": [
-        "AP"
-      ],
       "note": "Invented figure.",
-      "caughtToday": true
+      "evidence": [
+        {
+          "sourceId": "AP",
+          "quote": "killing at least four women and wounding dozens of civilians"
+        }
+      ],
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "Reuters reported that peace talks will resume in Jeddah next week.",
-      "cites": [
-        "REUTERS"
-      ],
       "note": "Cites a source that was never retrieved.",
-      "caughtToday": true
+      "evidence": [
+        {
+          "sourceId": "REUTERS",
+          "quote": "peace talks will resume in Jeddah next week"
+        }
+      ],
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "The central bank raised interest rates sharply.",
-      "cites": [
-        "AP"
-      ],
       "note": "Nothing to do with the cited source.",
-      "caughtToday": true
+      "evidence": [
+        {
+          "sourceId": "AP",
+          "quote": "a rights group said"
+        }
+      ],
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "On March 3, 2019, the World Food Programme condemned an airstrike on aid trucks in South Kordofan.",
-      "cites": [
-        "UN"
-      ],
       "note": "Invented date.",
-      "caughtToday": true
+      "evidence": [
+        {
+          "sourceId": "UN",
+          "quote": "has strongly condemned a deadly airstrike on two clearly marked aid trucks"
+        }
+      ],
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "The Chrystal Sky, carrying 2 million barrels of crude, reported explosions around the vessel.",
-      "cites": [
-        "SEATRADE"
-      ],
       "note": "Invented cargo figure attached to a real event.",
-      "caughtToday": true
+      "evidence": [
+        {
+          "sourceId": "SEATRADE",
+          "quote": "reported a series of explosions around the vessel late on Sunday afternoon"
+        }
+      ],
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "BBC News reports that Houthi forces captured territory on Yemen's Red Sea coast.",
-      "cites": [
-        "BBC_SEA"
-      ],
       "note": "The source says the Yemeni military secured the waterway; the claim attributes another outlet's story to it. Taken from a real evaluation failure. Caught only because the wording happens to share too few words with the source.",
-      "caughtToday": true
+      "evidence": [
+        {
+          "sourceId": "BBC_SEA",
+          "quote": "Yemeni military says it has 'secured' Red Sea waterway"
+        }
+      ],
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "Wikipedia identifies corrupt police and politicians as contributors to Haiti's gang violence.",
-      "cites": [
-        "WIKI_HAITI"
+      "note": "The source says nothing about corruption. Taken from a real evaluation failure. Caught because the claim shares too few words with the only text it can quote.",
+      "evidence": [
+        {
+          "sourceId": "WIKI_HAITI",
+          "quote": "The government of Haiti and Haitian security forces have struggled to maintain their control of Port-au-Prince"
+        }
       ],
-      "note": "The source says nothing about corruption. Taken from a real evaluation failure.",
-      "caughtToday": false
+      "caughtByChecks": true
     },
     {
       "label": "unsupported",
       "text": "A drone strike blamed on Sudan's army hit homes and a mosque in Blue Nile province, killing at least four women.",
-      "cites": [
-        "AP"
-      ],
       "note": "Wrong actor: the source blames the Rapid Support Forces.",
-      "caughtToday": false
+      "evidence": [
+        {
+          "sourceId": "AP",
+          "quote": "A drone strike blamed on Sudan’s paramilitary Rapid Support Forces hit homes and a mosque in Blue Nile province, killing at least four women"
+        }
+      ],
+      "caughtByChecks": false
     },
     {
       "label": "unsupported",
       "text": "The Trump administration is advancing its proposal for an arms embargo on Sudan.",
-      "cites": [
-        "HILL"
-      ],
       "note": "Reversed meaning: the source says the proposal is being shelved.",
-      "caughtToday": false
+      "evidence": [
+        {
+          "sourceId": "HILL",
+          "quote": "its proposal for an arms embargo on Sudan amid divisions on the United Nations Security Council"
+        }
+      ],
+      "caughtByChecks": false
     },
     {
       "label": "unsupported",
       "text": "Gaza's almost two million people live in ruins because the ceasefire collapsed last month.",
-      "cites": [
-        "AFRICANEWS"
-      ],
       "note": "Adds a cause the source does not give.",
-      "caughtToday": false
+      "evidence": [
+        {
+          "sourceId": "AFRICANEWS",
+          "quote": "In Gaza, the territory's almost two million people live in ruins"
+        }
+      ],
+      "caughtByChecks": false
+    },
+    {
+      "label": "unsupported",
+      "text": "The army shelled a hospital in El Fasher, killing 30 patients.",
+      "note": "The quote is invented: no source contains it.",
+      "evidence": [
+        {
+          "sourceId": "AP",
+          "quote": "the army shelled a hospital in El Fasher, killing 30 patients"
+        }
+      ],
+      "caughtByChecks": true
     }
   ]
 }

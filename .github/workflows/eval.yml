@@ -1,0 +1,65 @@
+name: Evaluation
+
+# Replays the recorded cases through the real pipeline and fails if any
+# measure is past its limit (artifacts/api-server/eval/thresholds.ts).
+# Needs the ANTHROPIC_API_KEY repository secret; without it the run is skipped.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "artifacts/api-server/src/brief/**"
+      - "artifacts/api-server/eval/**"
+      - "lib/api-spec/openapi.yaml"
+
+concurrency:
+  group: eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      AI_INTEGRATIONS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      AI_INTEGRATIONS_ANTHROPIC_BASE_URL: https://api.anthropic.com
+      NODE_ENV: production
+      LOG_LEVEL: silent
+    steps:
+      - name: Check for the API key
+        id: key
+        run: |
+          if [ -z "$AI_INTEGRATIONS_ANTHROPIC_API_KEY" ]; then
+            echo "::notice::ANTHROPIC_API_KEY is not set for this run (forks and unconfigured repositories); evaluation skipped."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.present == 'true'
+
+      - uses: pnpm/action-setup@v4
+        if: steps.key.outputs.present == 'true'
+        with:
+          version: 9.9.0
+
+      - uses: actions/setup-node@v4
+        if: steps.key.outputs.present == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        if: steps.key.outputs.present == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run the evaluation against its limits
+        if: steps.key.outputs.present == 'true'
+        run: pnpm --filter @workspace/api-server run eval --check
+
+      - name: Add the report to the run summary
+        if: always() && steps.key.outputs.present == 'true'
+        run: cat artifacts/api-server/eval/REPORT.md >> "$GITHUB_STEP_SUMMARY"

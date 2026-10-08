@@ -9,8 +9,10 @@
 export * from './analyzeArticleBody';
 export * from './casualtyData';
 export * from './claim';
+export * from './claimSupport';
 export * from './coverageComparison';
 export * from './errorResponse';
+export * from './evidence';
 export * from './exploreConflictBody';
 export * from './healthStatus';
 export * from './intelligenceBrief';
@@ -25,3 +27,5 @@ export * from './retrievalStatusStatus';
 export * from './source';
 export * from './sourceKind';
 export * from './streamBriefBody';
+export * from './verification';
+export * from './verificationStatus';

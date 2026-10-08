@@ -4,7 +4,13 @@ import { describe, expect, it } from "vitest";
 import type { SourceRecord } from "./sources";
 import { checkClaim } from "./support";
 
-type Labelled = { label: "supported" | "unsupported"; text: string; cites: string[]; note: string; caughtToday?: boolean };
+type Labelled = {
+  label: "supported" | "unsupported";
+  text: string;
+  evidence: Array<{ sourceId: string; quote: string }>;
+  note: string;
+  caughtByChecks?: boolean;
+};
 const set = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "../../eval/claim-check-set.json"), "utf8")) as {
   sources: Record<string, { publisher: string; publishedAt: string | null; text: string }>;
   claims: Labelled[];
@@ -16,9 +22,9 @@ const byId = new Map<string, SourceRecord>(
     { id, kind: "news", provider: "set", title: "", url: null, retrievedAt: "", language: "English", country: null, excerpt: null, ...s },
   ]),
 );
-const kept = (c: Labelled) => checkClaim({ text: c.text, sourceIds: c.cites }, byId).ok;
+const kept = (c: Labelled) => checkClaim({ text: c.text, evidence: c.evidence }, byId).ok;
 
-describe("claim checks against the hand-labelled set", () => {
+describe("quote checks against the hand-labelled set", () => {
   const supported = set.claims.filter((c) => c.label === "supported");
   const unsupported = set.claims.filter((c) => c.label === "unsupported");
 
@@ -26,22 +32,23 @@ describe("claim checks against the hand-labelled set", () => {
     expect(kept(c)).toBe(true);
   });
 
-  it.each(unsupported.filter((c) => c.caughtToday))("discards an unsupported claim: $text", (c) => {
+  it.each(unsupported.filter((c) => c.caughtByChecks))("discards an unsupported claim: $text", (c) => {
     expect(kept(c)).toBe(false);
   });
 
-  // These pass the lexical checks: the words match, the meaning does not. They
-  // are the measured limit of the current checks. If one starts being caught,
-  // this fails — flip its caughtToday and raise the number below.
-  it.each(unsupported.filter((c) => !c.caughtToday))("known gap, still kept: $text", (c) => {
+  // These carry a real quote and share its words; only the meaning is wrong.
+  // No rule about words can catch them — they are what the verifier is for,
+  // and the evaluation measures how many of them it removes. If one starts
+  // being caught here, flip its caughtByChecks and raise the number below.
+  it.each(unsupported.filter((c) => !c.caughtByChecks))("left for the verifier: $text", (c) => {
     expect(kept(c)).toBe(true);
   });
 
-  it("reports how much of the unsupported set the checks catch", () => {
+  it("reports how much of the unsupported set the quote checks catch", () => {
     const caught = unsupported.filter((c) => !kept(c)).length;
     expect({ caught, of: unsupported.length, falseDrops: supported.filter((c) => !kept(c)).length }).toEqual({
-      caught: 6,
-      of: 10,
+      caught: 8,
+      of: 11,
       falseDrops: 0,
     });
   });

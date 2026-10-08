@@ -20,7 +20,7 @@ function formatDate(iso: string | null) {
  * the claim without losing their place. The popover also links to the article
  * and to the entry in the source list.
  */
-function Citation({ source, number }: { source: Source; number: number }) {
+function Citation({ source, number, quote }: { source: Source; number: number; quote: string }) {
 	const [open, setOpen] = useState(false);
 	const wrapRef = useRef<HTMLSpanElement | null>(null);
 	const popRef = useRef<HTMLSpanElement | null>(null);
@@ -80,13 +80,19 @@ function Citation({ source, number }: { source: Source; number: number }) {
 						{source.kind === "news" ? ` · ${formatDate(source.publishedAt)}` : ""}
 						{source.kind !== "news" ? ` · ${KIND_LABEL[source.kind]}` : ""}
 					</span>
+					{quote ? (
+						<span className="ci-cite-pop__quote">
+							<span className="ci-cite-pop__quote-label">The words this rests on</span>
+							<q>{quote}</q>
+						</span>
+					) : null}
 					<span className="ci-cite-pop__title">{source.title}</span>
-					{source.excerpt ? (
+					{quote ? null : source.excerpt ? (
 						<span className="ci-cite-pop__excerpt">{source.excerpt}</span>
 					) : (
 						<span className="ci-cite-pop__excerpt ci-cite-pop__excerpt--none">
 							{source.kind === "article"
-								? "This is the article you supplied."
+								? "Checked against the text you supplied, which is not stored or shown."
 								: "The publisher gave no summary for this item."}
 						</span>
 					)}
@@ -110,14 +116,15 @@ function Citation({ source, number }: { source: Source; number: number }) {
 	);
 }
 
-/** The numbered sources behind one claim. */
-function Citations({ ids, sources }: { ids: string[]; sources: Source[] }) {
+/** The numbered sources behind one claim, each with the words quoted from it. */
+function Citations({ claim, sources }: { claim: Claim; sources: Source[] }) {
 	return (
 		<span className="ci-cites">
-			{ids.map((id) => {
+			{claim.sourceIds.map((id) => {
 				const index = sources.findIndex((s) => s.id === id);
 				if (index === -1) return null;
-				return <Citation key={id} source={sources[index]} number={index + 1} />;
+				const quote = claim.evidence.find((e) => e.sourceId === id)?.quote ?? "";
+				return <Citation key={id} source={sources[index]} number={index + 1} quote={quote} />;
 			})}
 		</span>
 	);
@@ -139,7 +146,7 @@ export function ClaimList({
 		<ul className="ci-claims">
 			{claims.map((claim, i) => (
 				<li key={i} className="ci-claim">
-					{claim.text} <Citations ids={claim.sourceIds} sources={sources} />
+					{claim.text} <Citations claim={claim} sources={sources} />
 				</li>
 			))}
 		</ul>

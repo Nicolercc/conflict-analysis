@@ -8,6 +8,8 @@ export default defineConfig({
       NODE_ENV: "production",
       LOG_LEVEL: "silent",
       GEOCODER_MIN_GAP_MS: "0",
+      // Route tests answer every model call with a brief; the verifier has its own tests.
+      BRIEF_VERIFY: "off",
     },
     restoreMocks: false,
   },

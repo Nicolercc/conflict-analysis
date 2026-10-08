@@ -96,34 +96,63 @@ describe("sources come from retrieval", () => {
   });
 });
 
-describe("claims must rest on cited sources", () => {
+describe("claims must rest on quoted source text", () => {
   const claims = async (keyFacts: unknown, coverage: unknown = { agreements: [], differences: [] }) => {
     answers({ ...modelBrief(), keyFacts, coverage });
     return (await explore()).body;
   };
+  // S1: "Sudan: 12 aid trucks turned back near El Fasher. Humanitarian agencies say 12 trucks
+  //      carrying food were refused access to El Fasher on Monday."
+  // S2: "Sudan: aid convoys blocked outside El Fasher as fighting continues. Convoys bound for
+  //      the Sudan city were stopped at checkpoints."
+  const REFUSED = "12 trucks carrying food were refused access to El Fasher";
+  const quote = (sourceId: string, text: string) => ({ sourceId, quote: text });
 
-  it("keeps a claim whose cited source says it", async () => {
+  it("keeps a claim whose quote is in the source, and returns the quote", async () => {
     const body = await claims([
-      { text: "Agencies say 12 aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
+      { text: "Agencies say 12 aid trucks were refused access to El Fasher.", evidence: [quote("S1", REFUSED)] },
     ]);
     expect(body.keyFacts).toEqual([
-      { text: "Agencies say 12 aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
+      {
+        text: "Agencies say 12 aid trucks were refused access to El Fasher.",
+        sourceIds: ["S1"],
+        evidence: [{ sourceId: "S1", quote: REFUSED }],
+        support: "unverified",
+      },
     ]);
   });
 
-  it("drops a claim that cites a source that was never retrieved", async () => {
-    const body = await claims([{ text: "Aid trucks were refused access to El Fasher.", sourceIds: ["S99"] }]);
-    expect(body.keyFacts).toEqual([]);
-  });
-
-  it("drops a claim with no citation", async () => {
-    const body = await claims([{ text: "Aid trucks were refused access to El Fasher.", sourceIds: [] }]);
-    expect(body.keyFacts).toEqual([]);
-  });
-
-  it("drops a claim whose figure appears in no cited source", async () => {
+  it("accepts a quote that differs only in case, spacing or typographic quotes", async () => {
     const body = await claims([
-      { text: "Agencies say 450 aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
+      { text: "Agencies say 12 aid trucks were refused access to El Fasher.", evidence: [quote("S1", "  12 TRUCKS carrying   food were refused access to El Fasher…")] },
+    ]);
+    expect(body.keyFacts).toHaveLength(1);
+  });
+
+  it("drops a claim whose quote is not in the source it names", async () => {
+    const body = await claims([
+      { text: "Agencies say 12 aid trucks were refused access to El Fasher.", evidence: [quote("S1", "12 trucks carrying food were destroyed near El Fasher")] },
+      // a real quote, attributed to the wrong source
+      { text: "Agencies say 12 aid trucks were refused access to El Fasher.", evidence: [quote("S2", REFUSED)] },
+    ]);
+    expect(body.keyFacts).toEqual([]);
+  });
+
+  it("drops a claim that cites a source that was never retrieved, or offers no quote", async () => {
+    const body = await claims([
+      { text: "Aid trucks were refused access to El Fasher.", evidence: [quote("S99", REFUSED)] },
+      { text: "Aid trucks were refused access to El Fasher.", evidence: [] },
+      { text: "Aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
+      { text: "Aid trucks were refused access to El Fasher.", evidence: [quote("S1", "El Fasher")] },
+    ]);
+    expect(body.keyFacts).toEqual([]);
+  });
+
+  it("drops a claim whose figure is not in its quote, even if it is elsewhere in the source", async () => {
+    const body = await claims([
+      { text: "Agencies say 450 aid trucks were refused access to El Fasher.", evidence: [quote("S1", REFUSED)] },
+      // "12" is in S1, but not in the words this claim quotes
+      { text: "Agencies say 12 trucks carrying food were refused access.", evidence: [quote("S1", "trucks carrying food were refused access to El Fasher on Monday")] },
     ]);
     expect(body.keyFacts).toEqual([]);
   });
@@ -132,30 +161,39 @@ describe("claims must rest on cited sources", () => {
     // S1 was published on 11 September 2026; its text never spells the date out.
     const dated = "On September 11, 2026, agencies said 12 aid trucks were refused access to El Fasher.";
     const body = await claims([
-      { text: dated, sourceIds: ["S1"] },
-      { text: "On March 3, 2019, agencies said 12 aid trucks were refused access to El Fasher.", sourceIds: ["S1"] },
+      { text: dated, evidence: [quote("S1", REFUSED)] },
+      { text: "On March 3, 2019, agencies said 12 aid trucks were refused access to El Fasher.", evidence: [quote("S1", REFUSED)] },
     ]);
-    expect(body.keyFacts).toEqual([{ text: dated, sourceIds: ["S1"] }]);
+    expect(body.keyFacts.map((k: { text: string }) => k.text)).toEqual([dated]);
   });
 
-  it("drops a claim that shares nothing with the source it cites", async () => {
-    const body = await claims([{ text: "The central bank raised interest rates sharply.", sourceIds: ["S1"] }]);
+  it("drops a claim that shares nothing with the words it quotes", async () => {
+    const body = await claims([{ text: "The central bank raised interest rates sharply.", evidence: [quote("S1", REFUSED)] }]);
     expect(body.keyFacts).toEqual([]);
   });
 
-  it("removes unknown ids from an otherwise supported claim", async () => {
+  it("keeps only the quotes that check out", async () => {
     const body = await claims([
-      { text: "Aid trucks carrying food were refused access to El Fasher.", sourceIds: ["S1", "S42"] },
+      {
+        text: "Aid trucks carrying food were refused access to El Fasher.",
+        evidence: [quote("S1", REFUSED), quote("S42", REFUSED), quote("S2", "trucks were refused at every checkpoint")],
+      },
     ]);
     expect(body.keyFacts[0].sourceIds).toEqual(["S1"]);
+    expect(body.keyFacts[0].evidence).toEqual([{ sourceId: "S1", quote: REFUSED }]);
   });
 
-  it("applies the same checks to the coverage comparison", async () => {
+  it("needs a quote from two sources for a comparison between outlets", async () => {
+    const both = [quote("S1", "aid trucks turned back near El Fasher"), quote("S2", "aid convoys blocked outside El Fasher")];
     const body = await claims([], {
-      agreements: [{ text: "Both report aid convoys blocked near El Fasher.", sourceIds: ["S1", "S2"] }],
-      differences: [{ text: "One outlet reports 9,000 deaths.", sourceIds: ["S1", "S2"] }],
+      agreements: [
+        { text: "Aid deliveries were stopped outside El Fasher.", evidence: both },
+        { text: "Aid trucks were turned back near El Fasher.", evidence: [both[0]] },
+      ],
+      differences: [{ text: "One outlet reports 9,000 deaths near El Fasher.", evidence: both }],
     });
     expect(body.coverage.agreements).toHaveLength(1);
+    expect(body.coverage.agreements[0].sourceIds).toEqual(["S1", "S2"]);
     expect(body.coverage.differences).toEqual([]);
   });
 
@@ -194,13 +232,20 @@ describe("prompt boundaries", () => {
       "Fighting continued in Khartoum on Monday as agencies warned that 30 aid convoys were blocked from El Fasher. SECRET-MARKER";
     answers({
       ...modelBrief(),
-      keyFacts: [{ text: "Agencies warned that 30 aid convoys were blocked from El Fasher.", sourceIds: ["S1"] }],
+      keyFacts: [
+        {
+          text: "Agencies warned that 30 aid convoys were blocked from El Fasher.",
+          evidence: [{ sourceId: "S1", quote: "agencies warned that 30 aid convoys were blocked from El Fasher" }],
+        },
+      ],
     });
     const res = await request(app).post("/api/intelligence/analyze").send({ article });
     expect(res.status).toBe(200);
     expect(res.body.sources[0]).toMatchObject({ id: "S1", kind: "article", provider: "Reader", url: null, excerpt: null });
     expect(res.body.keyFacts).toHaveLength(1);
-    expect(JSON.stringify(res.body)).not.toMatch(/SECRET-MARKER/);
+    // The quote was checked against the pasted text, but pasted text is never sent back or stored.
+    expect(res.body.keyFacts[0].evidence).toEqual([{ sourceId: "S1", quote: "" }]);
+    expect(JSON.stringify(res.body)).not.toMatch(/SECRET-MARKER|agencies warned that 30/);
     expect(create.mock.calls[0][0].messages[0].content).toMatch(/SECRET-MARKER/);
   });
 });

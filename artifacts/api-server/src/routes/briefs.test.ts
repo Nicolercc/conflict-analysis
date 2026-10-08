@@ -72,6 +72,31 @@ describe("stored briefs", () => {
     expect(create).toHaveBeenCalledTimes(1);
   });
 
+  it("serves a brief saved before quotes and verification existed, claiming neither", async () => {
+    const old = {
+      ...modelBrief(),
+      id: "oldBrief0001",
+      generatedAt: new Date().toISOString(),
+      inScope: true,
+      sources: [],
+      retrieval: [],
+      keyFacts: [{ text: "An older claim.", sourceIds: ["S1"] }],
+      coverage: { agreements: [], differences: [{ text: "An older comparison.", sourceIds: ["S1", "S2"] }] },
+    };
+    const store = (app.locals["briefs"] as { store: { save: (k: string, b: unknown) => Promise<void> } }).store;
+    await store.save("topic:old", old);
+    const res = await request(app).get("/api/briefs/oldBrief0001");
+    expect(res.status).toBe(200);
+    expect(res.body.keyFacts[0]).toEqual({
+      text: "An older claim.",
+      sourceIds: ["S1"],
+      evidence: [{ sourceId: "S1", quote: "" }],
+      support: "unverified",
+    });
+    expect(res.body.coverage.differences[0].evidence).toHaveLength(2);
+    expect(res.body.verification).toEqual({ status: "skipped", checked: 0, removed: 0, corrected: 0 });
+  });
+
   it("does not store the reader's pasted text with the brief", async () => {
     const made = await request(app).post("/api/intelligence/analyze").send({ article: ARTICLE });
     const read = await request(app).get(`/api/briefs/${made.body.id}`);
@@ -89,6 +114,7 @@ describe("POST /api/intelligence/stream", () => {
       "stage:retrieving",
       "sources",
       "stage:writing",
+      "stage:checking",
       "stage:locating",
       "brief",
     ]);

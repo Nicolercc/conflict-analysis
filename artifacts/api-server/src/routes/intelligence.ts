@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { AnalyzeArticleBody, ExploreConflictBody, StreamBriefBody } from "@workspace/api-zod";
 import { articleSearchTopic, scrapeArticle } from "../brief/article";
 import { buildBrief, type BriefInput, type BriefProgress } from "../brief/generate";
+import { upgradeStoredBrief } from "../brief/upgrade";
 import type { BriefState } from "../lib/brief-state";
 import { isBriefId, type StoredBrief } from "../lib/brief-store";
 import { AppError, invalidInput, sendError } from "../lib/errors";
@@ -47,7 +48,7 @@ function briefFor(req: Request, { key, input }: Resolved): Promise<StoredBrief> 
   const { cache, cacheTtlMs, gate, store } = briefState(req);
   return cache.getOrCreate(key, async () => {
     const saved = await store.latest(key, cacheTtlMs);
-    if (saved) return saved;
+    if (saved) return upgradeStoredBrief(saved);
     progress.open(key);
     try {
       const brief = await gate.run(() => buildBrief(input, (event) => progress.publish(key, event)));
@@ -159,7 +160,7 @@ briefsRouter.get("/:id", async (req, res) => {
     if (!brief) throw new AppError(404, "NOT_FOUND", "This brief is no longer available.");
     // A stored brief never changes, so it can be cached for a while.
     res.set("Cache-Control", "public, max-age=300");
-    res.json(brief);
+    res.json(upgradeStoredBrief(brief));
   } catch (err) {
     sendError(req, res, err);
   }

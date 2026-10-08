@@ -293,7 +293,7 @@ export const getStreamBriefUrl = () => {
  * Takes a topic, an article URL or article text and answers with a
  * `text/event-stream`. Events, in order:
  *
- * - `stage` — `{ "stage": "retrieving" | "writing" | "locating" }`
+ * - `stage` — `{ "stage": "retrieving" | "writing" | "checking" | "locating" }`
  * - `sources` — `{ "sources": Source[], "retrieval": RetrievalStatus[] }`, sent once retrieval finishes
  * - `brief` — the finished IntelligenceBrief (the last event on success)
  * - `error` — an ErrorResponse (the last event on failure after the stream has started)
