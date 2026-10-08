@@ -1,4 +1,5 @@
 import { anthropic } from "@workspace/integrations-anthropic-ai";
+import { recordModelCall } from "../lib/ledger";
 import { logger } from "../lib/logger";
 import { extractJSON } from "./json";
 import type { SourceRecord } from "./sources";
@@ -68,7 +69,7 @@ function render(claims: Claim[], byId: Map<string, SourceRecord>): string {
     .join("\n\n");
 }
 
-export async function verifyClaims(groups: Claim[][], sources: SourceRecord[]): Promise<VerifyResult> {
+export async function verifyClaims(groups: Claim[][], sources: SourceRecord[], briefId: string | null = null): Promise<VerifyResult> {
   const flat = groups.flat();
   const usage = { inputTokens: 0, outputTokens: 0 };
   const skipped = (): VerifyResult => ({
@@ -83,6 +84,9 @@ export async function verifyClaims(groups: Claim[][], sources: SourceRecord[]): 
   if (!verifierEnabled()) return skipped();
 
   let verdicts: Array<{ n?: number; verdict?: string; why?: string; fix?: unknown }>;
+  const started = Date.now();
+  const note = (ok: boolean) =>
+    recordModelCall({ briefId, purpose: "verifier", model: VERIFIER_MODEL, inputTokens: usage.inputTokens, outputTokens: usage.outputTokens, ms: Date.now() - started, ok });
   try {
     const message = await anthropic.messages.create(
       {
@@ -99,7 +103,9 @@ export async function verifyClaims(groups: Claim[][], sources: SourceRecord[]): 
     const parsed = extractJSON(block && block.type === "text" ? block.text : "") as { claims?: typeof verdicts };
     if (!Array.isArray(parsed.claims)) throw new Error("verifier returned no verdict list");
     verdicts = parsed.claims;
+    note(true);
   } catch (err) {
+    note(false);
     logger.warn({ err }, "claim verifier did not run; claims kept as unverified");
     return skipped();
   }

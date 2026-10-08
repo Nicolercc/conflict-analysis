@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
-import pg from "pg";
+import type pg from "pg";
+import { once, safeName } from "./db";
 import { logger } from "./logger";
 
 /**
@@ -61,27 +62,13 @@ export class MemoryBriefStore implements BriefStore {
 
 /** Briefs in Postgres: links survive restarts and deploys. */
 export class PostgresBriefStore implements BriefStore {
-  private readonly pool: pg.Pool;
-  private ready: Promise<void> | null = null;
+  private readonly table: string;
+  private readonly ensure: () => Promise<void>;
 
-  constructor(connectionString: string, private readonly table = "briefs") {
-    if (!/^[a-z_][a-z0-9_]*$/.test(table)) throw new Error("invalid table name");
-    this.pool = new pg.Pool({
-      connectionString,
-      max: 5,
-      connectionTimeoutMillis: 5_000,
-      idleTimeoutMillis: 30_000,
-      // Hosted Postgres requires TLS; a local server does not offer it.
-      ssl: /localhost|127\.0\.0\.1|sslmode=disable/.test(connectionString) ? undefined : { rejectUnauthorized: true },
-    });
-    // An idle connection dropped by the server must not crash the process.
-    this.pool.on("error", (err) => logger.warn({ err }, "brief store connection error"));
-  }
-
-  /** Create the table on first use. A failure is retried on the next call. */
-  private ensure(): Promise<void> {
-    this.ready ??= this.pool
-      .query(
+  constructor(private readonly pool: pg.Pool, table = "briefs") {
+    this.table = safeName(table);
+    this.ensure = once(() =>
+      pool.query(
         `CREATE TABLE IF NOT EXISTS ${this.table} (
            id text PRIMARY KEY,
            cache_key text NOT NULL,
@@ -89,13 +76,8 @@ export class PostgresBriefStore implements BriefStore {
            body jsonb NOT NULL
          );
          CREATE INDEX IF NOT EXISTS ${this.table}_key_created ON ${this.table} (cache_key, created_at DESC);`,
-      )
-      .then(() => undefined)
-      .catch((err) => {
-        this.ready = null;
-        throw err;
-      });
-    return this.ready;
+      ),
+    );
   }
 
   async save(key: string, brief: StoredBrief) {
@@ -121,9 +103,6 @@ export class PostgresBriefStore implements BriefStore {
     return rows[0]?.body ?? null;
   }
 
-  async close() {
-    await this.pool.end();
-  }
 }
 
 /**
@@ -166,8 +145,6 @@ export class LayeredBriefStore implements BriefStore {
   }
 }
 
-export function createBriefStore(databaseUrl = process.env["DATABASE_URL"]): LayeredBriefStore {
-  const usable = databaseUrl && /^postgres(ql)?:\/\//.test(databaseUrl);
-  if (!usable) logger.info("DATABASE_URL not set: briefs are kept in memory and their links last until the next restart");
-  return new LayeredBriefStore(new MemoryBriefStore(), usable ? new PostgresBriefStore(databaseUrl) : null);
+export function createBriefStore(pool: pg.Pool | null): LayeredBriefStore {
+  return new LayeredBriefStore(new MemoryBriefStore(), pool ? new PostgresBriefStore(pool) : null);
 }

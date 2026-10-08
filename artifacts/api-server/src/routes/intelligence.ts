@@ -64,7 +64,7 @@ function briefFor(req: Request, { key, input }: Resolved): Promise<StoredBrief> 
 
 router.post("/analyze", async (req, res) => {
   try {
-    briefState(req).limiter.take(req.ip ?? "unknown");
+    await briefState(req).limiter.take(req.ip ?? "unknown");
     const body = AnalyzeArticleBody.safeParse(req.body);
     if (!body.success) throw invalidInput(firstIssue(body.error.issues));
     res.json(await briefFor(req, await resolveArticle(body.data.article, body.data.url)));
@@ -75,7 +75,7 @@ router.post("/analyze", async (req, res) => {
 
 router.post("/explore", async (req, res) => {
   try {
-    briefState(req).limiter.take(req.ip ?? "unknown");
+    await briefState(req).limiter.take(req.ip ?? "unknown");
     const body = ExploreConflictBody.safeParse(req.body);
     if (!body.success) throw invalidInput(firstIssue(body.error.issues));
     res.json(await briefFor(req, resolveTopic(body.data.topic)));
@@ -103,7 +103,7 @@ function errorEvent(req: Request, err: unknown) {
 router.post("/stream", async (req: Request, res: Response) => {
   let resolved: Resolved;
   try {
-    briefState(req).limiter.take(req.ip ?? "unknown");
+    await briefState(req).limiter.take(req.ip ?? "unknown");
     const body = StreamBriefBody.safeParse(req.body);
     if (!body.success) throw invalidInput(firstIssue(body.error.issues));
     const { topic, url, article } = body.data;
