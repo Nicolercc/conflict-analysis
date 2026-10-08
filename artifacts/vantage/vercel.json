@@ -7,7 +7,7 @@
         {
           "type": "header",
           "key": "user-agent",
-          "value": "(?i).*(bot|crawler|spider|facebookexternalhit|facebot|slack|whatsapp|telegram|discord|linkedin|pinterest|embedly|quora link preview|redditbot|vkshare|skypeuripreview|iframely|mastodon|bluesky|preview).*"
+          "value": ".*([Bb]ot|[Cc]rawler|[Ss]pider|facebookexternalhit|Facebot|[Ss]lack|WhatsApp|[Tt]elegram|[Dd]iscord|LinkedIn|Pinterest|[Ee]mbedly|Quora|vkShare|Skype|Iframely|Mastodon|[Bb]luesky|[Pp]review).*"
         }
       ],
       "destination": "/api/brief-preview?id=:id"
