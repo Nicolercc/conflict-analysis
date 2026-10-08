@@ -3,6 +3,7 @@ import { ExploreConflictResponse } from "@workspace/api-zod";
 import { newBriefId } from "../lib/brief-store";
 import { AppError } from "../lib/errors";
 import { recordModelCall } from "../lib/ledger";
+import { classifyModelError, noteModelFailure, noteModelSuccess } from "../lib/model-health";
 import { logger } from "../lib/logger";
 import { locateBrief } from "./geocode";
 import { extractJSON, normalizeLatLng, tryExtractJsonFallback } from "./json";
@@ -55,8 +56,10 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
     );
   } catch (err) {
     recordModelCall({ briefId, purpose: "writer", model: BRIEF_MODEL, inputTokens: 0, outputTokens: 0, ms: Date.now() - started, ok: false });
+    noteModelFailure(err);
     throw providerUnavailable(err);
   }
+  noteModelSuccess();
   recordModelCall({
     briefId,
     purpose: "writer",
@@ -239,7 +242,9 @@ export async function generateFromCoverage(
       return { brief: await locateBrief(brief), stats: { ...stats, attempts: attempt } satisfies GenerationStats };
     } catch (err) {
       if (err instanceof AppError) {
-        const quick = Date.now() - attemptStarted < QUICK_FAILURE_MS;
+        // A refusal (bad key, no credit) will be refused again; only a blip is worth a second try.
+        const refused = classifyModelError(err.cause).kind === "refused";
+        const quick = !refused && Date.now() - attemptStarted < QUICK_FAILURE_MS;
         if (!quick || attempt === MAX_GENERATION_ATTEMPTS) throw err;
       }
       lastError = err;

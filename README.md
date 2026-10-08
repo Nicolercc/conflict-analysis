@@ -139,7 +139,7 @@ The system prompt is a constant. Retrieved headlines and the reader's article tr
 ### Configuration, readiness and cost
 
 * **Configuration is validated at start-up.** A malformed value stops the process with a message naming the variable; every problem is listed at once and no secret is echoed.
-* **`GET /api/readyz`** says whether the instance can do its job and whether what it saves will last (`/api/healthz` only says the process is up).
+* **`GET /api/readyz`** says whether the instance can do its job and whether what it saves will last (`/api/healthz` only says the process is up). It turns not-ready when the model provider refuses a request — a revoked key, a suspended account, spent credit — and the uptime check then fails and emails the owner. It learns this from real requests, so it reports the problem from the first failed brief onwards.
 * **Every model call is recorded** with its purpose (writer or verifier), tokens, duration and cost. `GET /api/ops/costs`, for whoever holds `OPS_TOKEN`, gives totals per day and the cost per brief — about 1.6 US cents with the default model.
 * **Limits are shared.** The rate limit and the daily budget are counted in the database when there is one, so a restart or a second instance does not hand out a fresh allowance. Client addresses are stored only as a keyed hash. If the database is unreachable the limits still hold per process.
 
