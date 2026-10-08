@@ -171,6 +171,7 @@ Codes: `INVALID_INPUT`, `FETCH_BLOCKED`, `FETCH_FAILED`, `RATE_LIMITED`, `OVERLO
 ```bash
 pnpm test        # API and frontend unit/route tests
 pnpm typecheck
+pnpm lint
 pnpm codegen     # regenerate client and schemas from the OpenAPI spec
 ```
 
@@ -195,7 +196,7 @@ conflict-analysis/
 │   ├── api-zod/              # generated Zod schemas
 │   ├── api-client-react/     # generated React Query client
 │   └── integrations-anthropic-ai/
-├── .github/workflows/        # CI: codegen drift, typecheck, build, tests
+├── .github/workflows/        # CI: codegen drift, lint, typecheck, build, tests; uptime check
 ├── Dockerfile                # production API image
 ├── render.yaml               # Render API blueprint
 └── pnpm-workspace.yaml

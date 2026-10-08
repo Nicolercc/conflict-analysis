@@ -13,12 +13,12 @@ function findFirstJsonBracketIndex(s: string): number {
 
 export function extractJSON(text: string): object {
   // Remove markdown code fences (opening); strip trailing fence if present
-  let cleaned = text
+  const cleaned = text
     .replace(/```(?:json)?\s*/gi, "")
     .replace(/```\s*$/g, "")
     .trim();
 
-  let startIdx = findFirstJsonBracketIndex(cleaned);
+  const startIdx = findFirstJsonBracketIndex(cleaned);
 
   if (startIdx === -1) {
     throw new Error("No JSON object or array found in response");
