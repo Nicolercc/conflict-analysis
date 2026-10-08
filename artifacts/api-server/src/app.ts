@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import express, { type ErrorRequestHandler, type Express } from "express";
 import cors from "cors";
+import helmet from "helmet";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -14,6 +15,16 @@ app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
 app.locals.briefs = createBriefState();
+
+// This server only ever answers with JSON, so nothing it sends may be framed,
+// sniffed as another type, or load anything. Responses stay readable by the
+// allowed browser origins (see CORS below).
+app.use(
+	helmet({
+		contentSecurityPolicy: { directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } },
+		crossOriginResourcePolicy: { policy: "cross-origin" },
+	}),
+);
 
 app.use(
 	pinoHttp({

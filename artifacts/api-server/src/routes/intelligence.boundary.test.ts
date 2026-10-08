@@ -122,6 +122,23 @@ describe("failures", () => {
   });
 });
 
+describe("response headers", () => {
+  it("sends protective headers and no server fingerprint", async () => {
+    const res = await request(app).get("/api/healthz");
+    expect(res.headers["x-content-type-options"]).toBe("nosniff");
+    expect(res.headers["content-security-policy"]).toMatch(/default-src 'none'/);
+    expect(res.headers["content-security-policy"]).toMatch(/frame-ancestors 'none'/);
+    expect(res.headers["strict-transport-security"]).toMatch(/max-age=/);
+    expect(res.headers["x-powered-by"]).toBeUndefined();
+  });
+
+  it("still lets the allowed site read a response", async () => {
+    const res = await request(app).get("/api/healthz").set("Origin", "http://localhost:5173");
+    expect(res.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
+    expect(res.headers["cross-origin-resource-policy"]).toBe("cross-origin");
+  });
+});
+
 describe("provider blips", () => {
   it("tries once more when the provider fails straight away, then succeeds", async () => {
     let calls = 0;

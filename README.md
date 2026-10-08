@@ -132,6 +132,13 @@ The system prompt is a constant. Retrieved headlines and the reader's article tr
 * **Bounded cache** with a TTL that never stores failures.
 * **Typed errors** with a stable code, a safe message and a request id; upstream provider messages are logged, never returned.
 
+* **Response headers**: the site sends a content-security policy that allows only its own scripts, its fonts, map tiles and the API; the API sends `default-src 'none'`, no-sniff and HSTS.
+* **Hard deadline on the model call**: one attempt, 60 seconds, so a reader gets an answer or a "try again", never a silent wait.
+
+### Watching production
+
+A scheduled workflow (`.github/workflows/uptime.yml`) requests the API's health check and the site every ten minutes; a failure emails the repository owner. Each brief logs its token use, source count and how many claims survived the checks, and every failure logs its code with the request id shown to the reader.
+
 ## 7. Accessible by default
 
 Nothing is hidden behind hover. Pages have titles, a status region, ordered headings and managed focus; text is at least 11px and meets 4.5:1 contrast; pinch zoom works; reduced motion is respected.
