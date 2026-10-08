@@ -1,3 +1,4 @@
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import type {
 	Claim,
 	RetrievalStatus,
@@ -13,24 +14,110 @@ function formatDate(iso: string | null) {
 	return d.toLocaleDateString(undefined, { dateStyle: "medium" });
 }
 
-/** Numbered links from a claim to the sources that support it. */
+/**
+ * A citation number. Pressing it shows the source right where the claim is —
+ * outlet, date, headline and the publisher's summary — so a reader can check
+ * the claim without losing their place. The popover also links to the article
+ * and to the entry in the source list.
+ */
+function Citation({ source, number }: { source: Source; number: number }) {
+	const [open, setOpen] = useState(false);
+	const wrapRef = useRef<HTMLSpanElement | null>(null);
+	const popRef = useRef<HTMLSpanElement | null>(null);
+	const popId = useId();
+
+	// Close on Escape, and on a press or focus that lands outside.
+	useEffect(() => {
+		if (!open) return;
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key !== "Escape") return;
+			setOpen(false);
+			wrapRef.current?.querySelector("button")?.focus();
+		};
+		const onOutside = (e: Event) => {
+			if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+		};
+		document.addEventListener("keydown", onKey);
+		document.addEventListener("pointerdown", onOutside);
+		document.addEventListener("focusin", onOutside);
+		return () => {
+			document.removeEventListener("keydown", onKey);
+			document.removeEventListener("pointerdown", onOutside);
+			document.removeEventListener("focusin", onOutside);
+		};
+	}, [open]);
+
+	// Keep the popover inside the screen: it opens under its number, then is
+	// nudged sideways if that would push it past either edge.
+	useLayoutEffect(() => {
+		const pop = popRef.current;
+		if (!open || !pop) return;
+		pop.style.setProperty("--shift", "0px");
+		const box = pop.getBoundingClientRect();
+		const margin = 12;
+		const over = box.right - (window.innerWidth - margin);
+		const under = margin - box.left;
+		pop.style.setProperty("--shift", `${over > 0 ? -over : under > 0 ? under : 0}px`);
+	}, [open]);
+
+	return (
+		<span className="ci-cite-wrap" ref={wrapRef}>
+			<button
+				type="button"
+				className="ci-cite"
+				aria-label={`Source ${number}: ${source.publisher}`}
+				aria-expanded={open}
+				aria-controls={open ? popId : undefined}
+				onClick={() => setOpen((v) => !v)}
+			>
+				{number}
+			</button>
+			{open && (
+				<span className="ci-cite-pop" id={popId} ref={popRef} role="group" aria-label={`Source ${number}`}>
+					<span className="ci-cite-pop__meta">
+						<strong>{source.publisher}</strong>
+						{source.country ? ` · ${source.country}` : ""}
+						{source.kind === "news" ? ` · ${formatDate(source.publishedAt)}` : ""}
+						{source.kind !== "news" ? ` · ${KIND_LABEL[source.kind]}` : ""}
+					</span>
+					<span className="ci-cite-pop__title">{source.title}</span>
+					{source.excerpt ? (
+						<span className="ci-cite-pop__excerpt">{source.excerpt}</span>
+					) : (
+						<span className="ci-cite-pop__excerpt ci-cite-pop__excerpt--none">
+							{source.kind === "article"
+								? "This is the article you supplied."
+								: "The publisher gave no summary for this item."}
+						</span>
+					)}
+					<span className="ci-cite-pop__links">
+						{source.url ? (
+							<a href={source.url} target="_blank" rel="noopener noreferrer">
+								Read the original
+								<span className="sr-only"> (opens in a new tab)</span>
+							</a>
+						) : null}
+						<a
+							href={`#${sourceAnchor(source.id)}`}
+							onClick={() => setOpen(false)}
+						>
+							Show in source list
+						</a>
+					</span>
+				</span>
+			)}
+		</span>
+	);
+}
+
+/** The numbered sources behind one claim. */
 function Citations({ ids, sources }: { ids: string[]; sources: Source[] }) {
 	return (
 		<span className="ci-cites">
 			{ids.map((id) => {
 				const index = sources.findIndex((s) => s.id === id);
 				if (index === -1) return null;
-				const source = sources[index];
-				return (
-					<a
-						key={id}
-						href={`#${sourceAnchor(id)}`}
-						className="ci-cite"
-						aria-label={`Source ${index + 1}: ${source.publisher}`}
-					>
-						{index + 1}
-					</a>
-				);
+				return <Citation key={id} source={sources[index]} number={index + 1} />;
 			})}
 		</span>
 	);

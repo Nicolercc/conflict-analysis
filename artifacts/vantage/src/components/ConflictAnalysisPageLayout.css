@@ -612,7 +612,86 @@
 	white-space: nowrap;
 }
 
+.ci-cite-wrap {
+	position: relative;
+	display: inline-block;
+}
+
+/* The source, shown where the claim is */
+.ci-cite-pop {
+	position: absolute;
+	z-index: 700;
+	top: calc(100% + 8px);
+	left: 0;
+	transform: translateX(var(--shift, 0px));
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	width: min(340px, calc(100vw - 24px));
+	padding: 14px 16px;
+	border: 1px solid var(--border-medium);
+	border-radius: 10px;
+	background: var(--bg-surface);
+	box-shadow: 0 10px 30px rgba(20, 24, 31, 0.16);
+	white-space: normal;
+	text-align: left;
+	cursor: auto;
+}
+
+.ci-cite-pop__meta {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	line-height: 1.5;
+	letter-spacing: 0.03em;
+	color: var(--text-muted);
+}
+
+.ci-cite-pop__meta strong {
+	font-weight: 500;
+	color: var(--text-primary);
+}
+
+.ci-cite-pop__title {
+	font-family: "Newsreader", Georgia, serif;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--text-primary);
+}
+
+.ci-cite-pop__excerpt {
+	font-family: "Newsreader", Georgia, serif;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--text-secondary);
+}
+
+.ci-cite-pop__excerpt--none {
+	font-style: italic;
+	color: var(--text-muted);
+}
+
+.ci-cite-pop__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 18px;
+	padding-top: 6px;
+	border-top: 1px solid var(--border-light);
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.ci-cite-pop__links a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 28px;
+	color: var(--accent-navy);
+}
+
 .ci-cite {
+	cursor: pointer;
+	appearance: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -631,6 +710,7 @@
 	vertical-align: 1px;
 }
 
+.ci-cite[aria-expanded="true"],
 .ci-cite:hover {
 	background: var(--accent-navy);
 	color: #fff;

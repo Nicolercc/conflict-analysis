@@ -2,7 +2,18 @@
   "outputDirectory": "dist/public",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/brief/:id",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawler|spider|facebookexternalhit|facebot|slack|whatsapp|telegram|discord|linkedin|pinterest|embedly|quora link preview|redditbot|vkshare|skypeuripreview|iframely|mastodon|bluesky|preview).*"
+        }
+      ],
+      "destination": "/api/brief-preview?id=:id"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
