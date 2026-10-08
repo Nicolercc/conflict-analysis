@@ -1,6 +1,6 @@
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { ExploreConflictResponse } from "@workspace/api-zod";
-import { newBriefId } from "../lib/brief-store";
+import { newBriefId, type SourceSnapshot } from "../lib/brief-store";
 import { AppError } from "../lib/errors";
 import { recordModelCall } from "../lib/ledger";
 import { logger } from "../lib/logger";
@@ -8,7 +8,7 @@ import { locateBrief } from "./geocode";
 import { extractJSON, normalizeLatLng, tryExtractJsonFallback } from "./json";
 import { buildUserMessage, SYSTEM_PROMPT } from "./prompt";
 import { searchCoverage, type Coverage } from "./retrieval";
-import { toPublicSource, type Candidate } from "./sources";
+import { toPublicSource, type Candidate, type SourceRecord } from "./sources";
 import { checkClaims } from "./support";
 import { verifyClaims } from "./verify";
 
@@ -95,6 +95,26 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
   const dropped = [...quoted.keyFacts.dropped, ...quoted.agreements.dropped, ...quoted.differences.dropped];
   if (dropped.length > 0) logger.info({ dropped }, "claims failed the quote checks");
 
+  const location = {
+    city: str(rawLoc["city"]),
+    country: str(rawLoc["country"]),
+    region: str(rawLoc["region"]),
+    ...normalizeLatLng(rawLoc["lat"], rawLoc["lng"]),
+  };
+  const events = Array.isArray(parsed["relatedEvents"])
+    ? (parsed["relatedEvents"] as Array<Record<string, unknown>>).map((ev) => ({
+        ...ev,
+        ...normalizeLatLng(ev?.["lat"], ev?.["lng"]),
+        place: str(ev?.["place"]).trim() || null,
+        searchQuery: str(ev?.["searchQuery"]),
+      }))
+    : null;
+  // Looking places up and verifying claims do not depend on each other, so the
+  // map lookups start now and run while the verifier reads. The model's
+  // coordinates are only a guess; the map shows looked-up places.
+  const lookingUp = parsed["inScope"] === false ? null : locateBrief({ location, relatedEvents: events ?? [] });
+  lookingUp?.catch(() => {});
+
   // Second check: another model reads each claim against its quotes.
   onProgress({ type: "stage", stage: "checking" });
   const verified = await verifyClaims([quoted.keyFacts.kept, quoted.agreements.kept, quoted.differences.kept], coverage.sources, briefId);
@@ -110,6 +130,8 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
     })),
   );
   const claimsKept = keyFacts.length + agreements.length + differences.length;
+  onProgress({ type: "stage", stage: "locating" });
+  const located = lookingUp ? await lookingUp : null;
 
   // An out-of-scope topic has no risk level, parties or timeline. The model
   // sometimes says so with "N/A" or by leaving fields out, which would fail the
@@ -139,20 +161,8 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
     id: briefId,
     generatedAt: new Date().toISOString(),
     inScope: parsed["inScope"] !== false,
-    location: {
-      city: str(rawLoc["city"]),
-      country: str(rawLoc["country"]),
-      region: str(rawLoc["region"]),
-      ...normalizeLatLng(rawLoc["lat"], rawLoc["lng"]),
-    },
-    relatedEvents: Array.isArray(parsed["relatedEvents"])
-      ? (parsed["relatedEvents"] as Array<Record<string, unknown>>).map((ev) => ({
-          ...ev,
-          ...normalizeLatLng(ev?.["lat"], ev?.["lng"]),
-          place: str(ev?.["place"]).trim() || null,
-          searchQuery: str(ev?.["searchQuery"]),
-        }))
-      : parsed["relatedEvents"],
+    location: located?.location ?? { ...location, lat: null, lng: null },
+    relatedEvents: events ? (located?.relatedEvents ?? events.map((ev) => ({ ...ev, lat: null, lng: null }))) : parsed["relatedEvents"],
     ...neutral,
     keyFacts,
     coverage: { agreements, differences },
@@ -179,6 +189,19 @@ async function generateOnce(coverage: Coverage, userMessage: string, onProgress:
       usage: { inputTokens: message.usage?.input_tokens ?? 0, outputTokens: message.usage?.output_tokens ?? 0 },
     },
   };
+}
+
+/** The text each source contributed, for keeping. Pasted text is not kept: only its fingerprint is. */
+export function snapshotOf(sources: SourceRecord[]): SourceSnapshot[] {
+  return sources.map((s) => ({
+    id: s.id,
+    publisher: s.publisher,
+    url: s.url,
+    textFrom: s.textFrom,
+    retrievedAt: s.retrievedAt,
+    contentHash: s.contentHash,
+    text: s.kind === "article" && s.url === null ? null : s.text,
+  }));
 }
 
 /** What a brief is doing right now, for readers watching it being built. */
@@ -213,7 +236,7 @@ export async function buildBrief(input: BriefInput, onProgress: OnProgress = () 
   const coverage = await searchCoverage(input.topic, supplied);
   onProgress({ type: "sources", sources: coverage.sources.map(toPublicSource), retrieval: coverage.retrieval });
   const { brief } = await generateFromCoverage(coverage, { topic: input.topic, hasArticle: Boolean(supplied) }, onProgress);
-  return brief;
+  return { brief, snapshot: snapshotOf(coverage.sources) };
 }
 
 /**
@@ -233,10 +256,8 @@ export async function generateFromCoverage(
     try {
       onProgress({ type: "stage", stage: "writing" });
       const { brief, stats } = await generateOnce(coverage, userMessage, onProgress);
-      onProgress({ type: "stage", stage: "locating" });
       logger.info({ sources: coverage.sources.length, attempt, ...stats.usage, claimsKept: stats.claimsKept }, "brief generated");
-      // The model's coordinates are a guess; the map shows only looked-up places.
-      return { brief: await locateBrief(brief), stats: { ...stats, attempts: attempt } satisfies GenerationStats };
+      return { brief, stats: { ...stats, attempts: attempt } satisfies GenerationStats };
     } catch (err) {
       if (err instanceof AppError) {
         const quick = Date.now() - attemptStarted < QUICK_FAILURE_MS;

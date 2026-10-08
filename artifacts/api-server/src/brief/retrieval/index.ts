@@ -1,5 +1,6 @@
-import { selectNews, toRecords, type Candidate, type ProviderResult, type SourceRecord } from "../sources";
+import { selectNews, topicAnchors, toRecords, type Candidate, type ProviderResult, type SourceRecord } from "../sources";
 import { searchNews } from "./news-search";
+import { aboutTopic, readFullText } from "./full-text";
 import { FEEDS, searchFeed } from "./rss";
 import { searchWikipedia } from "./wikipedia";
 
@@ -21,7 +22,11 @@ export async function searchCoverage(topic: string, supplied?: Candidate): Promi
 
   // Feeds first: their outlet and country are known, which the comparison relies on.
   const news = selectNews([...feeds.flatMap((f) => f.candidates), ...search.candidates]);
-  const ordered = [...(supplied ? [supplied] : []), ...news, ...wiki.candidates];
+  // Read the selected articles themselves, where the sites allow it and time permits.
+  // Reading them also shows which ones merely mention the topic in passing; those are dropped.
+  const anchors = topicAnchors(topic);
+  const read = (await readFullText(news)).filter((c) => aboutTopic(c, anchors));
+  const ordered = [...(supplied ? [supplied] : []), ...read, ...wiki.candidates];
   const sources = toRecords(ordered);
 
   const selectedByProvider = (provider: string) => sources.filter((s) => s.provider === provider).length;

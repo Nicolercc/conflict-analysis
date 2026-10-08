@@ -40,7 +40,7 @@ export async function judge(input: {
   const cited = new Set(input.claims.flatMap((c) => c.sourceIds));
   const sources = input.sources
     .filter((s) => cited.has(s.id))
-    .map((s) => `<source id="${s.id}" publisher="${s.publisher}" published="${s.publishedAt?.slice(0, 10) ?? "unknown"}">\n${s.text.slice(0, 3000)}\n</source>`)
+    .map((s) => `<source id="${s.id}" publisher="${s.publisher}" published="${s.publishedAt?.slice(0, 10) ?? "unknown"}">\n${s.text.slice(0, 7000)}\n</source>`)
     .join("\n");
   const claims = input.claims.map((c, i) => `${i + 1}. [cites ${c.sourceIds.join(", ")}] ${c.text}`).join("\n");
   const expected = input.expectedFacts.map((f, i) => `${i + 1}. ${f}`).join("\n");

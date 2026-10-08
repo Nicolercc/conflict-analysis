@@ -1,0 +1,789 @@
+{
+  "ranAt": "2026-10-08T22:26:50.272Z",
+  "briefModel": "claude-haiku-4-5-20251001",
+  "verifierModel": "claude-haiku-4-5-20251001",
+  "judgeModel": "claude-sonnet-5-5",
+  "labelled": {
+    "ran": true,
+    "supported": 9,
+    "supportedRemoved": 0,
+    "supportedReworded": 2,
+    "unsupportedTotal": 11,
+    "unsupportedReachingVerifier": 3,
+    "unsupportedRemoved": 3,
+    "unsupportedReworded": [
+      {
+        "from": "Gaza's almost two million people live in ruins because the ceasefire collapsed last month.",
+        "to": "Gaza's almost two million people live in ruins."
+      }
+    ],
+    "removed": [
+      {
+        "text": "A drone strike blamed on Sudan's army hit homes and a mosque in Blue Nile province, killing at least four women.",
+        "verdict": "unsupported",
+        "why": "The quote attributes the strike to Sudan's paramilitary Rapid Support Forces, not Sudan's army."
+      },
+      {
+        "text": "The Trump administration is advancing its proposal for an arms embargo on Sudan.",
+        "verdict": "unsupported",
+        "why": "The quote does not state the Trump administration is advancing the proposal; it only mentions 'its proposal for an arms embargo' in a different context."
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "sudan",
+      "topic": "Sudan",
+      "sources": 10,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 9,
+        "kept": 7,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 3,
+        "conveyed": 3,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 6151,
+        "outputTokens": 3288
+      },
+      "ok": true,
+      "seconds": 35.639,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Khartoum (15.56, 32.53) vs Sudan"
+    },
+    {
+      "id": "gaza-ceasefire",
+      "topic": "Gaza ceasefire",
+      "sources": 13,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 10,
+        "kept": 6,
+        "dropped": [
+          "figure not in the quoted text: 2",
+          "quote not found in the cited source",
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 1
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 5,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Despite the ceasefire, Israeli airstrikes in Gaza have continued almost daily.",
+          "cites": [
+            "S4",
+            "S10"
+          ],
+          "verdict": "partly",
+          "why": "S4 says strikes continue almost daily, but S10 only says airstrikes continue, so 'almost daily' comes from S4 alone."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 1,
+        "missed": [
+          "Israeli strikes on Gaza on the October 7 anniversary killed three people.",
+          "The WHO appealed for a large increase in aid to Gaza before winter."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 9171,
+        "outputTokens": 3814
+      },
+      "ok": true,
+      "seconds": 41.94,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Gaza City (31.51, 34.46) vs Gaza Strip"
+    },
+    {
+      "id": "ukraine-front-line",
+      "topic": "Ukraine front-line updates",
+      "sources": 13,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 9,
+        "kept": 4,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "needs quotes from 2 sources, has 1",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 2,
+        "partly": 1,
+        "unsupported": 1
+      },
+      "failures": [
+        {
+          "claim": "President Zelenskyy reported that a Russian strike killed 18 people, including three infants aged 12 months and another child aged eight.",
+          "cites": [
+            "S2"
+          ],
+          "verdict": "partly",
+          "why": "S2 says three of the 18 victims were 12 months old and another was eight, but not that the strike killed 18 people; 'victims' could include wounded, and the 18 figure is not clearly deaths."
+        },
+        {
+          "claim": "Russia's defence ministry stated its attacks on railways target infrastructure used to transport military personnel and equipment, not civilians.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "unsupported",
+          "why": "S1 contains no Russian defence ministry statement about railway targets."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "Zelenskyy said intelligence shows Russia is preparing a massive attack."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 8914,
+        "outputTokens": 4008
+      },
+      "ok": true,
+      "seconds": 50.905,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Kyiv (50.45, 30.52) vs Ukraine"
+    },
+    {
+      "id": "red-sea-shipping",
+      "topic": "Red Sea shipping tensions",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 10,
+        "kept": 7,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "A product tanker was attacked in the Red Sea."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 8004,
+        "outputTokens": 4021
+      },
+      "ok": true,
+      "seconds": 46.526,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Mokha (13.32, 43.25) vs Red Sea and its coasts"
+    },
+    {
+      "id": "myanmar",
+      "topic": "Myanmar civil war",
+      "sources": 10,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 10,
+        "kept": 9,
+        "dropped": [
+          "figure not in the quoted text: 2021"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 1,
+        "unsupported": 1
+      },
+      "failures": [
+        {
+          "claim": "The military government has killed 383 civilians in 21 documented massacres in Rakhine State alone.",
+          "cites": [
+            "S7"
+          ],
+          "verdict": "partly",
+          "why": "S7 headline gives 383 killed in 21 Rakhine massacres per Irrawaddy tally, but the claim states it as established fact and adds 'alone' and 'documented'."
+        },
+        {
+          "claim": "Foreign direct investment in Myanmar fell from over $28.7 billion in 2016–2020 to $7.4 billion in 2021–2025.",
+          "cites": [
+            "S5"
+          ],
+          "verdict": "unsupported",
+          "why": "S5 excerpt contains no FDI figures of $28.7 billion or $7.4 billion."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 7275,
+        "outputTokens": 5023
+      },
+      "ok": true,
+      "seconds": 50.805,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Yangon (16.80, 96.16) vs Myanmar"
+    },
+    {
+      "id": "dr-congo-m23",
+      "topic": "DR Congo M23",
+      "sources": 4,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 9,
+        "kept": 5,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "figure not in the quoted text: 23",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 4,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "M23 is backed by Rwanda.",
+          "cites": [
+            "S1",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S3 calls M23 'Rwanda-backed' as Amnesty's allegation, but S1 does not state this, and the claim presents it as fact."
+        }
+      ],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 4799,
+        "outputTokens": 3746
+      },
+      "ok": true,
+      "seconds": 39.433,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Goma (-1.67, 29.23) vs DR Congo and Rwanda border"
+    },
+    {
+      "id": "yemen-houthis",
+      "topic": "Yemen Houthis",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 12,
+        "kept": 10,
+        "dropped": [
+          "figure not in the quoted text: 7",
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 8,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Fighting over the Red Sea coast has been driven by its importance as an alternative shipping route after US-Iran conflict restricted trade through the Strait of Hormuz.",
+          "cites": [
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S3 says the strait became more crucial after Hormuz was restricted and that fighting is focused there, but not that the fighting is driven by that importance."
+        },
+        {
+          "claim": "BBC News reports that the Houthis 'seized control of the country's Red Sea coastline' in their September offensive; South China Morning Post frames it as the group having 'captured in September' territory 'that the Houthis had captured,' with uncertain current control.",
+          "cites": [
+            "S1",
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S1 and S3 are accurately paraphrased, but S3's uncertainty concerns whether the government advance will hold, and it names only territory near the strait and Mocha."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "The Houthis attacked Aden airport."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 9613,
+        "outputTokens": 4687
+      },
+      "ok": true,
+      "seconds": 45.958,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Sanaa (15.35, 44.20) vs Yemen"
+    },
+    {
+      "id": "haiti-gangs",
+      "topic": "Haiti gangs",
+      "sources": 5,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 8,
+        "kept": 8,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "The dominant gang coalition Viv Ansanm was founded in September 2023, uniting the two rival federations G9 and G-Pèp.",
+          "cites": [
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S4 gives the September 2023 founding and the G9/G-Pèp merger, but the 'founded' date is stated in S4 while the S4 text is consistent; however, S4 does not call them 'federations' only... it does, so only minor; the core is stated."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 4865,
+        "outputTokens": 3200
+      },
+      "ok": true,
+      "seconds": 34.865,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Port-au-Prince (18.55, -72.34) vs Haiti"
+    },
+    {
+      "id": "lebanon-israel",
+      "topic": "Lebanon Israel border",
+      "sources": 4,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 9,
+        "kept": 6,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 1
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 4,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Lebanon's Prime Minister warned that withdrawing UNIFIL without a viable replacement would create a security vacuum.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 says Salam urged the need to 'avert the vacuum' from withdrawal without a viable replacement, but does not call it a 'security' vacuum or say he 'warned' of it as such; this is a mild embellishment."
+        },
+        {
+          "claim": "A US-sponsored framework agreement between Lebanon and Israel concluded in June involves Hezbollah disarmament, Israeli withdrawal from southern Lebanon, and Lebanese army deployment in pilot zones.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 gives the deal's contents and says it was concluded in June (later that month), but 'pilot zones' are test areas for the army's deployment, and the claim's details otherwise match; the minor imprecision is that S1 says withdrawal is gradual and army deployment starts in pilot zones."
+        }
+      ],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3919,
+        "outputTokens": 3157
+      },
+      "ok": true,
+      "seconds": 30.056,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Kfar Shouba (33.33, 35.69) vs Lebanon and northern Israel"
+    },
+    {
+      "id": "mali-sahel",
+      "topic": "Mali jihadists",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 3,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2696,
+        "outputTokens": 2193
+      },
+      "ok": true,
+      "seconds": 23.826,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Bamako (12.61, -7.99) vs Mali"
+    },
+    {
+      "id": "taiwan-strait",
+      "topic": "Taiwan Strait tensions",
+      "sources": 2,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 5,
+        "kept": 4,
+        "dropped": [
+          "figure not in the quoted text: 2027"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 4,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3277,
+        "outputTokens": 2421
+      },
+      "ok": true,
+      "seconds": 27.795,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Taipei (25.04, 121.56) vs Taiwan and the strait"
+    },
+    {
+      "id": "south-sudan",
+      "topic": "South Sudan",
+      "sources": 13,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 9,
+        "kept": 8,
+        "dropped": [
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 10575,
+        "outputTokens": 3937
+      },
+      "ok": true,
+      "seconds": 41.283,
+      "scope": {
+        "expected": true,
+        "got": false,
+        "correct": false
+      },
+      "pin": "correct",
+      "pinDetail": "Juba (4.85, 31.60) vs South Sudan"
+    },
+    {
+      "id": "oos-recipe",
+      "topic": "banana bread recipe",
+      "sources": 5,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3067,
+        "outputTokens": 848
+      },
+      "ok": true,
+      "seconds": 7.805,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-football",
+      "topic": "Premier League transfer news",
+      "sources": 7,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 6,
+        "kept": 3,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "figure not in the quoted text: 16"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 4815,
+        "outputTokens": 2257
+      },
+      "ok": true,
+      "seconds": 22.342,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-phone",
+      "topic": "best phone camera review",
+      "sources": 3,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 5,
+        "kept": 1,
+        "dropped": [
+          "figure not in the quoted text: 26",
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "figure not in the quoted text: 300"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3543,
+        "outputTokens": 1105
+      },
+      "ok": true,
+      "seconds": 10.068,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-python",
+      "topic": "how to learn Python programming",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2498,
+        "outputTokens": 702
+      },
+      "ok": true,
+      "seconds": 6.387,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    }
+  ]
+}

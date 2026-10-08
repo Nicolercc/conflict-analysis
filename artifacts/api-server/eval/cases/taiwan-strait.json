@@ -13,9 +13,11 @@
       "language": "English",
       "country": null,
       "excerpt": "China has renewed its opposition to United States arms sales to Taiwan, urging Washington to exercise restraint over the Taiwan question. This follows reports that the island has received two US-made ...",
+      "text": "China opposes US fighter jet sales and warns that Taiwan's proposed military spending increase could heighten tensions across the Taiwan Strait.. China has renewed its opposition to United States arms sales to Taiwan, urging Washington to exercise restraint over the Taiwan question. This follows reports that the island has received two US-made F-16V fighter jets, with dozens more expected by the year’s end. Beijing also warns that Taiwan’s proposed increase in military spending could heighten tensions across the Taiwan Strait. Chinese Foreign Ministry spokesperson Guo Jiakun stated that Beijing’s position on US arms sales to Taiwan remains firm and unchanged. He called on Washington to honour commitments made during a meeting between the two countries’ presidents, to abide by the one-China principle and the three China-US joint communiqués, and to handle the Taiwan question prudently. Guo emphasised, “The Taiwan question is China’s internal affair, and resolving it is a matter for the Chinese ourselves that brooks no external interference.” His remarks came after Taiwan reportedly received the initial F-16V fighter jets, part of a programme to provide the island with 66 advanced fighter jets. Another 64 are anticipated within the year. The latest criticism arises amid ongoing tensions concerning military preparedness, cross-strait relations, and Washington’s security cooperation with the island, which China insists is part of its territory. In a related development last month, China criticised the Taiwan authorities, led by Lai Ching-te, over plans to increase military spending in 2027. Beijing warned that the proposed allocation could divert resources from public welfare and escalate tensions across the Taiwan Strait. Zhang Han, a spokesperson for the State Council Taiwan Affairs Office, stated that the planned spending increase would harm the interests of Taiwan residents and place the island in a more dangerous situation. Her remarks followed Lai’s announcement on 23 September in Kaohsiung that Taiwan would allocate over NT$1.3 trillion (approximately US$40.8 billion) towards military procurement, international cooperation, and domestic defence development next year. Lai indicated that this investment would partly focus on strengthening industries such as drones and robotics to enhance defence capabilities. Zhang accused the Lai administration of pursuing what Beijing describes as a separatist “Taiwan independence” agenda through military expansion and reliance on external support. She argued that increased military expenditure would reduce resources available for livelihoods and social welfare, while exposing Taiwan residents to greater security risks. Zhang also criticised the authorities for spending what she described as the hard-earned money of Taiwan residents on military procurement, warning that such an approach would face strong opposition. Beijing has consistently opposed efforts by Taiwan authorities to strengthen military capabilities through purchases from the United States, maintaining that the island’s future should be resolved by the Chinese people without external interference.",
+      "textFrom": "article",
       "id": "S1",
       "retrievedAt": "2026-10-08T02:52:53.311Z",
-      "text": "China opposes US fighter jet sales and warns that Taiwan's proposed military spending increase could heighten tensions across the Taiwan Strait.. China has renewed its opposition to United States arms sales to Taiwan, urging Washington to exercise restraint over the Taiwan question. This follows reports that the island has received two US-made ..."
+      "contentHash": "4a901e2089759ed1"
     },
     {
       "kind": "reference",
@@ -28,8 +30,10 @@
       "country": null,
       "excerpt": "Cross-strait relations are the political and economic relations between China and Taiwan across the Taiwan Strait. Due to the existing controversy over the status of Taiwan and the Chinese legitimacy question, they are also not defined as diplomatic relations by either side.",
       "text": "Cross-strait relations. Cross-strait relations are the political and economic relations between China and Taiwan across the Taiwan Strait. Due to the existing controversy over the status of Taiwan and the Chinese legitimacy question, they are also not defined as diplomatic relations by either side.",
+      "textFrom": "summary",
       "id": "S2",
-      "retrievedAt": "2026-10-08T02:52:53.311Z"
+      "retrievedAt": "2026-10-08T02:52:53.311Z",
+      "contentHash": "0c5f082a0722a22b"
     }
   ],
   "retrieval": [
@@ -138,5 +142,6 @@
       "status": "ok",
       "count": 1
     }
-  ]
+  ],
+  "deepenedAt": "2026-10-08T22:27:58.544Z"
 }

@@ -129,6 +129,17 @@ describe("claims must rest on quoted source text", () => {
     expect(body.keyFacts).toHaveLength(1);
   });
 
+  it("accepts a quote that skips words with an ellipsis, if each piece is found in order", async () => {
+    const body = await claims([
+      { text: "Agencies say 12 trucks were refused access to El Fasher on Monday.", evidence: [quote("S1", "Humanitarian agencies say 12 trucks ... were refused access to El Fasher on Monday")] },
+      // pieces out of order
+      { text: "Agencies say 12 trucks were refused access to El Fasher.", evidence: [quote("S1", "were refused access to El Fasher ... Humanitarian agencies say 12 trucks")] },
+      // a piece too short to pin anything down
+      { text: "Agencies say 12 trucks were refused access to El Fasher.", evidence: [quote("S1", "12 trucks ... refused access to El Fasher on Monday")] },
+    ]);
+    expect(body.keyFacts).toHaveLength(1);
+  });
+
   it("drops a claim whose quote is not in the source it names", async () => {
     const body = await claims([
       { text: "Agencies say 12 aid trucks were refused access to El Fasher.", evidence: [quote("S1", "12 trucks carrying food were destroyed near El Fasher")] },

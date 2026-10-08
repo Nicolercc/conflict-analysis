@@ -54,6 +54,7 @@ describe("source helpers", () => {
 
   it("decodes entities and strips markup from feed text", () => {
     expect(cleanText("Ukraine&#8217;s <b>Flamingo</b> &amp; more&nbsp;")).toBe("Ukraine’s Flamingo & more");
+    expect(cleanText("Nairobi &mdash; South Sudan&rsquo;s &ldquo;order&rdquo;&hellip;")).toBe("Nairobi — South Sudan’s “order”…");
   });
 
   it("does not let a longer place name stand in for the topic's", () => {

@@ -1,0 +1,746 @@
+{
+  "ranAt": "2026-10-08T22:32:53.375Z",
+  "briefModel": "claude-haiku-4-5-20251001",
+  "verifierModel": "claude-haiku-4-5-20251001",
+  "judgeModel": "claude-sonnet-5-5",
+  "labelled": {
+    "ran": true,
+    "supported": 9,
+    "supportedRemoved": 0,
+    "supportedReworded": 3,
+    "unsupportedTotal": 11,
+    "unsupportedReachingVerifier": 3,
+    "unsupportedRemoved": 3,
+    "unsupportedReworded": [
+      {
+        "from": "Gaza's almost two million people live in ruins because the ceasefire collapsed last month.",
+        "to": "Gaza's almost two million people live in ruins."
+      }
+    ],
+    "removed": [
+      {
+        "text": "A drone strike blamed on Sudan's army hit homes and a mosque in Blue Nile province, killing at least four women.",
+        "verdict": "unsupported",
+        "why": "The claim attributes the strike to Sudan's army, but the quote attributes it to the Rapid Support Forces, a paramilitary group."
+      },
+      {
+        "text": "The Trump administration is advancing its proposal for an arms embargo on Sudan.",
+        "verdict": "unsupported",
+        "why": "The quote does not state the Trump administration is advancing the proposal; it only mentions the proposal exists amid Security Council divisions."
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "sudan",
+      "topic": "Sudan",
+      "sources": 10,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 10,
+        "kept": 7,
+        "dropped": [
+          "quote not found in the cited source",
+          "figure not in the quoted text: 14",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 3,
+        "conveyed": 3,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 6425,
+        "outputTokens": 3450
+      },
+      "ok": true,
+      "seconds": 38.546,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Khartoum (15.56, 32.53) vs Sudan"
+    },
+    {
+      "id": "gaza-ceasefire",
+      "topic": "Gaza ceasefire",
+      "sources": 13,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 11,
+        "kept": 8,
+        "dropped": [
+          "quote not found in the cited source",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 1
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Hundreds of thousands of displaced people in Gaza live in tent cities and makeshift shelters.",
+          "cites": [
+            "S3",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S3 supports hundreds of thousands in tent cities and shelters; S4 only says most live in squalid tent camps, and the phrase is attributed mainly to S3."
+        }
+      ],
+      "expected": {
+        "total": 3,
+        "conveyed": 1,
+        "missed": [
+          "Israeli strikes on Gaza on the October 7 anniversary killed three people.",
+          "The WHO appealed for a large increase in aid to Gaza before winter."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 7826,
+        "outputTokens": 3981
+      },
+      "ok": true,
+      "seconds": 43.068,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Gaza City (31.51, 34.46) vs Gaza Strip"
+    },
+    {
+      "id": "ukraine-front-line",
+      "topic": "Ukraine front-line updates",
+      "sources": 13,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 9,
+        "kept": 5,
+        "dropped": [
+          "figure not in the quoted text: 2022",
+          "figure not in the quoted text: 8",
+          "quote not found in the cited source",
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 4,
+        "partly": 1,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Russian strikes on Ukrainian infrastructure have targeted apartment buildings, schools, medical centres, railways and shops.",
+          "cites": [
+            "S1",
+            "S4"
+          ],
+          "verdict": "partly",
+          "why": "S4 lists apartment buildings, schools, medical centres, railways and shops as hit; S1 only covers railways, and S4 does not say the strikes were on infrastructure per se."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "Zelenskyy said intelligence shows Russia is preparing a massive attack."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 7883,
+        "outputTokens": 3694
+      },
+      "ok": true,
+      "seconds": 41.622,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Kyiv (50.45, 30.52) vs Ukraine"
+    },
+    {
+      "id": "red-sea-shipping",
+      "topic": "Red Sea shipping tensions",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 9,
+        "kept": 6,
+        "dropped": [
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 2
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 6,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "A product tanker was attacked in the Red Sea."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 6926,
+        "outputTokens": 3676
+      },
+      "ok": true,
+      "seconds": 37.987,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Mokha (13.32, 43.25) vs Red Sea and its coasts"
+    },
+    {
+      "id": "myanmar",
+      "topic": "Myanmar civil war",
+      "sources": 10,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 10,
+        "kept": 8,
+        "dropped": [
+          "figure not in the quoted text: 2021"
+        ],
+        "rejectedByVerifier": 1
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 6,
+        "partly": 2,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "Myanmar's military has killed 383 civilians in 21 massacres in Rakhine State.",
+          "cites": [
+            "S7"
+          ],
+          "verdict": "partly",
+          "why": "S7 headline gives 383 civilians in 21 Rakhine massacres as an Irrawaddy tally, but the claim states it as fact without attribution, and S7 ties it to roughly three years of fighting, not stated in the claim."
+        },
+        {
+          "claim": "Myanmar's military-backed leader arrived in Malaysia on Wednesday for talks with the two nations working to repatriate thousands of Myanmar nationals.",
+          "cites": [
+            "S3"
+          ],
+          "verdict": "partly",
+          "why": "S3 says he arrived Wednesday for talks as the nations work on repatriation, but the claim doesn't name him or say the talks are with Malaysia's PM (Thursday); it's essentially stated, though garbled."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 6270,
+        "outputTokens": 4322
+      },
+      "ok": true,
+      "seconds": 42.12,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Yangon (16.80, 96.16) vs Myanmar"
+    },
+    {
+      "id": "dr-congo-m23",
+      "topic": "DR Congo M23",
+      "sources": 4,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 8,
+        "kept": 4,
+        "dropped": [
+          "figure not in the quoted text: 23",
+          "figure not in the quoted text: 21",
+          "figure not in the quoted text: 4018, 8300",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 4,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 4408,
+        "outputTokens": 3416
+      },
+      "ok": true,
+      "seconds": 35.507,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Goma (-1.67, 29.23) vs DR Congo and Rwanda border"
+    },
+    {
+      "id": "yemen-houthis",
+      "topic": "Yemen Houthis",
+      "sources": 12,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 10,
+        "kept": 9,
+        "dropped": [
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 6,
+        "partly": 3,
+        "unsupported": 0
+      },
+      "failures": [
+        {
+          "claim": "The Houthis cut a vital supply route linking Taiz with Aden, effectively encircling the key city of Taiz held by government forces.",
+          "cites": [
+            "S1"
+          ],
+          "verdict": "partly",
+          "why": "S1 says the Houthis cut the route and, per AFP, effectively encircled Taiz, but it is an AFP report citing military sources; the claim states it as fact and Taiz is not fully taken."
+        },
+        {
+          "claim": "Fighting has intensified around the Bab el-Mandeb Strait and the strategic town of Mocha/Mokha.",
+          "cites": [
+            "S3",
+            "S9"
+          ],
+          "verdict": "partly",
+          "why": "S3 and S9 describe fighting near Bab el-Mandeb and around Mocha/Dhubab, but S3 says the Mocha claim was premature, and S9 centers fighting at Dhubab, so intensification around Mocha is not directly stated."
+        },
+        {
+          "claim": "The Hindu reports the Houthis claimed they targeted Abha airport and King Khalid Air Base with claims of hitting targets accurately, whereas NBC News reports Houthi spokesman Yahya Saree said the rebels launched attacks targeting these sites but did not provide evidence.",
+          "cites": [
+            "S2",
+            "S9"
+          ],
+          "verdict": "partly",
+          "why": "S2 mentions Abha airport and King Khalid Air Base (Khamis Mushait) with 'hit their targets accurately' and S9 says no evidence was provided, but S9 doesn't use King Khalid Air Base, and the claim's contrast is the grader's framing."
+        }
+      ],
+      "expected": {
+        "total": 2,
+        "conveyed": 1,
+        "missed": [
+          "The Houthis attacked Aden airport."
+        ],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 8271,
+        "outputTokens": 4438
+      },
+      "ok": true,
+      "seconds": 49.038,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Sanaa (15.35, 44.20) vs Yemen"
+    },
+    {
+      "id": "haiti-gangs",
+      "topic": "Haiti gangs",
+      "sources": 5,
+      "eventPins": 3,
+      "claims": {
+        "proposed": 8,
+        "kept": 7,
+        "dropped": [
+          "figure not in the quoted text: 9"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 7,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 2,
+        "conveyed": 2,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 4424,
+        "outputTokens": 2984
+      },
+      "ok": true,
+      "seconds": 30.445,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Port-au-Prince (18.55, -72.34) vs Haiti"
+    },
+    {
+      "id": "lebanon-israel",
+      "topic": "Lebanon Israel border",
+      "sources": 4,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 8,
+        "kept": 6,
+        "dropped": [
+          "quote not found in the cited source"
+        ],
+        "rejectedByVerifier": 1
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 6,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 4054,
+        "outputTokens": 3312
+      },
+      "ok": true,
+      "seconds": 33.517,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Kfar Shouba (33.33, 35.69) vs Lebanon and northern Israel"
+    },
+    {
+      "id": "mali-sahel",
+      "topic": "Mali jihadists",
+      "sources": 1,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 3,
+        "kept": 3,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 3,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2681,
+        "outputTokens": 2013
+      },
+      "ok": true,
+      "seconds": 22.48,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Bamako (12.61, -7.99) vs Mali"
+    },
+    {
+      "id": "taiwan-strait",
+      "topic": "Taiwan Strait tensions",
+      "sources": 2,
+      "eventPins": 2,
+      "claims": {
+        "proposed": 6,
+        "kept": 4,
+        "dropped": [
+          "figure not in the quoted text: 16",
+          "figure not in the quoted text: 2027"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 4,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3130,
+        "outputTokens": 2484
+      },
+      "ok": true,
+      "seconds": 27.658,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Taipei (25.04, 121.56) vs Taiwan and the strait"
+    },
+    {
+      "id": "south-sudan",
+      "topic": "South Sudan",
+      "sources": 13,
+      "eventPins": 1,
+      "claims": {
+        "proposed": 9,
+        "kept": 6,
+        "dropped": [
+          "quote not found in the cited source",
+          "quote not found in the cited source",
+          "needs quotes from 2 sources, has 1"
+        ],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 6,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 1,
+        "conveyed": 1,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 8408,
+        "outputTokens": 3684
+      },
+      "ok": true,
+      "seconds": 42.145,
+      "scope": {
+        "expected": true,
+        "got": true,
+        "correct": true
+      },
+      "pin": "correct",
+      "pinDetail": "Juba (4.85, 31.60) vs South Sudan"
+    },
+    {
+      "id": "oos-recipe",
+      "topic": "banana bread recipe",
+      "sources": 5,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 2,
+        "kept": 2,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3040,
+        "outputTokens": 611
+      },
+      "ok": true,
+      "seconds": 6.041,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-football",
+      "topic": "Premier League transfer news",
+      "sources": 7,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 0,
+        "kept": 0,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 3836,
+        "outputTokens": 303
+      },
+      "ok": true,
+      "seconds": 3.8,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-phone",
+      "topic": "best phone camera review",
+      "sources": 3,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 0,
+        "kept": 0,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2861,
+        "outputTokens": 284
+      },
+      "ok": true,
+      "seconds": 3.267,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    },
+    {
+      "id": "oos-python",
+      "topic": "how to learn Python programming",
+      "sources": 1,
+      "eventPins": 0,
+      "claims": {
+        "proposed": 0,
+        "kept": 0,
+        "dropped": [],
+        "rejectedByVerifier": 0
+      },
+      "verification": "verified",
+      "judged": {
+        "supported": 0,
+        "partly": 0,
+        "unsupported": 0
+      },
+      "failures": [],
+      "expected": {
+        "total": 0,
+        "conveyed": 0,
+        "missed": [],
+        "reviewed": false
+      },
+      "usage": {
+        "inputTokens": 2045,
+        "outputTokens": 279
+      },
+      "ok": true,
+      "seconds": 2.946,
+      "scope": {
+        "expected": false,
+        "got": false,
+        "correct": true
+      },
+      "pin": "n/a"
+    }
+  ]
+}

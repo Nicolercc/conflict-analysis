@@ -177,6 +177,11 @@ export function SourceList({ sources }: { sources: Source[] }) {
 						{s.language && s.language !== "English" ? ` · ${s.language}` : ""}
 						{s.kind === "news" ? ` · ${formatDate(s.publishedAt)}` : ""}
 						{` · ${KIND_LABEL[s.kind]}`}
+						{s.kind === "news" ? (
+							<span className={`ci-source__depth ci-source__depth--${s.textFrom}`}>
+								{s.textFrom === "article" ? "Article read in full" : "Summary only"}
+							</span>
+						) : null}
 					</p>
 					{s.url ? (
 						<a
@@ -199,14 +204,25 @@ export function SourceList({ sources }: { sources: Source[] }) {
 }
 
 /** Which providers answered, in plain words, so missing coverage is visible. */
-export function RetrievalSummary({ retrieval }: { retrieval: RetrievalStatus[] }) {
+export function RetrievalSummary({
+	retrieval,
+	sources = [],
+}: {
+	retrieval: RetrievalStatus[];
+	sources?: Source[];
+}) {
 	if (retrieval.length === 0) return null;
 	const failed = retrieval.filter((r) => r.status === "failed");
 	const used = retrieval.filter((r) => r.count > 0).length;
+	const news = sources.filter((s) => s.kind === "news");
+	const inFull = news.filter((s) => s.textFrom === "article").length;
 	return (
 		<p className="ci-retrieval">
 			Checked {retrieval.length} news feeds and services; {used} had coverage
 			used here.
+			{news.length > 0
+				? ` ${inFull} of ${news.length} news ${news.length === 1 ? "article was" : "articles were"} read in full; the rest are checked against the publisher's summary only.`
+				: ""}
 			{failed.length > 0
 				? ` Could not reach: ${failed.map((f) => f.provider).join(", ")}.`
 				: ""}

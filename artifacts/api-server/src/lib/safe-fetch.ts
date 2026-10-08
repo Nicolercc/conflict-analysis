@@ -80,6 +80,8 @@ export type FetchPolicy = {
   /** Test seam: lets a test serve pages from loopback. Never set in production code. */
   allowAddress?: (address: string) => boolean;
   allowAnyPort?: boolean;
+  /** Give up sooner than the default; used when many pages are read for one brief. */
+  deadlineMs?: number;
 };
 
 function checkUrl(raw: string, policy: FetchPolicy): URL {
@@ -171,7 +173,7 @@ function requestOnce(
 
 /** Returns the page body as text, or throws FETCH_BLOCKED / FETCH_FAILED. */
 export async function fetchPublicPage(rawUrl: string, policy: FetchPolicy = {}): Promise<string> {
-  const signal = AbortSignal.timeout(DEADLINE_MS);
+  const signal = AbortSignal.timeout(policy.deadlineMs ?? DEADLINE_MS);
   let url = checkUrl(rawUrl, policy);
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
     const result = await requestOnce(url, policy, signal);

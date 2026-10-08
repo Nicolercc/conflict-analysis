@@ -14,8 +14,10 @@
       "country": null,
       "excerpt": "The Mali War is an ongoing conflict that began on 16 January 2012 with a Tuareg rebellion in northern Mali. The rebels included the secular-oriented National Movement for the Liberation of Azawad (MNLA), a group fighting for independence or greater autonomy of a region they called Azawad. The MNLA was initially allied…",
       "text": "Mali War. The Mali War is an ongoing conflict that began on 16 January 2012 with a Tuareg rebellion in northern Mali. The rebels included the secular-oriented National Movement for the Liberation of Azawad (MNLA), a group fighting for independence or greater autonomy of a region they called Azawad. The MNLA was initially allied with the jihadist Ansar Dine, which, in turn, was allied to other Salafi jihadist organizations such as al-Qaeda in the Islamic Maghreb (AQIM) and its splinter, Movement for Oneness and Jihad in West Africa (MOJWA).",
+      "textFrom": "summary",
       "id": "S1",
-      "retrievedAt": "2026-10-08T02:52:24.726Z"
+      "retrievedAt": "2026-10-08T02:52:24.726Z",
+      "contentHash": "e832d8e56a195a0e"
     }
   ],
   "retrieval": [
@@ -124,5 +126,6 @@
       "status": "ok",
       "count": 1
     }
-  ]
+  ],
+  "deepenedAt": "2026-10-08T22:27:54.762Z"
 }

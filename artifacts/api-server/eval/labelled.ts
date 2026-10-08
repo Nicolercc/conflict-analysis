@@ -17,7 +17,7 @@ export async function measureVerifier() {
     claims: Labelled[];
   };
   const sources: SourceRecord[] = Object.entries(set.sources).map(([id, s]) => ({
-    id, kind: "news", provider: "set", title: "", url: null, retrievedAt: "", language: "English", country: null, excerpt: null, ...s,
+    id, kind: "news", provider: "set", title: "", url: null, retrievedAt: "", language: "English", country: null, excerpt: null, textFrom: "summary", contentHash: "", ...s,
   }));
   const byId = new Map(sources.map((s) => [s.id, s]));
 

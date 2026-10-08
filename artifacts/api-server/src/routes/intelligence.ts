@@ -51,8 +51,9 @@ function briefFor(req: Request, { key, input }: Resolved): Promise<StoredBrief> 
     if (saved) return upgradeStoredBrief(saved);
     progress.open(key);
     try {
-      const brief = await gate.run(() => buildBrief(input, (event) => progress.publish(key, event)));
-      await store.save(key, brief);
+      const { brief, snapshot } = await gate.run(() => buildBrief(input, (event) => progress.publish(key, event)));
+      // Saved with the text it was checked against, so its quotes can be audited later.
+      await store.save(key, brief, snapshot);
       return brief;
     } finally {
       progress.close(key);

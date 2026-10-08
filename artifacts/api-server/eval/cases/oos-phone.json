@@ -13,9 +13,11 @@
       "language": "English",
       "country": null,
       "excerpt": "The best camera phone of 2026 is one most Americans can't buy, and that's the awkward truth running through this guide. I've spent months shooting with Oppo's Find X9 Ultra and Vivo's X300 Ultra, and ...",
+      "text": "The Best Camera Phones of 2026, From Pixel 11 Pro to Vivo X300 Ultra. The best camera phone of 2026 is one most Americans can't buy, and that's the awkward truth running through this guide. I've spent months shooting with Oppo's Find X9 Ultra and Vivo's X300 Ultra , and both leave the Galaxy S26 Ultra trailing on pure image quality. So where does that leave you if you live in the US? In decent shape, as it happens, because Samsung and Google still make excellent camera phones you can pick up at any carrier store. Here's how all four stack up. Samsung kept the 200MP main sensor for this year's Ultra but widened the aperture to f/1.4, letting in more light for cleaner night shots. It's backed by a 50MP ultrawide, a 10MP 3x telephoto, and a 50MP 5x periscope, which covers almost every focal length you'll reach for day to day. Where it slips is long-range zoom. Push past 5x and the quality drops faster than it does on Oppo's dedicated 10x hardware, as I found when I put the two head to head . What keeps it at the top of the US list is everything around the camera. You get a built-in S Pen, the new Privacy Display, and seven major Android upgrades, so this is a phone you can keep shooting with into the 2030s. If you want a phone that nails the shot without you touching a single setting, this is still the one. Google says the Pixel 11 Pro's new main sensor and upgraded 48MP telephoto, which captures 30% more light than last year's, work with Tensor G6 to process Night Sight shots up to 4.5 times faster. Google has also added Portrait Mode at 5x and pushed Pro Zoom out to 120x. The 42MP selfie camera is the sharpest front camera in this lineup, and like Samsung, Google promises seven years of updates. The trade-off is endurance. A 4,850mAh battery and 30W wired charging trail every other phone here, so heavy shooting days may mean a midday top-up; the 6.8-inch Pixel 11 Pro XL ($1,299) gets a larger 5,115mAh cell if that worries you. This is the first Ultra-tier Find X phone to go on sale outside China, and it arrived swinging. Two of its five rear cameras are 200MP, including a 3x telephoto with a 1/1.28-inch sensor that's bigger than many phones' main cameras. The headline act is the 50MP 10x periscope, which Oppo calls an industry first. In my testing, it pulled in detail at distances where other phones resort to smeared digital guesswork, and Hasselblad's color science keeps everything looking natural rather than overcooked. A 7,050mAh battery with 100W wired charging means it'll outlast a full day of shooting. My two complaints from the review still stand: selfies can push skin toward a ruddy orange in mixed light, and the extra action and snap keys get in the way when you're framing a shot. In my review, I called the X300 Ultra the finest camera phone of the year, and nothing since has changed my mind. Both the 35mm main and the 85mm periscope telephoto are 200MP, paired with a 50MP ultrawide under ZEISS branding. That 85mm lens is the one you'll live on. It resolved roof tiles and window frames across a valley with real texture rather than over-sharpened mush, and the handheld keeper rate was impressively high. Battery life is the other standout. The 6,600mAh cell routinely lasted me two days, and 100W wired charging refills it in about an hour. The catch is availability, as Vivo isn't selling it in the US, the UK, or Germany. If you're in the US and want one phone that does everything, the Galaxy S26 Ultra is the pick. If you'd rather point, shoot, and trust the result, the Pixel 11 Pro gets you there for $200 less. If photography is the reason you buy a phone and you're happy to import, the Vivo X300 Ultra and Oppo Find X9 Ultra are on another level, with the Find X9 Ultra edging it for zoom. Google's Night Sight speed claims sound promising on paper, and we can't wait to see how the Pixel 11 Pro holds up in a full review. Not sure a flagship is the right call? There are plenty of other factors worth weighing before you buy a phone , and a high megapixel count is only one of them.",
+      "textFrom": "article",
       "id": "S1",
       "retrievedAt": "2026-10-08T02:52:35.828Z",
-      "text": "The Best Camera Phones of 2026, From Pixel 11 Pro to Vivo X300 Ultra. The best camera phone of 2026 is one most Americans can't buy, and that's the awkward truth running through this guide. I've spent months shooting with Oppo's Find X9 Ultra and Vivo's X300 Ultra, and ..."
+      "contentHash": "44a7ac9306d60c2a"
     },
     {
       "kind": "news",
@@ -27,8 +29,10 @@
       "language": "English",
       "country": null,
       "excerpt": "The post Vivo X Fold 6 Review: The Best Camera on a Foldable Phone appeared first on Android Headlines.",
+      "textFrom": "summary",
       "id": "S2",
       "retrievedAt": "2026-10-08T02:52:35.828Z",
+      "contentHash": "28325f31bf5d0cdb",
       "text": "Vivo X Fold 6 review: The best camera on a foldable phone. The post Vivo X Fold 6 Review: The Best Camera on a Foldable Phone appeared first on Android Headlines."
     },
     {
@@ -42,8 +46,10 @@
       "country": null,
       "excerpt": "A camera phone is a mobile phone that is able to capture photographs and often record video using one or more built-in digital cameras. It can also send the resulting image wirelessly and conveniently. The first commercial phone with a color camera was the Kyocera Visual Phone VP-210, released in Japan in May 1999…",
       "text": "Camera phone. A camera phone is a mobile phone that is able to capture photographs and often record video using one or more built-in digital cameras. It can also send the resulting image wirelessly and conveniently. The first commercial phone with a color camera was the Kyocera Visual Phone VP-210, released in Japan in May 1999. While cameras in mobile phones used to be supplementary, they have been a major selling point of mobile phones since the 2010s.",
+      "textFrom": "summary",
       "id": "S3",
-      "retrievedAt": "2026-10-08T02:52:35.828Z"
+      "retrievedAt": "2026-10-08T02:52:35.828Z",
+      "contentHash": "f8d502a3ebfedca4"
     }
   ],
   "retrieval": [
@@ -152,5 +158,6 @@
       "status": "ok",
       "count": 1
     }
-  ]
+  ],
+  "deepenedAt": "2026-10-08T22:28:04.578Z"
 }

@@ -13,9 +13,11 @@
       "language": "English",
       "country": null,
       "excerpt": "The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. \"This morning, several rounds ...",
+      "text": "UN Peacekeeping Force Says Shots Fired at Post on Lebanon-Israel Border. The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. \"This morning, several rounds of small arms fire impacted a UNIFIL position near Kfar Shouba along the Blue Line in Sector East,\" the UN force said in a statement, referring to the de facto border between Lebanon and Israel. \"Such deliberate attacks gravely endanger the lives of peacekeepers,\" it said, adding that it was investigating the incident. Under US pressure, the UN Security Council decided in August to fix December as the end of the mandate for UNIFIL, which has been deployed since 1978. Last month, Lebanon's Prime Minister Nawaf Salam insisted at the UN on the need to \"avert the vacuum\" that would be caused by withdrawing the peacekeeping mission deployed in the country's south without a viable replacement. UNIFIL currently has 7,500 blue helmets from around 50 countries. Violence has decreased since a ceasefire following a memorandum of understanding in the US-Iran war struck in June, while Lebanon and Israel concluded a US-sponsored framework agreement later that month. The Lebanon-Israel deal involves the disarmament of Hezbollah, a gradual withdrawal of Israeli forces from Lebanon's south and the deployment of the Lebanese army to the region, starting in test areas known as \"pilot zones\".",
+      "textFrom": "article",
       "id": "S1",
       "retrievedAt": "2026-10-08T02:52:24.525Z",
-      "text": "UN Peacekeeping Force Says Shots Fired at Post on Lebanon-Israel Border. The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. \"This morning, several rounds ..."
+      "contentHash": "f2207b87a6c7707b"
     },
     {
       "kind": "news",
@@ -27,9 +29,11 @@
       "language": "English",
       "country": null,
       "excerpt": "The United Nations Interim Force in Lebanon said one of its posts was targeted near the border with Israel by small-arms fire, but there were no casualties.",
+      "text": "Shots fired at UNIFIL post on Israel-Lebanon border 'unacceptable'. The United Nations Interim Force in Lebanon said one of its posts was targeted near the border with Israel by small-arms fire, but there were no casualties. \"This morning, several rounds of small arms fire impacted a UNIFIL position near Kfar Shouba along the Blue Line in Sector East,\" the UN force said in a statement, referring to the de facto border between Israel and Lebanon. \"Such deliberate attacks gravely endanger the lives of peacekeepers,\" it said, adding that it was investigating the incident. Under US pressure, the UN Security Council decided in August to fix December as the end of the mandate for UNIFIL, which has been deployed since 1978. Last month, Lebanon's Prime Minister Nawaf Salam insisted at the UN on the need to \"avert the vacuum\" that would be caused by withdrawing the peacekeeping mission deployed in the country's south without a viable replacement. UNIFIL currently has 7,500 blue helmets from around 50 countries. Violence has decreased since a ceasefire following a memorandum of understanding in the US-Iran war struck in June, while Lebanon and Israel concluded a US-sponsored framework agreement later that month. The Israel-Lebanon deal involves the disarmament of Hezbollah, a gradual withdrawal of Israeli forces from Lebanon's south and the deployment of the Lebanese army to the region, starting in test areas known as \"pilot zones\".",
+      "textFrom": "article",
       "id": "S2",
       "retrievedAt": "2026-10-08T02:52:24.525Z",
-      "text": "Shots fired at UNIFIL post on Israel-Lebanon border 'unacceptable'. The United Nations Interim Force in Lebanon said one of its posts was targeted near the border with Israel by small-arms fire, but there were no casualties."
+      "contentHash": "485442fe4e951712"
     },
     {
       "kind": "news",
@@ -41,8 +45,10 @@
       "language": "English",
       "country": null,
       "excerpt": "BEIRUT: The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. T ...",
+      "textFrom": "summary",
       "id": "S3",
       "retrievedAt": "2026-10-08T02:52:24.525Z",
+      "contentHash": "7b42e6c6162b3808",
       "text": "UN peacekeeping force says shots fired at post on Israel-Lebanon border. BEIRUT: The United Nations Interim Force in Lebanon said one of its posts was targeted on Wednesday near the border with Israel by small-arms fire, but there were no casualties. T ..."
     },
     {
@@ -56,8 +62,10 @@
       "country": null,
       "excerpt": "The Israeli–Lebanese conflict, or the South Lebanon conflict, is a long-running conflict involving Israel, Lebanon-based paramilitary groups, and sometimes Syria. The conflict peaked during the Lebanese Civil War. In response to Palestinian attacks from Lebanon, Israel invaded the country in 1978 and again in 1982…",
       "text": "Israeli–Lebanese conflict. The Israeli–Lebanese conflict, or the South Lebanon conflict, is a long-running conflict involving Israel, Lebanon-based paramilitary groups, and sometimes Syria. The conflict peaked during the Lebanese Civil War. In response to Palestinian attacks from Lebanon, Israel invaded the country in 1978 and again in 1982. After this it occupied southern Lebanon until 2000, while fighting a guerrilla conflict against Shia paramilitaries. After Israel's withdrawal, Hezbollah attacks sparked the 2006 Lebanon War. A new period of conflict began in 2023, leading to the 2024 Israeli invasion of Lebanon.",
+      "textFrom": "summary",
       "id": "S4",
-      "retrievedAt": "2026-10-08T02:52:24.525Z"
+      "retrievedAt": "2026-10-08T02:52:24.525Z",
+      "contentHash": "dc131e1b351008be"
     }
   ],
   "retrieval": [
@@ -166,5 +174,6 @@
       "status": "ok",
       "count": 1
     }
-  ]
+  ],
+  "deepenedAt": "2026-10-08T22:27:54.760Z"
 }

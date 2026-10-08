@@ -19,7 +19,7 @@ const set = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "../../eva
 const byId = new Map<string, SourceRecord>(
   Object.entries(set.sources).map(([id, s]) => [
     id,
-    { id, kind: "news", provider: "set", title: "", url: null, retrievedAt: "", language: "English", country: null, excerpt: null, ...s },
+    { id, kind: "news", provider: "set", title: "", url: null, retrievedAt: "", language: "English", country: null, excerpt: null, textFrom: "summary", contentHash: "", ...s },
   ]),
 );
 const kept = (c: Labelled) => checkClaim({ text: c.text, evidence: c.evidence }, byId).ok;

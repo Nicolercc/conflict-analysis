@@ -10,6 +10,8 @@ export default defineConfig({
       GEOCODER_MIN_GAP_MS: "0",
       // Route tests answer every model call with a brief; the verifier has its own tests.
       BRIEF_VERIFY: "off",
+      // Reading article pages has its own tests; route tests work from summaries.
+      FULL_TEXT: "off",
       // Never used to call anything: the model client is replaced in every test that needs it.
       ANTHROPIC_API_KEY: "test-key-not-real",
     },

@@ -2,7 +2,8 @@ name: Evaluation
 
 # Replays the recorded cases through the real pipeline and fails if any
 # measure is past its limit (artifacts/api-server/eval/thresholds.ts).
-# Needs the ANTHROPIC_API_KEY repository secret; without it the run is skipped.
+# Needs the EVAL_ANTHROPIC_API_KEY repository secret (a key separate from the
+# live site's, with its own spending limit); without it the run is skipped.
 on:
   schedule:
     - cron: "0 6 * * 1"
@@ -22,16 +23,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      AI_INTEGRATIONS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      AI_INTEGRATIONS_ANTHROPIC_BASE_URL: https://api.anthropic.com
+      # A key of its own, with its own spending limit: never the live site's key.
+      ANTHROPIC_API_KEY: ${{ secrets.EVAL_ANTHROPIC_API_KEY }}
+      EVAL_ANTHROPIC_API_KEY: ${{ secrets.EVAL_ANTHROPIC_API_KEY }}
       NODE_ENV: production
       LOG_LEVEL: silent
     steps:
       - name: Check for the API key
         id: key
         run: |
-          if [ -z "$AI_INTEGRATIONS_ANTHROPIC_API_KEY" ]; then
-            echo "::notice::ANTHROPIC_API_KEY is not set for this run (forks and unconfigured repositories); evaluation skipped."
+          if [ -z "$EVAL_ANTHROPIC_API_KEY" ]; then
+            echo "::notice::EVAL_ANTHROPIC_API_KEY is not set for this run (forks and unconfigured repositories); evaluation skipped."
             echo "present=false" >> "$GITHUB_OUTPUT"
           else
             echo "present=true" >> "$GITHUB_OUTPUT"

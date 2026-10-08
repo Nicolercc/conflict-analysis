@@ -87,7 +87,9 @@ export const AnalyzeArticleResponse = zod.object({
   "retrievedAt": zod.string().describe('ISO 8601 time the server retrieved the record.'),
   "language": zod.string().nullable(),
   "country": zod.string().nullable().describe('Country of the outlet when the provider reports it.'),
-  "excerpt": zod.string().nullable().describe('The publisher\'s own summary or the reference extract, when available.')
+  "excerpt": zod.string().nullable().describe('The publisher\'s own summary or the reference extract, when available.'),
+  "textFrom": zod.enum(['article', 'summary']).describe('Whether the brief\'s claims were quoted from and checked against the article itself, or only a summary of it.'),
+  "contentHash": zod.string().describe('Fingerprint of the exact text the brief was written and checked against. The text itself is kept on the server.')
 }).describe('A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.')),
   "keyFacts": zod.array(zod.object({
   "text": zod.string(),
@@ -199,7 +201,9 @@ export const GetBriefResponse = zod.object({
   "retrievedAt": zod.string().describe('ISO 8601 time the server retrieved the record.'),
   "language": zod.string().nullable(),
   "country": zod.string().nullable().describe('Country of the outlet when the provider reports it.'),
-  "excerpt": zod.string().nullable().describe('The publisher\'s own summary or the reference extract, when available.')
+  "excerpt": zod.string().nullable().describe('The publisher\'s own summary or the reference extract, when available.'),
+  "textFrom": zod.enum(['article', 'summary']).describe('Whether the brief\'s claims were quoted from and checked against the article itself, or only a summary of it.'),
+  "contentHash": zod.string().describe('Fingerprint of the exact text the brief was written and checked against. The text itself is kept on the server.')
 }).describe('A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.')),
   "keyFacts": zod.array(zod.object({
   "text": zod.string(),
@@ -345,7 +349,9 @@ export const ExploreConflictResponse = zod.object({
   "retrievedAt": zod.string().describe('ISO 8601 time the server retrieved the record.'),
   "language": zod.string().nullable(),
   "country": zod.string().nullable().describe('Country of the outlet when the provider reports it.'),
-  "excerpt": zod.string().nullable().describe('The publisher\'s own summary or the reference extract, when available.')
+  "excerpt": zod.string().nullable().describe('The publisher\'s own summary or the reference extract, when available.'),
+  "textFrom": zod.enum(['article', 'summary']).describe('Whether the brief\'s claims were quoted from and checked against the article itself, or only a summary of it.'),
+  "contentHash": zod.string().describe('Fingerprint of the exact text the brief was written and checked against. The text itself is kept on the server.')
 }).describe('A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.')),
   "keyFacts": zod.array(zod.object({
   "text": zod.string(),
