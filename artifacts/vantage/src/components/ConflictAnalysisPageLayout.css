@@ -968,3 +968,23 @@ span.ci-source__title {
 		font-size: 18px;
 	}
 }
+
+/* How deeply a source was read */
+.ci-source__depth {
+	margin-left: 8px;
+	padding: 1px 7px;
+	border-radius: 4px;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	white-space: nowrap;
+}
+
+.ci-source__depth--article {
+	color: var(--risk-low);
+	background: var(--risk-low-bg);
+}
+
+.ci-source__depth--summary {
+	color: var(--text-muted);
+	background: var(--bg-subtle);
+}

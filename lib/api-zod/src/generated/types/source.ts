@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { SourceKind } from './sourceKind';
+import type { SourceTextFrom } from './sourceTextFrom';
 
 /**
  * A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.
@@ -40,4 +41,8 @@ export interface Source {
      * @nullable
      */
   excerpt: string | null;
+  /** Whether the brief's claims were quoted from and checked against the article itself, or only a summary of it. */
+  textFrom: SourceTextFrom;
+  /** Fingerprint of the exact text the brief was written and checked against. The text itself is kept on the server. */
+  contentHash: string;
 }

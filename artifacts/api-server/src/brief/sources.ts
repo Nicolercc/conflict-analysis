@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+
 /**
  * Evidence records. A SourceRecord is created by retrieval (or from what the
  * reader supplied) and is the only place a URL, publisher or date can come
@@ -17,12 +19,19 @@ export type SourceRecord = {
   language: string | null;
   country: string | null;
   excerpt: string | null;
+  /** Whether claims were checked against the article itself or only a summary of it. */
+  textFrom: "article" | "summary";
+  /** Fingerprint of the exact text the brief was written and checked against. */
+  contentHash: string;
   /** Server-only: the full text available for support checks and the prompt. */
   text: string;
 };
 
 /** A record before it has been selected and given an id. */
-export type Candidate = Omit<SourceRecord, "id" | "retrievedAt" | "text"> & { text?: string };
+export type Candidate = Omit<SourceRecord, "id" | "retrievedAt" | "text" | "textFrom" | "contentHash"> & {
+  text?: string;
+  textFrom?: SourceRecord["textFrom"];
+};
 
 export type ProviderResult = {
   provider: string;
@@ -48,6 +57,12 @@ export function canonicalUrl(raw: string): string | null {
   }
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  mdash: "\u2014", ndash: "\u2013", hellip: "\u2026", lsquo: "\u2018", rsquo: "\u2019", ldquo: "\u201c", rdquo: "\u201d",
+  laquo: "\u00ab", raquo: "\u00bb", bull: "\u2022", middot: "\u00b7", euro: "\u20ac", pound: "\u00a3", copy: "\u00a9",
+  reg: "\u00ae", trade: "\u2122", deg: "\u00b0",
+};
+
 const titleKey = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
 export const cleanText = (s: string) =>
@@ -58,6 +73,7 @@ export const cleanText = (s: string) =>
     .replace(/&lt;|&gt;/g, " ")
     .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'")
+    .replace(/&(mdash|ndash|hellip|lsquo|rsquo|ldquo|rdquo|laquo|raquo|bull|middot|euro|pound|copy|reg|trade|deg);/g, (_m, name: string) => NAMED_ENTITIES[name] ?? " ")
     .replace(/&#(\d+);/g, (_m, code) => String.fromCodePoint(Number(code)))
     .replace(/&#x([0-9a-f]+);/gi, (_m, code) => String.fromCodePoint(parseInt(code, 16)))
     .replace(/[<>]/g, " ")
@@ -118,12 +134,18 @@ export function selectNews(candidates: Candidate[], limit = 12, perPublisher = 2
 /** Give selected records their ids and server timestamps. */
 export function toRecords(candidates: Candidate[], now = new Date()): SourceRecord[] {
   const retrievedAt = now.toISOString();
-  return candidates.map((c, i) => ({
-    ...c,
-    id: `S${i + 1}`,
-    retrievedAt,
-    text: cleanText(`${c.title}. ${c.text ?? c.excerpt ?? ""}`),
-  }));
+  return candidates.map((c, i) => {
+    const text = cleanText(`${c.title}. ${c.text ?? c.excerpt ?? ""}`);
+    return {
+      ...c,
+      id: `S${i + 1}`,
+      retrievedAt,
+      // What the reader supplied is the article; everything else is a summary unless the article was read.
+      textFrom: c.textFrom ?? (c.kind === "article" ? "article" : "summary"),
+      contentHash: crypto.createHash("sha256").update(text).digest("hex").slice(0, 16),
+      text,
+    };
+  });
 }
 
 /** What the client receives: everything except the server-only text. */
@@ -184,11 +206,16 @@ const normalise = (s: string) =>
  * ("South Sudan" for "Sudan") does not count, and neither does a mention in a
  * multi-story digest.
  */
+/** The topic's distinctive words — usually its place or actor names. */
+export function topicAnchors(topic: string): string[] {
+  return topicTerms(topic).filter((t) => !CONFLICT_VOCABULARY.has(t)).slice(0, 3);
+}
+
 export function topicMatcher(topic: string): (text: string) => boolean {
   const terms = topicTerms(topic);
   if (terms.length === 0) return () => false;
-  const anchors = terms.filter((t) => !CONFLICT_VOCABULARY.has(t));
-  const required = anchors.length > 0 ? anchors.slice(0, 3) : terms;
+  const anchors = topicAnchors(topic);
+  const required = anchors.length > 0 ? anchors : terms;
   const topicText = normalise(topic);
   const otherPlaces = COMPOUND_PLACES.filter((p) => !topicText.includes(` ${p} `));
   // A compound name the reader did ask for has to appear as that phrase:

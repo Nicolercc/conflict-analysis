@@ -14,8 +14,10 @@
       "country": null,
       "excerpt": "Python is a high-level, general-purpose programming language that emphasizes code readability, simplicity, and ease-of-writing with the use of significant indentation, an extensive (\"batteries-included\") standard library, and garbage collection. Python supports multiple programming paradigms but with an emphasis on…",
       "text": "Python (programming language). Python is a high-level, general-purpose programming language that emphasizes code readability, simplicity, and ease-of-writing with the use of significant indentation, an extensive (\"batteries-included\") standard library, and garbage collection. Python supports multiple programming paradigms but with an emphasis on object-oriented programming and dynamic typing.",
+      "textFrom": "summary",
       "id": "S1",
-      "retrievedAt": "2026-10-08T02:52:36.208Z"
+      "retrievedAt": "2026-10-08T02:52:36.208Z",
+      "contentHash": "9882768cd6c6e795"
     }
   ],
   "retrieval": [
@@ -124,5 +126,6 @@
       "status": "ok",
       "count": 1
     }
-  ]
+  ],
+  "deepenedAt": "2026-10-08T22:28:04.583Z"
 }

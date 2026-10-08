@@ -121,6 +121,17 @@ export const SourceKind = {
 } as const;
 
 /**
+ * Whether the brief's claims were quoted from and checked against the article itself, or only a summary of it.
+ */
+export type SourceTextFrom = typeof SourceTextFrom[keyof typeof SourceTextFrom];
+
+
+export const SourceTextFrom = {
+  article: 'article',
+  summary: 'summary',
+} as const;
+
+/**
  * A record created by retrieval or supplied by the reader. Every field is set by the server; the model never writes sources, URLs or dates.
  */
 export interface Source {
@@ -153,6 +164,10 @@ export interface Source {
      * @nullable
      */
   excerpt: string | null;
+  /** Whether the brief's claims were quoted from and checked against the article itself, or only a summary of it. */
+  textFrom: SourceTextFrom;
+  /** Fingerprint of the exact text the brief was written and checked against. The text itself is kept on the server. */
+  contentHash: string;
 }
 
 /**

@@ -88,7 +88,7 @@ Each brief contains two clearly separated kinds of content.
 
 ## 1. Sources come from retrieval, never from the model
 
-A source record — publisher, URL, date, country — can only be created by the retrieval layer. The model refers to sources by id (`S1`, `S2`…) and anything it writes into a `sources`, `url` or date field is discarded.
+A source record — publisher, URL, date, country, and the text itself — can only be created by the retrieval layer. The model refers to sources by id (`S1`, `S2`…) and anything it writes into a `sources`, `url` or date field is discarded.
 
 Providers are queried concurrently and report their own outcome (`ok`, `empty`, `failed`), so a slow or unavailable provider neither blocks the brief nor silently looks like "no coverage".
 
@@ -164,6 +164,7 @@ GET  /api/briefs/{id}              a saved brief, exactly as first generated
 GET  /api/healthz                  the process is up
 GET  /api/readyz                   ready to serve, and whether storage is durable
 GET  /api/ops/costs?days=7         model spend per day (needs the operations token)
+GET  /api/ops/briefs/{id}/audit    replay a saved brief's quote checks against its saved sources
 ```
 
 Errors share one shape:
@@ -280,9 +281,13 @@ Render checks `/api/healthz`, which returns a small JSON status response.
 
 Vantage is honest about what it can and cannot support today.
 
-### Headlines and summaries, not full articles
+### Not every article can be read
 
-RSS feeds and the news search supply a headline and a short summary. Claims are therefore checked against that text, not the full article. Retrieving permitted full text is the next evidence step.
+For each selected headline the server reads the article itself — honouring the site's robots.txt, with a short deadline — so claims are quoted from and checked against the article and not only its summary. In practice about six in ten are read; the rest stay on the publisher's summary, and the source list says which is which. Reading adds a few seconds to a brief.
+
+### Source text is kept, privately
+
+Each saved brief keeps the exact text of its sources and a fingerprint of each, so an operator can replay the quote checks later (`GET /api/ops/briefs/{id}/audit`) and show that a brief said what its sources said on the day. That text is never served; readers see only the publisher's summary and short quotes. Text a reader pastes is not kept at all.
 
 ### A feed is a window, not an archive
 

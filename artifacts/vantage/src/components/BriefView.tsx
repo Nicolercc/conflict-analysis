@@ -333,7 +333,7 @@ export function BriefView({ brief: briefData }: { brief: IntelligenceBrief }) {
 							</Section>
 
 							<Section id="sources" title="Sources" kind="retrieved" startOpen>
-								<RetrievalSummary retrieval={briefData.retrieval} />
+								<RetrievalSummary retrieval={briefData.retrieval} sources={briefData.sources} />
 								<SourceList sources={briefData.sources} />
 							</Section>
 						</div>

@@ -76,7 +76,19 @@ export function verifyQuote(quote: unknown, source: SourceRecord): string | null
   // A model sometimes wraps what it copied in quotation marks or trails off with an ellipsis.
   const trimmed = quote.trim().replace(/^["'“‘]+|["'”’]+$/g, "").replace(/(\.\.\.|…)$/, "").trim();
   if (trimmed.length < MIN_QUOTE_CHARS || trimmed.length > MAX_QUOTE_CHARS) return null;
-  return quoteForm(source.text).includes(quoteForm(trimmed)) ? trimmed : null;
+  const haystack = quoteForm(source.text);
+  // A quote may skip words with an ellipsis, as a careful writer would. Each
+  // piece must then be found, whole and in order; a piece too short to pin
+  // anything down is not accepted.
+  const pieces = quoteForm(trimmed).split(/\s*(?:\.\.\.|\[\.\.\.\])\s*/).filter(Boolean);
+  let from = 0;
+  for (const piece of pieces) {
+    if (piece.length < MIN_QUOTE_CHARS) return null;
+    const at = haystack.indexOf(piece, from);
+    if (at === -1) return null;
+    from = at + piece.length;
+  }
+  return pieces.length > 0 ? trimmed : null;
 }
 
 export type ClaimCheck = { ok: true; claim: Claim } | { ok: false; reason: string };

@@ -1,6 +1,9 @@
 import crypto from "node:crypto";
 import { Router, type IRouter, type Request } from "express";
 import type { BriefState } from "../lib/brief-state";
+import { auditBrief } from "../brief/audit";
+import { upgradeStoredBrief } from "../brief/upgrade";
+import { isBriefId } from "../lib/brief-store";
 import { AppError, sendError } from "../lib/errors";
 
 const router: IRouter = Router();
@@ -71,6 +74,25 @@ router.get("/ops/costs", async (req, res) => {
       unpricedModels: [...new Set(rows.filter((r) => r.costUsd === null).map((r) => r.model))],
       daily: rows,
     });
+  } catch (err) {
+    sendError(req, res, err);
+  }
+});
+
+/**
+ * Check a saved brief against the text that was saved with it: is every quote
+ * still found in its source, and is each source's text the text that was
+ * fingerprinted when the brief was written? This is the evidence that a brief
+ * said what its sources said on the day, whatever the pages say now.
+ */
+router.get("/ops/briefs/:id/audit", async (req, res) => {
+  try {
+    const { config, store } = state(req);
+    if (!config.opsToken || !authorised(req, config.opsToken)) throw new AppError(404, "NOT_FOUND", "Not found.");
+    const id = String(req.params["id"] ?? "");
+    const brief = isBriefId(id) ? await store.get(id) : null;
+    if (!brief) throw new AppError(404, "NOT_FOUND", "Not found.");
+    res.set("Cache-Control", "no-store").json(auditBrief(upgradeStoredBrief(brief), await store.snapshot(id)));
   } catch (err) {
     sendError(req, res, err);
   }

@@ -24,6 +24,7 @@ export function upgradeStoredBrief<T extends StoredBrief>(brief: T): T {
     keyFacts?: AnyClaim[];
     coverage?: { agreements?: AnyClaim[]; differences?: AnyClaim[] };
     verification?: unknown;
+    sources?: Array<Record<string, unknown>>;
   };
   return {
     ...b,
@@ -33,5 +34,7 @@ export function upgradeStoredBrief<T extends StoredBrief>(brief: T): T {
       differences: (b.coverage?.differences ?? []).map(upgradeClaim),
     },
     verification: b.verification ?? { status: "skipped", checked: 0, removed: 0, corrected: 0 },
+    // Before articles were read in full, every source was a summary.
+    sources: (b.sources ?? []).map((s) => ({ ...s, textFrom: s["textFrom"] ?? "summary", contentHash: s["contentHash"] ?? "" })),
   };
 }

@@ -26,6 +26,7 @@ export * from './retrievalStatus';
 export * from './retrievalStatusStatus';
 export * from './source';
 export * from './sourceKind';
+export * from './sourceTextFrom';
 export * from './streamBriefBody';
 export * from './verification';
 export * from './verificationStatus';

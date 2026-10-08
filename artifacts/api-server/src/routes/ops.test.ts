@@ -99,3 +99,66 @@ describe("GET /api/ops/costs", () => {
     expect(res.body.totalUsd).toBe(0);
   });
 });
+
+describe("GET /api/ops/briefs/:id/audit", () => {
+  const quoted = () =>
+    create.mockImplementation(async () =>
+      modelText(
+        JSON.stringify(
+          modelBrief({
+            keyFacts: [
+              { text: "Agencies say 12 aid trucks were refused access to El Fasher.", evidence: [{ sourceId: "S1", quote: "12 trucks carrying food were refused access to El Fasher" }] },
+            ],
+          }),
+        ),
+      ),
+    );
+
+  it("needs the operations token", async () => {
+    quoted();
+    const made = await request(app).post("/api/intelligence/explore").send({ topic: "Sudan El Fasher aid" });
+    expect((await request(app).get(`/api/ops/briefs/${made.body.id}/audit`)).status).toBe(404);
+  });
+
+  it("confirms every quote against the text saved with the brief", async () => {
+    state().config.opsToken = TOKEN;
+    quoted();
+    const made = await request(app).post("/api/intelligence/explore").send({ topic: "Sudan El Fasher aid" });
+    const res = await request(app).get(`/api/ops/briefs/${made.body.id}/audit`).set("Authorization", `Bearer ${TOKEN}`);
+    expect(res.status).toBe(200);
+    expect(res.body.intact).toBe(true);
+    expect(res.body.claims[0].quotes).toEqual([{ sourceId: "S1", status: "found" }]);
+    expect(res.body.sources.every((s: { fingerprintMatches: boolean }) => s.fingerprintMatches)).toBe(true);
+    // the public brief carries the same fingerprints, and never the text
+    expect(made.body.sources[0].contentHash).toMatch(/^[0-9a-f]{16}$/);
+    expect(JSON.stringify(made.body)).not.toContain("turned back near El Fasher. Humanitarian");
+    expect(JSON.stringify(res.body)).not.toContain("Humanitarian agencies say");
+  });
+
+  it("reports a brief as not intact when its saved text has been altered", async () => {
+    state().config.opsToken = TOKEN;
+    quoted();
+    const made = await request(app).post("/api/intelligence/explore").send({ topic: "Sudan El Fasher aid" });
+    const snapshot = (await state().store.snapshot(made.body.id))!;
+    snapshot[0]!.text = "Something else entirely.";
+    const res = await request(app).get(`/api/ops/briefs/${made.body.id}/audit`).set("Authorization", `Bearer ${TOKEN}`);
+    expect(res.body.intact).toBe(false);
+    expect(res.body.sources[0].fingerprintMatches).toBe(false);
+    expect(res.body.claims[0].quotes[0].status).toBe("missing");
+  });
+
+  it("does not keep pasted text, and says its quotes cannot be re-checked", async () => {
+    state().config.opsToken = TOKEN;
+    const article = "Fighting continued in Khartoum on Monday as agencies warned that 30 aid convoys were blocked from El Fasher. SECRET-MARKER";
+    create.mockImplementation(async () =>
+      modelText(JSON.stringify(modelBrief({ keyFacts: [{ text: "Agencies warned that 30 aid convoys were blocked from El Fasher.", evidence: [{ sourceId: "S1", quote: "agencies warned that 30 aid convoys were blocked from El Fasher" }] }] }))),
+    );
+    const made = await request(app).post("/api/intelligence/analyze").send({ article });
+    const snapshot = await state().store.snapshot(made.body.id);
+    expect(snapshot![0]).toMatchObject({ id: "S1", text: null });
+    expect(JSON.stringify(snapshot)).not.toContain("SECRET-MARKER");
+    const res = await request(app).get(`/api/ops/briefs/${made.body.id}/audit`).set("Authorization", `Bearer ${TOKEN}`);
+    expect(res.body.notes.join(" ")).toMatch(/pasted is never stored/);
+    expect(res.body.sources[0]).toMatchObject({ kept: false, fingerprintMatches: null });
+  });
+});

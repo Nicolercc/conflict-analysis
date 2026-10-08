@@ -330,7 +330,14 @@ components:
         excerpt:
           type: [string, "null"]
           description: The publisher's own summary or the reference extract, when available.
-      required: [id, kind, provider, publisher, title, url, publishedAt, retrievedAt, language, country, excerpt]
+        textFrom:
+          type: string
+          enum: [article, summary]
+          description: Whether the brief's claims were quoted from and checked against the article itself, or only a summary of it.
+        contentHash:
+          type: string
+          description: Fingerprint of the exact text the brief was written and checked against. The text itself is kept on the server.
+      required: [id, kind, provider, publisher, title, url, publishedAt, retrievedAt, language, country, excerpt, textFrom, contentHash]
     Evidence:
       type: object
       description: Words copied from one source. The server has checked that they appear in that source exactly.

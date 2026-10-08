@@ -10,9 +10,26 @@ import { logger } from "./logger";
  */
 export type StoredBrief = { id: string; generatedAt: string };
 
+/**
+ * The exact text one source contributed to a brief, kept on the server so the
+ * brief's quotes can be checked again later against what was actually read.
+ * `text` is null for text the reader pasted, which is never stored.
+ */
+export type SourceSnapshot = {
+  id: string;
+  publisher: string;
+  url: string | null;
+  textFrom: "article" | "summary";
+  retrievedAt: string;
+  contentHash: string;
+  text: string | null;
+};
+
 export interface BriefStore {
-  save(key: string, brief: StoredBrief): Promise<void>;
+  save(key: string, brief: StoredBrief, snapshot?: SourceSnapshot[]): Promise<void>;
   get(id: string): Promise<StoredBrief | null>;
+  /** The sources as they were when the brief was written; null if none were kept. */
+  snapshot(id: string): Promise<SourceSnapshot[] | null>;
   /** The newest brief for the same request, if it is younger than `maxAgeMs`. */
   latest(key: string, maxAgeMs: number): Promise<StoredBrief | null>;
   reset?(): void;
@@ -26,13 +43,13 @@ export const newBriefId = () => crypto.randomBytes(9).toString("base64url");
 
 /** Keeps the most recent briefs in the process. Lost on restart. */
 export class MemoryBriefStore implements BriefStore {
-  private byId = new Map<string, { key: string; brief: StoredBrief }>();
+  private byId = new Map<string, { key: string; brief: StoredBrief; snapshot: SourceSnapshot[] | null }>();
   private newest = new Map<string, string>();
 
   constructor(private readonly maxEntries = 500) {}
 
-  async save(key: string, brief: StoredBrief) {
-    this.byId.set(brief.id, { key, brief });
+  async save(key: string, brief: StoredBrief, snapshot?: SourceSnapshot[]) {
+    this.byId.set(brief.id, { key, brief, snapshot: snapshot ?? null });
     this.newest.set(key, brief.id);
     while (this.byId.size > this.maxEntries) {
       const oldestId = this.byId.keys().next().value;
@@ -45,6 +62,10 @@ export class MemoryBriefStore implements BriefStore {
 
   async get(id: string) {
     return this.byId.get(id)?.brief ?? null;
+  }
+
+  async snapshot(id: string) {
+    return this.byId.get(id)?.snapshot ?? null;
   }
 
   async latest(key: string, maxAgeMs: number) {
@@ -75,17 +96,24 @@ export class PostgresBriefStore implements BriefStore {
            created_at timestamptz NOT NULL,
            body jsonb NOT NULL
          );
+         ALTER TABLE ${this.table} ADD COLUMN IF NOT EXISTS evidence jsonb;
          CREATE INDEX IF NOT EXISTS ${this.table}_key_created ON ${this.table} (cache_key, created_at DESC);`,
       ),
     );
   }
 
-  async save(key: string, brief: StoredBrief) {
+  async save(key: string, brief: StoredBrief, snapshot?: SourceSnapshot[]) {
     await this.ensure();
     await this.pool.query(
-      `INSERT INTO ${this.table} (id, cache_key, created_at, body) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
-      [brief.id, key, brief.generatedAt, JSON.stringify(brief)],
+      `INSERT INTO ${this.table} (id, cache_key, created_at, body, evidence) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+      [brief.id, key, brief.generatedAt, JSON.stringify(brief), snapshot ? JSON.stringify(snapshot) : null],
     );
+  }
+
+  async snapshot(id: string) {
+    await this.ensure();
+    const { rows } = await this.pool.query<{ evidence: SourceSnapshot[] | null }>(`SELECT evidence FROM ${this.table} WHERE id = $1`, [id]);
+    return rows[0]?.evidence ?? null;
   }
 
   async get(id: string) {
@@ -113,11 +141,11 @@ export class PostgresBriefStore implements BriefStore {
 export class LayeredBriefStore implements BriefStore {
   constructor(private readonly memory: MemoryBriefStore, private readonly durable: BriefStore | null) {}
 
-  async save(key: string, brief: StoredBrief) {
-    await this.memory.save(key, brief);
+  async save(key: string, brief: StoredBrief, snapshot?: SourceSnapshot[]) {
+    await this.memory.save(key, brief, snapshot);
     if (!this.durable) return;
     try {
-      await this.durable.save(key, brief);
+      await this.durable.save(key, brief, snapshot);
     } catch (err) {
       logger.error({ err, id: brief.id }, "brief not saved to the database; its link will not survive a restart");
     }
@@ -127,6 +155,12 @@ export class LayeredBriefStore implements BriefStore {
     const local = await this.memory.get(id);
     if (local || !this.durable) return local;
     return this.durable.get(id);
+  }
+
+  async snapshot(id: string) {
+    const local = await this.memory.snapshot(id);
+    if (local || !this.durable) return local;
+    return this.durable.snapshot(id);
   }
 
   async latest(key: string, maxAgeMs: number) {

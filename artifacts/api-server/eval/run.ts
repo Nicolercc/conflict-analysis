@@ -3,6 +3,7 @@
  * the result. Needs an API key; costs one brief and one grading call per case.
  * Run: pnpm --filter @workspace/api-server eval [-- --only sudan,gaza-ceasefire]
  */
+import "./env";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -50,7 +51,10 @@ function isReviewed(id: string): boolean {
 }
 
 function loadCase(t: EvalTopic): Coverage & { recordedAt: string } {
-  return JSON.parse(readFileSync(path.join(here, "cases", `${t.id}.json`), "utf8"));
+  const recorded = JSON.parse(readFileSync(path.join(here, "cases", `${t.id}.json`), "utf8")) as Coverage & { recordedAt: string };
+  // Cases recorded before sources carried these fields.
+  recorded.sources = recorded.sources.map((s) => ({ ...s, textFrom: s.textFrom ?? "summary", contentHash: s.contentHash ?? "" }));
+  return recorded;
 }
 
 function pinVerdict(t: EvalTopic, loc: { lat: number | null; lng: number | null; city: string }): Pick<CaseResult, "pin" | "pinDetail"> {

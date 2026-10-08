@@ -13,8 +13,10 @@
       "language": "English",
       "country": null,
       "excerpt": "The \"Protein Dad\" shows how overripe fruit can become a soft, moist homemade loaf with a few simple ingredients and a protein-focused twist.",
+      "textFrom": "summary",
       "id": "S1",
       "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "contentHash": "0d8486a4eb5269a6",
       "text": "High-protein banana bread recipe offers a simple twist on the classic loaf. The \"Protein Dad\" shows how overripe fruit can become a soft, moist homemade loaf with a few simple ingredients and a protein-focused twist."
     },
     {
@@ -27,9 +29,11 @@
       "language": "English",
       "country": null,
       "excerpt": "Don's throw out those overripe bananas. This easy, delicious banana bread recipe from the AJC archives is updated with photos, baking tips and ingredient substitutions.",
+      "text": "From the AJC archives: An easy, delicious banana bread recipe. Long before the internet, recipes were passed down through generations to preserve traditions within families. Some made it to the newspaper, and readers would clip them, taping the curated, tried-and-tested recipes into notebooks, creating a sense of community between home cooks. The Atlanta Journal-Constitution’s recipe archives are filled with treasures submitted by past food editors, journalists and readers. In an era where millions of recipes are made for content consumption as much as actual consumption, traveling back in time for someone’s beloved 1970 banana bread recipe sounds pretty nice. Each week, we’re updating one of our favorite archived recipes with photos, essential cooking tips and modern ingredient substitutes.",
+      "textFrom": "article",
       "id": "S2",
       "retrievedAt": "2026-10-08T02:52:34.965Z",
-      "text": "From the AJC archives: An easy, delicious banana bread recipe. Don's throw out those overripe bananas. This easy, delicious banana bread recipe from the AJC archives is updated with photos, baking tips and ingredient substitutions."
+      "contentHash": "4f36412e1a7c6723"
     },
     {
       "kind": "news",
@@ -41,8 +45,10 @@
       "language": "English",
       "country": null,
       "excerpt": "Satisfy your sweet tooth with this recipe for warm, gooey, and chocolatey banana bread made with aromatic brown butter!",
+      "textFrom": "summary",
       "id": "S3",
       "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "contentHash": "fcd0619a007f4332",
       "text": "Cheat day done right: Try this nutritionist-approved recipe for brown butter chocolate banana bread to satisfy your sweet cravings. Satisfy your sweet tooth with this recipe for warm, gooey, and chocolatey banana bread made with aromatic brown butter!"
     },
     {
@@ -55,8 +61,10 @@
       "language": "English",
       "country": null,
       "excerpt": "Mary Berry's delicious banana bread recipe includes a simple ingredient for extra flavour ...",
+      "textFrom": "summary",
       "id": "S4",
       "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "contentHash": "f5cc53a0e7966cb6",
       "text": "Mary Berry’s banana bread recipe is full of flavour with 1 added ingredient. Mary Berry's delicious banana bread recipe includes a simple ingredient for extra flavour ..."
     },
     {
@@ -70,8 +78,10 @@
       "country": null,
       "excerpt": "Banana bread is a type of sweet bread or cake made from mashed bananas. Banana bread is typically classified as a quick bread, relying on chemical leavening agents such as baking soda or baking powder rather than yeast, which allows it to be prepared without fermentation. It is often a moist and sweet quick bread, but…",
       "text": "Banana bread. Banana bread is a type of sweet bread or cake made from mashed bananas. Banana bread is typically classified as a quick bread, relying on chemical leavening agents such as baking soda or baking powder rather than yeast, which allows it to be prepared without fermentation. It is often a moist and sweet quick bread, but some recipes are yeast raised. Its sweet taste and slightly crumbly texture make it more akin to a tea cake or muffin than bread.",
+      "textFrom": "summary",
       "id": "S5",
-      "retrievedAt": "2026-10-08T02:52:34.965Z"
+      "retrievedAt": "2026-10-08T02:52:34.965Z",
+      "contentHash": "df1e36c83fe17ef8"
     }
   ],
   "retrieval": [
@@ -180,5 +190,6 @@
       "status": "ok",
       "count": 1
     }
-  ]
+  ],
+  "deepenedAt": "2026-10-08T22:28:02.511Z"
 }

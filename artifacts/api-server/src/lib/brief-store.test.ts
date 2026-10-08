@@ -30,6 +30,20 @@ function contract(name: string, make: () => BriefStore) {
       expect((await store.get(old.id))?.id).toBe(old.id);
     });
 
+    it("keeps the source text saved with a brief, and returns none when none was saved", async () => {
+      const store = make();
+      const [withText, without] = [brief(), brief()];
+      const snapshot = [
+        { id: "S1", publisher: "UN News", url: "https://news.un.org/a", textFrom: "article" as const, retrievedAt: new Date().toISOString(), contentHash: "abc123", text: "“Quoted” text — kept exactly." },
+        { id: "S2", publisher: "Pasted text", url: null, textFrom: "article" as const, retrievedAt: new Date().toISOString(), contentHash: "def456", text: null },
+      ];
+      await store.save("k1", withText, snapshot);
+      await store.save("k2", without);
+      expect(await store.snapshot(withText.id)).toEqual(snapshot);
+      expect(await store.snapshot(without.id)).toBeNull();
+      expect(await store.snapshot(newBriefId())).toBeNull();
+    });
+
     it("keeps the first copy when the same id is saved twice", async () => {
       const store = make();
       const b = brief();
@@ -71,6 +85,7 @@ describe("layered store", () => {
     save: async () => { throw new Error("database down"); },
     get: async () => { throw new Error("database down"); },
     latest: async () => { throw new Error("database down"); },
+    snapshot: async () => { throw new Error("database down"); },
   };
 
   it("still serves a brief from this process when the database is down", async () => {
