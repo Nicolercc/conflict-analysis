@@ -25,31 +25,6 @@
 	color: var(--text-muted);
 }
 
-.ci-hero__live {
-	display: flex;
-	align-items: center;
-	gap: 5px;
-	flex-shrink: 0;
-}
-
-.ci-hero__live-dot {
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
-	background: var(--risk-high);
-	animation: ci-live-blink 2s infinite;
-}
-
-@keyframes ci-live-blink {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0.2;
-	}
-}
-
 /* Score cards — same interaction model as preview HTML (.sc) */
 /* The reason is always shown in full; it is the substance of the card. */
 .ci-map-outer {
@@ -108,34 +83,6 @@
 	}
 }
 
-.ci-section-block {
-	margin-bottom: 22px;
-}
-
-/* Sources sidebar — preview .sr-r / .sr-pop */
-.sr-r {
-	position: relative;
-	cursor: default;
-}
-
-.sr-pop {
-	opacity: 0;
-	pointer-events: none;
-	transition: opacity 0.18s;
-	position: absolute;
-	z-index: 20;
-}
-
-.sr-r:hover .sr-pop {
-	opacity: 1;
-	pointer-events: auto;
-}
-
-.ci-sr-row:hover .ci-sr-pop {
-	opacity: 1 !important;
-	pointer-events: auto !important;
-}
-
 /* Parties — preview .pr-r */
 .pr-r {
 	border-radius: 5px;
@@ -185,31 +132,10 @@
 		max-height: none;
 		overflow: visible;
 	}
-	.sr-pop {
-		transition: none;
-	}
 	.pr-r:hover,
 	.tl-r:hover {
 		background: transparent;
 	}
-}
-
-/* Perspectives — preview .pp-pill / .pp-pop */
-.pp-pill {
-	position: relative;
-}
-
-.pp-pop {
-	opacity: 0;
-	pointer-events: none;
-	transition: opacity 0.18s;
-	position: absolute;
-	z-index: 20;
-}
-
-.pp-pill:hover .pp-pop {
-	opacity: 1;
-	pointer-events: auto;
 }
 
 /* —— Interactive Leaflet conflict map (realistic basemap + tooltips) —— */
@@ -620,7 +546,7 @@
 /* The source, shown where the claim is */
 .ci-cite-pop {
 	position: absolute;
-	z-index: 700;
+	z-index: var(--z-popover);
 	top: calc(100% + 8px);
 	left: 0;
 	transform: translateX(var(--shift, 0px));
@@ -834,7 +760,7 @@ span.ci-source__title {
 .ci-nav {
 	position: sticky;
 	top: 56px;
-	z-index: 600;
+	z-index: var(--z-section-nav);
 	margin: 0 -18px;
 	padding: 0 18px;
 	background: var(--bg-primary);

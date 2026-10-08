@@ -84,7 +84,7 @@
 	position: fixed;
 	top: 8px;
 	left: 8px;
-	z-index: 2000;
+	z-index: var(--z-skip-link);
 	padding: 10px 16px;
 	border-radius: 8px;
 	background: var(--accent-navy);
