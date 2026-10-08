@@ -12,10 +12,16 @@ concurrency:
   group: uptime
   cancel-in-progress: true
 
+permissions:
+  actions: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
       - name: API answers its health check
         run: |
@@ -33,6 +39,14 @@ jobs:
           fi
           if [ "$code" != "200" ]; then
             echo "::error::The API is up but not ready (HTTP $code). The response above says which part is failing; if it is the model provider, check the key and the account's credit."
+            # Fail (which emails the owner) when the problem is new, then only
+            # every six hours while it lasts — not on every ten-minute run.
+            previous=$(gh run list --workflow uptime.yml --status completed --limit 1 --json conclusion --jq '.[0].conclusion' || echo unknown)
+            hour=$((10#$(date -u +%H))); minute=$((10#$(date -u +%M)))
+            if [ "$previous" = "failure" ] && ! { [ $((hour % 6)) -eq 0 ] && [ "$minute" -lt 10 ]; }; then
+              echo "::warning::Still not ready. Already reported; the next reminder is at the next six-hour mark (UTC)."
+              exit 0
+            fi
             exit 1
           fi
       - name: Site serves the app
